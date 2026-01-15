@@ -21,9 +21,11 @@ export const DeleteClientModal = () => {
     mutate(client.id, {
       onSuccess: () => {
         closeDeleteClientModal();
+        toast.success("Cliente eliminado exitosamente");
       },
       onError: () => {
         toast.error("Error ");
+        toast.error("Error al eliminar el cliente");
       },
     });
   };

@@ -33,6 +33,10 @@ export const ClientsList = () => {
       header: "Nombre",
     },
     {
+      accessorKey: "description",
+      header: "Descripción",
+    },
+    {
       accessorKey: "website_url",
       header: "URL del Sitio Web",
       cell: ({ row }) => row.original.website_url || "N/A",

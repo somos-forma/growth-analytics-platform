@@ -12,12 +12,14 @@ export type Client = {
   website_url: string;
   source: SourceItem[];
   gcp_id: string;
+  description?: string;
   updatedAt: string;
   createdAt: string;
 };
 
 export type CreateClientInput = {
   name: string;
+  description?: string;
   website_url: string;
   source: SourceItem[];
   gcp_id: string;

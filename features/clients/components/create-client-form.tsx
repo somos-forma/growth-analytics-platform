@@ -26,6 +26,7 @@ const formSchema = z
       .min(2, { message: "El nombre debe tener al menos 2 caracteres" }),
     website_url: z.string().url({ message: "URL inválida" }).or(z.literal("")),
     gcp_id: z.string().min(1, { message: "GCP ID requerido" }),
+    description: z.string().optional(),
     ga4_check: z.boolean(),
     ga4_value: z.string().optional(),
     google_ads_check: z.boolean(),
@@ -68,6 +69,7 @@ export function CreateClientForm() {
       name: "",
       website_url: "",
       gcp_id: "",
+      description: "",
       ga4_check: false,
       ga4_value: "",
       google_ads_check: false,
@@ -100,19 +102,8 @@ export function CreateClientForm() {
         },
       ],
       gcp_id: data.gcp_id,
+      description: data.description,
     };
-    try {
-      await fetch("https://auton8n.moovmediagroup.com/webhook/growth/clients", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-    } catch (error) {
-      console.error("Error enviando a example.com", error);
-      toast.error("No se pudo enviar a example.com");
-      return;
-    }
-
     mutate(payload, {
       onSuccess: () => {
         closeCreateClientModal();
@@ -144,7 +135,7 @@ export function CreateClientForm() {
             </Field>
           )}
         />
-        {/* <Controller
+        <Controller
           name="description"
           control={form.control}
           render={({ field, fieldState }) => (
@@ -159,7 +150,7 @@ export function CreateClientForm() {
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
-        /> */}
+        />
         <Controller
           name="website_url"
           control={form.control}

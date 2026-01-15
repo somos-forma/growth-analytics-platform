@@ -10,21 +10,30 @@ export const getClients = async (): Promise<Client[]> => {
 };
 
 export const createClient = async (data: CreateClientInput): Promise<Client> => {
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  return {
-    id: Math.random().toString(36).substring(2, 9),
-    name: data.name,
-    website_url: data.website_url,
-    source: data.source,
-    gcp_id: data.gcp_id,
-    updatedAt: new Date().toISOString(),
-    createdAt: new Date().toISOString(),
-  };
+  try {
+    const response = await fetch("https://auton8n.moovmediagroup.com/webhook/growth/clients", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to create client');
+    }
+    const createdClient: Client = await response.json();
+    return createdClient;
+  } catch (error) {
+    console.error("Error creating client", error);
+    throw error;
+  }
 };
 
 export const deleteClient = async (id: string): Promise<void> => {
-  await new Promise((resolve) => setTimeout(resolve, 1500));
-  return;
+  const response = await fetch(`https://auton8n.moovmediagroup.com/webhook/31e5ab5d-d54b-40ed-a59c-7d107521920d/clients/${id}`, {
+    method: "DELETE",
+  });
+  if (!response.ok) {
+    throw new Error('Failed to delete client');
+  }
 };
 
 export const updateClient = async (data: Partial<Client> & { id: string }): Promise<Client> => {
