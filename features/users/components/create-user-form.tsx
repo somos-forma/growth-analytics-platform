@@ -25,6 +25,45 @@ import {
 } from "@/components/ui/select";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { CreateUserAssignmentForm } from "./create-user-assignment-form";
+
+const clients = [
+  {
+    id: "a7k9x2",
+    name: "Cliente A",
+    description: "Descripción del Cliente A",
+  },
+  {
+    id: "b4m3y8",
+    name: "Cliente B",
+    description: "Descripción del Cliente B",
+  },
+  {
+    id: "c1n5z6",
+    name: "Cliente C",
+    description: "Descripción del Cliente C",
+  },
+  {
+    id: "d3p7q4",
+    name: "Cliente D",
+    description: "Descripción del Cliente D",
+  },
+  {
+    id: "e9r2s1",
+    name: "Cliente E",
+    description: "Descripción del Cliente E",
+  },
+  {
+    id: "f6t8u3",
+    name: "Cliente F",
+    description: "Descripción del Cliente F",
+  },
+  {
+    id: "g0v4w5",
+    name: "Cliente G",
+    description: "Descripción del Cliente G",
+  },
+];
 
 const formSchema = z.object({
   name: z
@@ -154,45 +193,16 @@ export function CreateUserForm() {
             </Field>
           )}
         />
+        
         <Field>
-          <div className="flex justify-between items-center">
-            <FieldLabel>Client IDs</FieldLabel>
-            <Button
-              type="button"
-              size="sm"
-              onClick={() => {
-                const current = form.getValues('client_id');
-                form.setValue('client_id', [...current, '']);
-              }}
-            >
-              Add Client ID
-            </Button>
-          </div>
-          {form.watch('client_id').map((id, index) => (
-            <div key={index} className="flex gap-2 mb-2">
-              <Input
-                value={id}
-                onChange={(e) => {
-                  const current = form.getValues('client_id');
-                  current[index] = e.target.value;
-                  form.setValue('client_id', current);
-                }}
-                placeholder="Client ID"
-              />
-              <Button
-                type="button"
-                variant="destructive"
-                size="sm"
-                onClick={() => {
-                  const current = form.getValues('client_id');
-                  form.setValue('client_id', current.filter((_, i) => i !== index));
-                }}
-              >
-                Delete
-              </Button>
-            </div>
-          ))}
+          <FieldLabel>Asignar clientes</FieldLabel>
+          <CreateUserAssignmentForm
+            selectedClientIds={form.watch('client_id')}
+            onChange={(clientIds) => form.setValue('client_id', clientIds)}
+            clients={clients}
+          />
         </Field>
+        
         <Field>
           <Button disabled={isPending} type="submit">
             {isPending && <Spinner />}
