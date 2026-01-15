@@ -14,6 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
+import { useAssignmentStore } from "@/features/asignments/store";
 
 export const UsersList = () => {
   const { data: users = [], isLoading, isError } = useUsers();
@@ -46,10 +47,15 @@ export const UsersList = () => {
       header: "Acciones",
       cell: ({ row }) => {
         const { openDeleteUserModal, openEditUserModal } = useUserStore();
+        const { setSelectedUser } = useAssignmentStore();
+
         return (
           <div className="flex gap-2">
             <Button variant="outline" asChild>
-              <Link href={`/dashboard/users/${row.original.id}/clients`}>
+              <Link 
+                href={`/dashboard/users/${row.original.id}/clients`}
+                onClick={() => setSelectedUser(row.original)}
+              >
                 Ver clientes asignados
               </Link>
             </Button>

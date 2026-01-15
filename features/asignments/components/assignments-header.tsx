@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useAssignmentStore } from "../store";
 import { CreateAssignmentModal } from "./create-assignment-modal";
+import Link from "next/link";
 
 export const AssignmentsHeader = () => {
   const openCreateAssignmentModal = useAssignmentStore(
@@ -14,18 +15,28 @@ export const AssignmentsHeader = () => {
   const closeCreateAssignmentModal = useAssignmentStore(
     (state) => state.closeCreateAssignmentModal
   );
+  const user = useAssignmentStore((state) => state.user);
+
+  console.log(user);
 
   return (
     <div className="flex justify-between items-center">
       <div>
-        <h1 className="text-4xl font-bold">Clientes para John Doe</h1>
+        <h1 className="text-4xl font-bold">Clientes para {user?.name}</h1>
         <p className="text-muted-foreground">
           Administra los clientes asignados a este usuario.
         </p>
       </div>
-      <Button onClick={openCreateAssignmentModal}>
-        <Plus /> Asignar clientes a este usuario
-      </Button>
+      <div className="flex gap-2">
+        <Button variant="outline" asChild>
+          <Link href="/dashboard/users">
+            Volver a usuarios
+          </Link>
+        </Button>
+        <Button onClick={openCreateAssignmentModal}>
+          <Plus /> Asignar clientes a este usuario
+        </Button>
+      </div>
       {isOpenCreateAssignmentModal && (
         <CreateAssignmentModal onClose={closeCreateAssignmentModal} />
       )}

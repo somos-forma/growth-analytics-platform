@@ -1,7 +1,9 @@
 import { create } from "zustand";
 import { Client } from "../clients/types/client.type";
+import { User } from "../users/types/user.type";
 
 type AsignmentStore = {
+  user: User | null;
   client: Client | null;
   clientsId: string[];
   isOpenCreateAssignmentModal: boolean;
@@ -10,8 +12,10 @@ type AsignmentStore = {
   closeCreateAssignmentModal: () => void;
   openDeleteAssignmentModal: (client: Client) => void;
   closeDeleteAssignmentModal: () => void;
+  setSelectedUser: (user: User) => void;
 };
 export const useAssignmentStore = create<AsignmentStore>((set) => ({
+  user: null,
   client: null,
   clientsId: [],
   isOpenCreateAssignmentModal: false,
@@ -32,5 +36,9 @@ export const useAssignmentStore = create<AsignmentStore>((set) => ({
   closeDeleteAssignmentModal: () =>
     set(() => ({
       isOpenDeleteAssignmentModal: false,
+    })),
+  setSelectedUser: (user) =>
+    set(() => ({
+      user: user,
     })),
 }));
