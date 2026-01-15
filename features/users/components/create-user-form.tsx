@@ -23,6 +23,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 const formSchema = z.object({
   name: z
@@ -32,24 +34,33 @@ const formSchema = z.object({
   password: z
     .string()
     .min(8, { message: "La contraseña debe tener al menos 8 caracteres" }),
-  role: z.enum(["admin", "user"]).optional(),
+  rol: z.enum(["admin", "user"]),
+  client_id: z.array(z.string()),
 });
 
 export function CreateUserForm() {
   const { closeCreateUserModal } = useUserStore();
   const { mutate, isPending } = useCreateUser();
+  const [showPassword, setShowPassword] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       email: "",
       password: "",
-      role: "user",
+      rol: "user",
+      client_id: [],
     },
   });
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    mutate(data, {
+    mutate({
+      email: data.email,
+      name: data.name,
+      password: data.password,
+      rol: data.rol,
+      client_id: data.client_id
+    }, {
       onSuccess: () => {
         closeCreateUserModal();
         toast.success("Usuario creado exitosamente");
@@ -61,7 +72,7 @@ export function CreateUserForm() {
   }
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
+    <form onSubmit={form.handleSubmit(onSubmit)} className="overflow-y-auto max-h-[450px]">
       <FieldGroup>
         <Controller
           name="name"
@@ -95,9 +106,37 @@ export function CreateUserForm() {
             </Field>
           )}
         />
-
+      <Controller
+          name="password"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor={field.name}>Contraseña</FieldLabel>
+              <div className="flex">
+                <Input
+                  {...field}
+                  id={field.name}
+                  aria-invalid={fieldState.invalid}
+                  type={showPassword ? "text" : "password"}
+                  placeholder="********"
+                  className="flex-1"
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="ml-2"
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </Button>
+              </div>
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
         <Controller
-          name="role"
+          name="rol"
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
@@ -115,24 +154,45 @@ export function CreateUserForm() {
             </Field>
           )}
         />
-
-        <Controller
-          name="password"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor={field.name}>Contraseña</FieldLabel>
+        <Field>
+          <div className="flex justify-between items-center">
+            <FieldLabel>Client IDs</FieldLabel>
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => {
+                const current = form.getValues('client_id');
+                form.setValue('client_id', [...current, '']);
+              }}
+            >
+              Add Client ID
+            </Button>
+          </div>
+          {form.watch('client_id').map((id, index) => (
+            <div key={index} className="flex gap-2 mb-2">
               <Input
-                {...field}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-                type="password"
-                placeholder="********"
+                value={id}
+                onChange={(e) => {
+                  const current = form.getValues('client_id');
+                  current[index] = e.target.value;
+                  form.setValue('client_id', current);
+                }}
+                placeholder="Client ID"
               />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
+              <Button
+                type="button"
+                variant="destructive"
+                size="sm"
+                onClick={() => {
+                  const current = form.getValues('client_id');
+                  form.setValue('client_id', current.filter((_, i) => i !== index));
+                }}
+              >
+                Delete
+              </Button>
+            </div>
+          ))}
+        </Field>
         <Field>
           <Button disabled={isPending} type="submit">
             {isPending && <Spinner />}

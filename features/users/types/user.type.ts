@@ -3,5 +3,6 @@ export type User = {
   name: string;
   email: string;
   password: string;
-  role: string;
+  rol: string;
+  client_id: string[];
 };

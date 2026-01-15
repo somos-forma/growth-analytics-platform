@@ -1,37 +1,36 @@
 import { User } from "../types/user.type";
 
 export const getUsers = async (): Promise<User[]> => {
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  return [
-    {
-      id: "1",
-      name: "John Doe",
-      email: "john@example.com",
-      password: "password123",
-      role: "admin",
-    },
-    {
-      id: "2",
-      name: "Jane Smith",
-      email: "jane@example.com",
-      password: "password456",
-      role: "user",
-    },
-  ];
+  const response = await fetch('https://auton8n.moovmediagroup.com/webhook/growth/users');
+  if (!response.ok) {
+    throw new Error('Failed to fetch users');
+  }
+  const users: User[] = await response.json();
+  return users;
 };
 
 export const createUser = async (data: {
-  name: string;
   email: string;
+  name: string;
   password: string;
+  rol: string;
+  client_id: string[];
 }): Promise<User> => {
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  return {
-    id: Math.random().toString(36).substring(2, 9),
-    name: data.name,
-    email: data.email,
-    password: data.password,
-  };
+  try {
+    const response = await fetch("https://auton8n.moovmediagroup.com/webhook/growth/users", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to create user');
+    }
+    const createdUser: User = await response.json();
+    return createdUser;
+  } catch (error) {
+    console.error("Error creating user", error);
+    throw error;
+  }
 };
 
 export const deleteUser = async (id: string): Promise<void> => {

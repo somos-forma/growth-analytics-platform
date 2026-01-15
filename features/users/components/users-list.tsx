@@ -38,8 +38,8 @@ export const UsersList = () => {
       header: "Email",
     },
     {
-      accessorKey: "role",
-      header: "Role",
+      accessorKey: "rol",
+      header: "Rol",
     },
     {
       accessorKey: "actions",
