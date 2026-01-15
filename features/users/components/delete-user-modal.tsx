@@ -11,7 +11,6 @@ import { useUserStore } from "../store";
 import { Button } from "@/components/ui/button";
 import { useDeleteUser } from "../hooks/useDeleteUser";
 import { Spinner } from "@/components/ui/spinner";
-import { toast } from "sonner";
 
 export const DeleteUserModal = () => {
   const { user, closeDeleteUserModal } = useUserStore();
@@ -21,9 +20,6 @@ export const DeleteUserModal = () => {
     mutate(user.id, {
       onSuccess: () => {
         closeDeleteUserModal();
-      },
-      onError: () => {
-        toast.error("Error ");
       },
     });
   };

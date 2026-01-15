@@ -34,22 +34,46 @@ export const createUser = async (data: {
 };
 
 export const deleteUser = async (id: string): Promise<void> => {
-  await new Promise((resolve) => setTimeout(resolve, 1500));
-  return;
+  try {
+    const response = await fetch(`https://auton8n.moovmediagroup.com/webhook/45d08efd-1e10-4702-853a-5aefc36c399c/growth/users/${id}`, {
+      method: "DELETE",
+    });
+    if (!response.ok) {
+      throw new Error('Failed to delete user');
+    }
+  } catch (error) {
+    console.error("Error deleting user", error);
+    throw error;
+  }
 };
 
 export const updateUser = async (data: {
   id: string;
-  name: string;
   email: string;
+  name: string;
   password: string;
+  rol: string;
+  client_id: string[];
 }): Promise<User> => {
-  console.log("update", data);
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  return {
-    id: data.id,
-    name: data.name,
-    email: data.email,
-    password: data.password,
-  };
+  try {
+    const response = await fetch(`https://auton8n.moovmediagroup.com/webhook/growth/users/${data.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: data.email,
+        name: data.name,
+        password: data.password,
+        rol: data.rol,
+        client_id: data.client_id,
+      }),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to update user');
+    }
+    const updatedUser: User = await response.json();
+    return updatedUser;
+  } catch (error) {
+    console.error("Error updating user", error);
+    throw error;
+  }
 };

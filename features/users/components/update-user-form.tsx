@@ -1,4 +1,5 @@
 "use client";
+import React, { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -21,6 +22,46 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { CreateUserAssignmentForm } from "./create-user-assignment-form";
+import { Eye, EyeOff } from "lucide-react";
+
+const clients = [
+  {
+    id: "a7k9x2",
+    name: "Cliente A",
+    description: "Descripción del Cliente A",
+  },
+  {
+    id: "b4m3y8",
+    name: "Cliente B",
+    description: "Descripción del Cliente B",
+  },
+  {
+    id: "c1n5z6",
+    name: "Cliente C",
+    description: "Descripción del Cliente C",
+  },
+  {
+    id: "d3p7q4",
+    name: "Cliente D",
+    description: "Descripción del Cliente D",
+  },
+  {
+    id: "e9r2s1",
+    name: "Cliente E",
+    description: "Descripción del Cliente E",
+  },
+  {
+    id: "f6t8u3",
+    name: "Cliente F",
+    description: "Descripción del Cliente F",
+  },
+  {
+    id: "g0v4w5",
+    name: "Cliente G",
+    description: "Descripción del Cliente G",
+  },
+];
 
 const formSchema = z.object({
   name: z
@@ -30,19 +71,40 @@ const formSchema = z.object({
   password: z
     .string()
     .min(8, { message: "La contraseña debe tener al menos 8 caracteres" }),
-  role: z.enum(["admin", "user"], { message: "Selecciona un rol válido" }),
+  rol: z.enum(["admin", "user"]),
+  client_id: z.array(z.string()).min(1, { message: "Selecciona al menos un cliente" }),
 });
 
 export function UpdateUserForm() {
   const { closeEditUserModal, user } = useUserStore();
   const { mutate, isPending } = useUpdateUser();
+  const [showPassword, setShowPassword] = useState(false);
+  
+  // Combinar clientes disponibles con los que ya tiene el usuario
+  const allClients = useMemo(() => {
+    const existingClientIds = new Set(clients.map(c => c.id));
+    const userClients = user?.client_id || [];
+    
+    // Agregar clientes del usuario que no estén en la lista
+    const additionalClients = userClients
+      .filter(clientId => !existingClientIds.has(clientId))
+      .map(clientId => ({
+        id: clientId,
+        name: `Cliente ${clientId}`,
+        description: `Cliente asignado al usuario`,
+      }));
+    
+    return [...clients, ...additionalClients];
+  }, [user?.client_id]);
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: user?.name || "",
       email: user?.email || "",
       password: user?.password || "",
-      role: user?.role || "user",
+      rol: (user?.rol as "admin" | "user") || "user",
+      client_id: user?.client_id || [],
     },
   });
 
@@ -60,7 +122,7 @@ export function UpdateUserForm() {
   }
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
+    <form onSubmit={form.handleSubmit(onSubmit)} className="overflow-y-auto max-h-[450px]">
       <FieldGroup>
         <Controller
           name="name"
@@ -94,8 +156,37 @@ export function UpdateUserForm() {
             </Field>
           )}
         />
+         <Controller
+          name="password"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor={field.name}>Contraseña</FieldLabel>
+              <div className="flex">
+                <Input
+                  {...field}
+                  id={field.name}
+                  aria-invalid={fieldState.invalid}
+                  type={showPassword ? "text" : "password"}
+                  placeholder="********"
+                  className="flex-1"
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="ml-2"
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </Button>
+              </div>
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
         <Controller
-          name="role"
+          name="rol"
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
@@ -113,23 +204,15 @@ export function UpdateUserForm() {
             </Field>
           )}
         />
-        <Controller
-          name="password"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor={field.name}>Contraseña</FieldLabel>
-              <Input
-                {...field}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-                type="password"
-                placeholder="********"
-              />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
+        <Field>
+          <FieldLabel>Asignar clientes</FieldLabel>
+          <CreateUserAssignmentForm
+            selectedClientIds={form.watch('client_id')}
+            onChange={(clientIds: string[]) => form.setValue('client_id', clientIds)}
+            clients={allClients}
+          />
+        </Field>
+       
         <Field>
           <Button disabled={isPending} type="submit">
             {isPending && <Spinner />}

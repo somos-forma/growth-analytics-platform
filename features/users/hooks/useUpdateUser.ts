@@ -3,6 +3,13 @@ import { updateUser } from "../services/user";
 
 export const useUpdateUser = () => {
   return useMutation({
-    mutationFn: updateUser,
+    mutationFn: updateUser as (data: {
+      id: string;
+      email: string;
+      name: string;
+      password: string;
+      rol: string;
+      client_id: string[];
+    }) => Promise<any>,
   });
 };
