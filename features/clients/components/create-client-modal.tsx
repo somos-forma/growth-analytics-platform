@@ -18,7 +18,7 @@ export const CreateClientModal = ({ onClose }: CreateClientModalProps) => {
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Crear Cliente</DialogTitle>
+          <DialogTitle>Crear Clientes</DialogTitle>
           <DialogDescription>
             Aquí va el formulario para crear un nuevo cliente.
           </DialogDescription>
