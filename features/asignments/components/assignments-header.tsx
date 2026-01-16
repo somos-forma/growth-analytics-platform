@@ -30,7 +30,7 @@ export const AssignmentsHeader = () => {
       <div className="flex gap-2">
         <Button variant="outline" asChild>
           <Link href="/dashboard/users">
-            Volver a usuarios
+            Volver
           </Link>
         </Button>
         <Button onClick={openCreateAssignmentModal}>

@@ -37,9 +37,9 @@ export const deleteClient = async (id: string): Promise<void> => {
 };
 
 export const updateClient = async (data: Partial<Client> & { id: string }): Promise<Client> => {
-  const { id, ...updateData } = data;
+  const {id, ...updateData } = data;
   const response = await fetch(`https://auton8n.moovmediagroup.com/webhook/31e5ab5d-d54b-40ed-a59c-7d107521920d/clients/${id}`, {
-    method: "POST",
+    method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(updateData),
   });

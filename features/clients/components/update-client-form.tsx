@@ -70,7 +70,7 @@ export function UpdateClientForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: client?.name || "",
-      description: "",
+      description: client?.description || "",
       website_url: client?.website_url || "",
       gcp_id: client?.gcp_id || "",
       ga4_check: sources?.ga4.check || false,
