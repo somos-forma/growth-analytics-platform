@@ -11,7 +11,7 @@ export const getClients = async (): Promise<Client[]> => {
 
 export const createClient = async (data: CreateClientInput): Promise<Client> => {
   try {
-    const response = await fetch("/api/test", {
+    const response = await fetch("/api/clients", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -39,7 +39,7 @@ export const deleteClient = async (id: string): Promise<void> => {
 export const updateClient = async (data: Partial<Client> & { id: string }): Promise<Client> => {
   const {id, ...updateData } = data;
 
-  const response = await fetch(`/api/test/${id}`, {
+  const response = await fetch(`/api/clients/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json", "Accept": "application/json" },
     body: JSON.stringify(updateData),
