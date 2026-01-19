@@ -68,11 +68,12 @@ const formSchema = z.object({
     .string()
     .min(2, { message: "El nombre debe tener al menos 2 caracteres" }),
   email: z.email({ message: "Ingresa un correo válido" }),
-  password: z
-    .string()
-    .min(8, { message: "La contraseña debe tener al menos 8 caracteres" }),
+  password: z.union([
+    z.string().min(8, { message: "La contraseña debe tener al menos 8 caracteres" }),
+    z.literal("")
+  ]),
   rol: z.enum(["admin", "user"]),
-  client_id: z.array(z.string()).min(1, { message: "Selecciona al menos un cliente" }),
+  client_id: z.array(z.string()).optional(),
 });
 
 export function UpdateUserForm() {
@@ -109,7 +110,8 @@ export function UpdateUserForm() {
   });
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    const newUser = { ...data, id: user?.id! };
+    const client_id = data.client_id ?? user?.client_id ?? [];
+    const newUser = { ...data, id: user?.id!, client_id };
     mutate(newUser, {
       onSuccess: () => {
         closeEditUserModal();
