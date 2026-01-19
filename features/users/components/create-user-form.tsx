@@ -193,55 +193,6 @@ export function CreateUserForm() {
             </Field>
           )}
         />
-        
-        <Controller
-          name="client_id"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel>Client IDs</FieldLabel>
-              <div className="space-y-2">
-                {field.value.map((clientId: string, index: number) => (
-                  <div key={index} className="flex items-center space-x-2">
-                    <Input
-                      value={clientId}
-                      onChange={(e) => {
-                        const newClientIds = [...field.value];
-                        newClientIds[index] = e.target.value;
-                        field.onChange(newClientIds);
-                      }}
-                      placeholder="Ingrese Client ID"
-                      className="flex-1"
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        const newClientIds = field.value.filter((_: string, i: number) => i !== index);
-                        field.onChange(newClientIds);
-                      }}
-                    >
-                      Eliminar
-                    </Button>
-                  </div>
-                ))}
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    field.onChange([...field.value, ""]);
-                  }}
-                >
-                  Agregar Client ID
-                </Button>
-              </div>
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-        
    
         
         <Field>
