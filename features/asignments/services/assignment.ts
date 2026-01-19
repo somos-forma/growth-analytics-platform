@@ -27,13 +27,27 @@ export const getAssignments = async (): Promise<any[]> => {
   ];
 };
 
-export const createAssignment = async (clientsId: {
+export const createAssignment = async (data: {
+  id: string;
   clientsId: string[];
 }): Promise<any> => {
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  return {
-    success: true,
-  };
+  try {
+    const response = await fetch(`/api/users/${data.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        client_id: data.clientsId,
+      }),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to update user assignments');
+    }
+    const updatedUser = await response.json();
+    return updatedUser;
+  } catch (error) {
+    console.error("Error updating user assignments", error);
+    throw error;
+  }
 };
 
 export const deleteAssignment = async (id: string): Promise<any> => {

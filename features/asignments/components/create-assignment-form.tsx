@@ -72,7 +72,7 @@ export function CreateAssignmentForm() {
   const { closeCreateAssignmentModal } = useAssignmentStore();
   const { mutate, isPending } = useCreateAssignment();
   const [searchTerm, setSearchTerm] = useState<string>("");
-
+  const user = useAssignmentStore((state) => state.user);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -81,7 +81,9 @@ export function CreateAssignmentForm() {
   });
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    mutate(data, {
+    // TODO: replace "placeholder-id" with the actual id source (e.g. selected user id from store or props)
+    const payload = { id: user?.id!, ...data };
+    mutate(payload, {
       onSuccess: () => {
         closeCreateAssignmentModal();
         toast.success("Cliente asignado exitosamente");

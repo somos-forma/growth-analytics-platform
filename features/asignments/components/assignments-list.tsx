@@ -16,6 +16,7 @@ import {
 
 export const AssignmentsList = () => {
   const { data: assignments = [], isLoading, isError } = useAssignments();
+    const user = useAssignmentStore((state) => state.user);
   if (isLoading) {
     return <div>Loading...</div>;
   }
