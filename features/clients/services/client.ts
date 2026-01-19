@@ -11,7 +11,7 @@ export const getClients = async (): Promise<Client[]> => {
 
 export const createClient = async (data: CreateClientInput): Promise<Client> => {
   try {
-    const response = await fetch("https://auton8n.moovmediagroup.com/webhook/growth/clients", {
+    const response = await fetch("/api/test", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -39,9 +39,9 @@ export const deleteClient = async (id: string): Promise<void> => {
 export const updateClient = async (data: Partial<Client> & { id: string }): Promise<Client> => {
   const {id, ...updateData } = data;
 
-  const response = await fetch(`https://auton8n.moovmediagroup.com/webhook/31e5ab5d-d54b-40ed-a59c-7d107521920d/clients/${id}`, {
+  const response = await fetch(`/api/test/${id}`, {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", "Accept": "application/json" },
     body: JSON.stringify(updateData),
   });
 

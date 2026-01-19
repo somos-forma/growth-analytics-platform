@@ -17,7 +17,7 @@ export const createUser = async (data: {
   client_id: string[];
 }): Promise<User> => {
   try {
-    const response = await fetch("https://auton8n.moovmediagroup.com/webhook/growth/users", {
+    const response = await fetch("/api/users", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -56,7 +56,7 @@ export const updateUser = async (data: {
   client_id: string[];
 }): Promise<User> => {
   try {
-    const response = await fetch(`https://auton8n.moovmediagroup.com/webhook/growth/users/${data.id}`, {
+    const response = await fetch(`/api/users/${data.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
