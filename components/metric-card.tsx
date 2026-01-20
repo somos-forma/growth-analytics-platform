@@ -41,7 +41,6 @@ export const MetricCard = ({
   const hardcodedChange = 6.5;
   const isHardcodedPositive = hardcodedChange >= 0;
 
-  console.log({ title, value, newValue, isPositive, change });
   return (
     <Card>
       <CardHeader>
