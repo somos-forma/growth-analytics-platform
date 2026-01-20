@@ -14,10 +14,12 @@ export const createAssignment = async (data: {
   clientsId: string[];
 }): Promise<any> => {
   try {
+    console.log('sending update', data);
     const response = await fetch(`/api/users/${data.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        user_id: data.id,
         client_id: data.clientsId,
       }),
     });

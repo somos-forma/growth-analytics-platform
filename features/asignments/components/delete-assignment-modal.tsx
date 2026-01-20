@@ -11,15 +11,24 @@ import { Button } from "@/components/ui/button";
 import { useCreateAssignment } from "../hooks/useCreateAssignment";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const DeleteAssignmentModal = () => {
   const { client, closeDeleteAssignmentModal, user } = useAssignmentStore();
   const { mutate, isPending } = useCreateAssignment();
+  const queryClient = useQueryClient();
   const handleDelete = () => {
     if (!client || !user || !user.id) return;
     const newClientIds = user.client_id?.filter(id => id !== String(client.id)) || [];
     mutate({ id: user.id, clientsId: newClientIds }, {
-      onSuccess: () => {
+      onSuccess: (data) => {
+        queryClient.refetchQueries({ queryKey: ["assignments"] });
+        if (data) {
+          useAssignmentStore.getState().setSelectedUser(data);
+        } else {
+          const updatedUser = { ...user, client_id: newClientIds };
+          useAssignmentStore.getState().setSelectedUser(updatedUser);
+        }
         closeDeleteAssignmentModal();
         toast.success("Cliente eliminado exitosamente");
       },
