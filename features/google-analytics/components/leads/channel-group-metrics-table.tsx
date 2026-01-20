@@ -21,7 +21,7 @@ type ChannelGroupMetrics = {
 export const columns: ColumnDef<ChannelGroupMetrics>[] = [
   {
     accessorKey: "channel_group",
-    header: "Grupo de canales principal de la...",
+    header: "Canal",
   },
   {
     accessorKey: "new_users",
@@ -32,21 +32,21 @@ export const columns: ColumnDef<ChannelGroupMetrics>[] = [
   },
   {
     accessorKey: "new_users_delta",
-    header: " % Δ",
+    header: "Sesiones",
     cell: (data) => {
       return formatPercentage(data.getValue() as number);
     },
   },
   {
     accessorKey: "session_interaction",
-    header: "Sesiones con interacción",
+    header: "Eventos Clave",
     cell: (data) => {
       return formatNumber(data.getValue() as number);
     },
   },
   {
     accessorKey: "session_interaction_delta",
-    header: "% Δ ",
+    header: "Tasa evento clave",
     cell: (data) => {
       return formatPercentage(data.getValue() as number);
     },
