@@ -25,6 +25,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { getAssignments } from "../services/assignment";
+import { useQueryClient } from "@tanstack/react-query";
 
 const formSchema = z.object({
   clientsId: z.array(z.string()),
@@ -36,13 +37,14 @@ export function CreateAssignmentForm() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [clients, setClients] = useState<any[]>([]);
   const user = useAssignmentStore((state) => state.user);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     getAssignments().then((data) => {
       setClients(data.map(client => ({ ...client, id: String(client.id) })));
     }).catch(console.error);
   }, []);
-  
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -57,7 +59,14 @@ export function CreateAssignmentForm() {
     }
     const payload = { id: user.id, ...data };
     mutate(payload, {
-      onSuccess: () => {
+      onSuccess: (data) => {
+        queryClient.refetchQueries({ queryKey: ["assignments"] });
+        if (data) {
+          useAssignmentStore.getState().setSelectedUser(data);
+        } else {
+          const updatedUser = { ...user, client_id: data.clientsId };
+          useAssignmentStore.getState().setSelectedUser(updatedUser);
+        }
         closeCreateAssignmentModal();
         toast.success("Cliente asignado exitosamente");
       },

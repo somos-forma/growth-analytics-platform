@@ -21,14 +21,7 @@ export const DeleteAssignmentModal = () => {
     if (!client || !user || !user.id) return;
     const newClientIds = user.client_id?.filter(id => id !== String(client.id)) || [];
     mutate({ id: user.id, clientsId: newClientIds }, {
-      onSuccess: (data) => {
-        queryClient.refetchQueries({ queryKey: ["assignments"] });
-        if (data) {
-          useAssignmentStore.getState().setSelectedUser(data);
-        } else {
-          const updatedUser = { ...user, client_id: newClientIds };
-          useAssignmentStore.getState().setSelectedUser(updatedUser);
-        }
+      onSuccess: () => {
         closeDeleteAssignmentModal();
         toast.success("Cliente eliminado exitosamente");
       },
