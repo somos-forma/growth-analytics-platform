@@ -59,14 +59,7 @@ export function CreateAssignmentForm() {
     }
     const payload = { id: user.id, ...data };
     mutate(payload, {
-      onSuccess: (data) => {
-        queryClient.refetchQueries({ queryKey: ["assignments"] });
-        if (data) {
-          useAssignmentStore.getState().setSelectedUser(data);
-        } else {
-          const updatedUser = { ...user, client_id: data.clientsId };
-          useAssignmentStore.getState().setSelectedUser(updatedUser);
-        }
+      onSuccess: () => {
         closeCreateAssignmentModal();
         toast.success("Cliente asignado exitosamente");
       },
