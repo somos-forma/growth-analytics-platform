@@ -14,6 +14,7 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 import { useCreateUser } from "../hooks/useCreateUser";
+import { useQueryClient } from "@tanstack/react-query";
 import { Spinner } from "@/components/ui/spinner";
 import { useUserStore } from "../store";
 import {
@@ -80,6 +81,7 @@ const formSchema = z.object({
 export function CreateUserForm() {
   const { closeCreateUserModal } = useUserStore();
   const { mutate, isPending } = useCreateUser();
+  const queryClient = useQueryClient();
   const [showPassword, setShowPassword] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -103,6 +105,7 @@ export function CreateUserForm() {
       onSuccess: () => {
         closeCreateUserModal();
         toast.success("Usuario creado exitosamente");
+        queryClient.invalidateQueries({ queryKey: ["users"] });
       },
       onError: () => {
         toast.error("Error al crear el usuario");

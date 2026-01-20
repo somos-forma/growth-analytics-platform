@@ -15,6 +15,7 @@ import * as z from "zod";
 import { Spinner } from "@/components/ui/spinner";
 import { useUserStore } from "../store";
 import { useUpdateUser } from "../hooks/useUpdateUser";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Select,
   SelectContent,
@@ -79,6 +80,7 @@ const formSchema = z.object({
 export function UpdateUserForm() {
   const { closeEditUserModal, user } = useUserStore();
   const { mutate, isPending } = useUpdateUser();
+  const queryClient = useQueryClient();
   const [showPassword, setShowPassword] = useState(false);
   
   // Combinar clientes disponibles con los que ya tiene el usuario
@@ -116,6 +118,7 @@ export function UpdateUserForm() {
       onSuccess: () => {
         closeEditUserModal();
         toast.success("Usuario actualizado exitosamente");
+        queryClient.invalidateQueries({ queryKey: ["users"] });
       },
       onError: () => {
         toast.error("Error al actualizar el usuario");

@@ -10,16 +10,19 @@ import {
 import { useUserStore } from "../store";
 import { Button } from "@/components/ui/button";
 import { useDeleteUser } from "../hooks/useDeleteUser";
+import { useQueryClient } from "@tanstack/react-query";
 import { Spinner } from "@/components/ui/spinner";
 
 export const DeleteUserModal = () => {
   const { user, closeDeleteUserModal } = useUserStore();
   const { mutate, isPending } = useDeleteUser();
+  const queryClient = useQueryClient();
   const handleDelete = () => {
     if (!user) return;
     mutate(user.id, {
       onSuccess: () => {
         closeDeleteUserModal();
+        queryClient.invalidateQueries({ queryKey: ["users"] });
       },
     });
   };
