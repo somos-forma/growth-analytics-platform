@@ -156,10 +156,15 @@ export const GoogleAnalytics = () => {
             </Button>
           </div>
         </div>
-        <div className="space-y-5">
-          <div className="space-y-5"></div>
+        <div className="space-y-7">
+          <div className="space-y-7"></div>
           {/* <FunnelIndicators /> */}
-
+             <div className="p-2">
+            <h2 className="font-bold text-2xl">Perfomance Genera del sitio Web </h2>
+            <p className="text-muted-foreground">
+            Visión integral del rendimiento digital del sitio, que permite evaluar la capacidad real del ecosistema para atraer, retener y convertir usuarios.
+            </p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
             {fakeData.map((item, i) => (
               <MetricCard
@@ -173,8 +178,19 @@ export const GoogleAnalytics = () => {
               />
             ))}
           </div>
+            <div className="p-2">
+            <h2 className="font-bold text-2xl">Performance del sitio web por canal de adquisición</h2>
+            <p className="text-muted-foreground">
+           Análisis comparativo de los canales para identificar cuáles aportan mayor volumen, eficiencia y calidad de resultados, y dónde existen oportunidades de optimización.
+            </p>
+          </div>
           <ChannelGroupMetricsTable />
-          <p className="font-bold  text-2xl">Métricas</p>
+           <div className="p-2">
+            <h2 className="font-bold text-2xl">Performance del sitio web por fuente / medio</h2>
+            <p className="text-muted-foreground">
+           Profundización a nivel de origen de tráfico para entender qué combinaciones de fuente y medio generan impacto real en los objetivos de negocio.
+            </p>
+          </div>
           <ChannelGroupMetricsChangeTable />
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             <UserByDevice date={{ from: "2025-11-01" }} />

@@ -14,7 +14,7 @@ function adaptMetaMonthlyKpis(rows: any[]) {
   // Ordenar para garantizar consistencia
   const sorted = [...rows].sort(
     (a, b) =>
-      new Date(b.mes_inicio).getTime() - new Date(a.mes_inicio).getTime()
+      new Date(b.mes_inicio).getTime() - new Date(a.mes_inicio).getTime(),
   );
 
   const current = sorted[0];
@@ -246,12 +246,14 @@ export const LeadsOverview = ({
   }
   return (
     <div>
-      <h1 className="font-bold mb-2">
-        Indicadores Generales{" "}
-        <span className=" italic font-light">
-          (Comparación del mes actual con el mismo mes del año anterior)
-        </span>
-      </h1>
+      <div className="p-2">
+        <h2 className="font-bold text-2xl">
+          Resultados generales 
+        </h2>
+        <p className="text-muted-foreground">
+         Visión consolidada del alcance, la interacción y la eficiencia de la inversión en el período analizado.
+        </p>
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-3">
         {data.map((metric) => (
           <MetricCard

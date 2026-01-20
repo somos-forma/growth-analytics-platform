@@ -101,7 +101,13 @@ export const LeadsCharts = ({
     return <div>Error: {(error as Error).message}</div>;
   }
 
-  return (
+  return (<>
+    <div className="p-2">
+              <h2 className="font-bold text-2xl">Evolución de inversión, conversiones y CPA </h2>
+              <p className="text-muted-foreground">
+            Comportamiento de la inversión y su relación directa con los resultados y el costo de conversión en el tiempo.
+      </p>
+     </div>
     <Card>
       <CardHeader>
         <CardTitle>Rendimiento mensual</CardTitle>
@@ -155,5 +161,6 @@ export const LeadsCharts = ({
         </ChartContainer>
       </CardContent>
     </Card>
+    </>
   );
 };

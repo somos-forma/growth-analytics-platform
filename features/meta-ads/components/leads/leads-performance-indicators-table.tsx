@@ -113,7 +113,7 @@ export const LeadsPerformanceIndicatorsTable = ({
         scope: raw.alcance ?? 0,
       }));
       const filteredData = data.filter(
-        (item: any) => item.campaign !== "Total"
+        (item: any) => item.campaign !== "Total",
       );
       return filteredData;
     },
@@ -128,17 +128,26 @@ export const LeadsPerformanceIndicatorsTable = ({
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Indicadores de performance</CardTitle>
-        <CardDescription>
-          Resultados por campaña
-          <p className=" italic">(Este mes)</p>
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <DataTable columns={columns} data={data} />
-      </CardContent>
-    </Card>
+    <>
+      <div className="p-2">
+        <h2 className="font-bold text-2xl">Desempeño de campañas</h2>
+        <p className="text-muted-foreground">
+          Aporte de cada campaña a la inversión, alcance e interacción con los
+          usuarios.
+        </p>
+      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Indicadores de performance</CardTitle>
+          <CardDescription>
+            Resultados por campaña
+            <p className=" italic">(Este mes)</p>
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <DataTable columns={columns} data={data} />
+        </CardContent>
+      </Card>
+    </>
   );
 };

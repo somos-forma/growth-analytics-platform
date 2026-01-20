@@ -80,7 +80,7 @@ export const OverviewLeads = ({ date }: { date: { from: string } }) => {
   if (isPending) {
     return (
       <div className="space-y-5">
-        <h1 className="text-center font-bold text-2xl">Resultados del mes</h1>
+        <h1 className="text-left font-bold text-2xl">Resultados Generales</h1>
         <OverviewSkeleton items={3} />
       </div>
     );
@@ -92,7 +92,12 @@ export const OverviewLeads = ({ date }: { date: { from: string } }) => {
 
   return (
     <div className="space-y-5">
-      <h1 className="text-center font-bold text-2xl">Resultados del mes</h1>
+          <div className="p-2">
+      <h1 className="text-left font-bold text-2xl">Resultados Generales</h1>
+      <p className="text-muted-foreground">
+        Visión consolidada del desempeño digital, considerando inversión, volumen de conversiones y eficiencia.
+      </p>
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3   gap-3">
         {data.map((metric) => (
           <MetricCard

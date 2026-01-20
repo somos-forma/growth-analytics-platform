@@ -111,46 +111,56 @@ export const CostsIndicatorsCharts = ({
     return <div>Error: {(error as Error).message}</div>;
   }
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Indicadores de Costos</CardTitle>
-        <CardDescription>
-          Inversión, CPM y CPC por Día
-          <p className=" italic">(Este mes)</p>
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig} className="h-[350px]  w-full">
-          <ResponsiveContainer>
-            <ComposedChart accessibilityLayer data={data}>
-              <CartesianGrid vertical={false} />
-              <YAxis
-                axisLine={false}
-                tickLine={false}
-                label={{
-                  value: "Total costes",
-                  angle: -90,
-                  dx: -30,
-                }}
-                tickFormatter={(value) => formatNumberAbbreviated(value)}
-              />
+    <>
+      <div className="p-2">
+        <h2 className="font-bold text-2xl">
+          Evolución de la eficiencia de la inversión en medios
+        </h2>
+        <p className="text-muted-foreground">
+          Comportamiento diario del gasto, CPM y CPC en el período analizado
+        </p>
+      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Indicadores de Costos</CardTitle>
+          <CardDescription>
+            Inversión, CPM y CPC por Día
+            <p className=" italic">(Este mes)</p>
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ChartContainer config={chartConfig} className="h-[350px]  w-full">
+            <ResponsiveContainer>
+              <ComposedChart accessibilityLayer data={data}>
+                <CartesianGrid vertical={false} />
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
+                  label={{
+                    value: "Total costes",
+                    angle: -90,
+                    dx: -30,
+                  }}
+                  tickFormatter={(value) => formatNumberAbbreviated(value)}
+                />
 
-              <XAxis
-                dataKey="day"
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
-                tickFormatter={(value) => formatSpanishDate(value)}
-              />
-              <ChartTooltip content={<ChartTooltipContent />} />
-              <ChartLegend content={<ChartLegendContent />} />
-              <Bar dataKey="cost" fill="var(--color-cost)" radius={4} />
-              <Line dataKey="cpm" stroke="var(--color-cpm)" />
-              <Line dataKey="cpc" stroke="var(--color-cpc)" />
-            </ComposedChart>
-          </ResponsiveContainer>
-        </ChartContainer>
-      </CardContent>
-    </Card>
+                <XAxis
+                  dataKey="day"
+                  tickLine={false}
+                  tickMargin={10}
+                  axisLine={false}
+                  tickFormatter={(value) => formatSpanishDate(value)}
+                />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <ChartLegend content={<ChartLegendContent />} />
+                <Bar dataKey="cost" fill="var(--color-cost)" radius={4} />
+                <Line dataKey="cpm" stroke="var(--color-cpm)" />
+                <Line dataKey="cpc" stroke="var(--color-cpc)" />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </ChartContainer>
+        </CardContent>
+      </Card>
+    </>
   );
 };

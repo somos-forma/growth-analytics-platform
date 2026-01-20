@@ -128,16 +128,25 @@ export const LeadsTable = ({ date }: { date: { from: string } }) => {
     return <div>Error: {(error as Error).message}</div>;
   }
   return (
-    <Card>
-      <CardHeader>
-        {/* <CardTitle>Indicadores Performance de Campañas</CardTitle>
+    <>
+      <div className="p-2">
+        <h2 className="font-bold text-2xl">Desempeño de campañas </h2>
+        <p className="text-muted-foreground">
+          Aporte de cada campaña al volumen total de conversiones y a la
+          eficiencia de la inversión.
+        </p>
+      </div>
+      <Card>
+        <CardHeader>
+          {/* <CardTitle>Indicadores Performance de Campañas</CardTitle>
         <CardDescription>
           Tabla de indicadores clave de rendimiento para campañas
         </CardDescription> */}
-      </CardHeader>
-      <CardContent>
-        <DataTable columns={columns} data={data} />
-      </CardContent>
-    </Card>
+        </CardHeader>
+        <CardContent>
+          <DataTable columns={columns} data={data} />
+        </CardContent>
+      </Card>
+    </>
   );
 };

@@ -129,16 +129,25 @@ export const LeadsKeywordsTable = ({ date }: { date: { from: string } }) => {
     return <div>Error: {(error as Error).message}</div>;
   }
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Keywords</CardTitle>
-        {/* <CardDescription>
+    <>
+      <div className="p-2">
+        <h2 className="font-bold text-2xl">Desempeño de keywords </h2>
+        <p className="text-muted-foreground">
+          Impacto de las principales búsquedas en la generación de conversiones
+          y en el costo asociado.
+        </p>
+      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Keywords</CardTitle>
+          {/* <CardDescription>
           Tabla de indicadores clave de rendimiento para keywords
         </CardDescription> */}
-      </CardHeader>
-      <CardContent>
-        <DataTable columns={columns} data={data} />
-      </CardContent>
-    </Card>
+        </CardHeader>
+        <CardContent>
+          <DataTable columns={columns} data={data} />
+        </CardContent>
+      </Card>
+    </>
   );
 };
