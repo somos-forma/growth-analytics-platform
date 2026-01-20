@@ -2,7 +2,7 @@
 
 import { DataTable } from "@/components/data-table";
 import { useAssignments } from "../hooks/useAssignments";
-// import { Client } from "../types/client.type";
+import { useCreateAssignment } from "../hooks/useCreateAssignment";
 import { ColumnDef } from "@tanstack/react-table";
 import { useAssignmentStore } from "../store";
 import { Button } from "@/components/ui/button";
@@ -17,14 +17,11 @@ import {
 export const AssignmentsList = () => {
   const { data: assignments = [], isLoading, isError } = useAssignments();
   const user = useAssignmentStore((state) => state.user);
+  const { mutate } = useCreateAssignment();
 
   const filteredClients = assignments.filter((assignment) =>
     user?.client_id?.includes(String(assignment.id))
   );
-
-  console.log('user.client_id:', user?.client_id);
-  console.log('assignments:', assignments);
-  console.log('filteredClients:', filteredClients);
 
 
   if (isLoading) {

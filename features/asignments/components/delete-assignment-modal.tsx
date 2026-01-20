@@ -8,18 +8,20 @@ import {
 } from "@/components/ui/dialog";
 import { useAssignmentStore } from "../store";
 import { Button } from "@/components/ui/button";
-import { useDeleteAssignment } from "../hooks/useDeleteAssignment";
+import { useCreateAssignment } from "../hooks/useCreateAssignment";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
 
 export const DeleteAssignmentModal = () => {
-  const { client, closeDeleteAssignmentModal } = useAssignmentStore();
-  const { mutate, isPending } = useDeleteAssignment();
+  const { client, closeDeleteAssignmentModal, user } = useAssignmentStore();
+  const { mutate, isPending } = useCreateAssignment();
   const handleDelete = () => {
-    if (!client) return;
-    mutate(client.id, {
+    if (!client || !user || !user.id) return;
+    const newClientIds = user.client_id?.filter(id => id !== String(client.id)) || [];
+    mutate({ id: user.id, clientsId: newClientIds }, {
       onSuccess: () => {
         closeDeleteAssignmentModal();
+        toast.success("Cliente eliminado exitosamente");
       },
       onError: () => {
         toast.error("Error al eliminar el cliente asignado");
