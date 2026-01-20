@@ -17,7 +17,6 @@ export const AssignmentsHeader = () => {
   );
   const user = useAssignmentStore((state) => state.user);
 
-  console.log(user);
 
   return (
     <div className="flex justify-between items-center">

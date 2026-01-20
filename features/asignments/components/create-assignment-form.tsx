@@ -22,57 +22,27 @@ import { Spinner } from "@/components/ui/spinner";
 import { useAssignmentStore } from "../store";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
-const clients = [
-  {
-    id: "a7k9x2",
-    name: "Cliente A",
-    description: "Descripción del Cliente A",
-  },
-  {
-    id: "b4m3y8",
-    name: "Cliente B",
-    description: "Descripción del Cliente B",
-  },
-  {
-    id: "c1n5z6",
-    name: "Cliente C",
-    description: "Descripción del Cliente C",
-  },
-  {
-    id: "d3p7q4",
-    name: "Cliente D",
-    description: "Descripción del Cliente D",
-  },
-  {
-    id: "e9r2s1",
-    name: "Cliente E",
-    description: "Descripción del Cliente E",
-  },
-  {
-    id: "f6t8u3",
-    name: "Cliente F",
-    description: "Descripción del Cliente F",
-  },
-  {
-    id: "g0v4w5",
-    name: "Cliente G",
-    description: "Descripción del Cliente G",
-  },
-];
+import { getAssignments } from "../services/assignment";
 
 const formSchema = z.object({
-  clientsId: z
-    .array(z.string())
-    .min(1, { message: "Selecciona al menos un cliente" }),
+  clientsId: z.array(z.string()),
 });
 
 export function CreateAssignmentForm() {
   const { closeCreateAssignmentModal } = useAssignmentStore();
   const { mutate, isPending } = useCreateAssignment();
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [clients, setClients] = useState<any[]>([]);
   const user = useAssignmentStore((state) => state.user);
+
+  useEffect(() => {
+    getAssignments().then((data) => {
+      setClients(data.map(client => ({ ...client, id: String(client.id) })));
+    }).catch(console.error);
+  }, []);
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -81,8 +51,11 @@ export function CreateAssignmentForm() {
   });
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    // TODO: replace "placeholder-id" with the actual id source (e.g. selected user id from store or props)
-    const payload = { id: user?.id!, ...data };
+    if (!user || !user.id) {
+      toast.error("Usuario no encontrado");
+      return;
+    }
+    const payload = { id: user.id, ...data };
     mutate(payload, {
       onSuccess: () => {
         closeCreateAssignmentModal();
@@ -95,7 +68,7 @@ export function CreateAssignmentForm() {
   }
 
   const filteredClients = clients.filter((client) =>
-    client.name.toLowerCase().includes(searchTerm.toLowerCase())
+    client.name.toLowerCase().includes(searchTerm.toLowerCase()) 
   );
   const clientWatch = form.watch("clientsId");
   return (
@@ -150,7 +123,7 @@ export function CreateAssignmentForm() {
                                 <div>
                                   <p className="font-medium">{client.name}</p>
                                   <p className="text-xs text-muted-foreground">
-                                    ID:#CM-8832
+                                    ID:{client.id}
                                   </p>
                                 </div>
                               </FieldTitle>

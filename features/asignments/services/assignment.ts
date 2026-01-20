@@ -1,30 +1,12 @@
 import { success } from "zod";
 
 export const getAssignments = async (): Promise<any[]> => {
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  return [
-    {
-      id: "1",
-      name: "Client ABC",
-      description: "First assignment",
-      updatedAt: "2025-10-01",
-      createdAt: "2025-10-01",
-    },
-    {
-      id: "2",
-      name: "Client XYZ",
-      description: "Second assignment",
-      updatedAt: "2025-10-02",
-      createdAt: "2025-10-02",
-    },
-    {
-      id: "3",
-      name: "Client 123",
-      description: "Third assignment",
-      updatedAt: "2025-10-03",
-      createdAt: "2025-10-03",
-    },
-  ];
+  const response = await fetch('https://auton8n.moovmediagroup.com/webhook/growth/clients');
+  if (!response.ok) {
+    throw new Error('Failed to fetch assignments');
+  }
+  const data = await response.json();
+  return data;
 };
 
 export const createAssignment = async (data: {

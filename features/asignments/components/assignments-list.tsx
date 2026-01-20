@@ -16,7 +16,17 @@ import {
 
 export const AssignmentsList = () => {
   const { data: assignments = [], isLoading, isError } = useAssignments();
-    const user = useAssignmentStore((state) => state.user);
+  const user = useAssignmentStore((state) => state.user);
+
+  const filteredClients = assignments.filter((assignment) =>
+    user?.client_id?.includes(String(assignment.id))
+  );
+
+  console.log('user.client_id:', user?.client_id);
+  console.log('assignments:', assignments);
+  console.log('filteredClients:', filteredClients);
+
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -37,10 +47,10 @@ export const AssignmentsList = () => {
       accessorKey: "description",
       header: "Descripción",
     },
-    {
-      accessorKey: "createdAt",
-      header: "Fecha de Asignación",
-    },
+    // {
+    //   accessorKey: "createdAt",
+    //   header: "Fecha de Asignación",
+    // },
     {
       accessorKey: "actions",
       header: "Acciones",
@@ -68,7 +78,7 @@ export const AssignmentsList = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <DataTable columns={columns} data={assignments} showTotals={false} />
+        <DataTable columns={columns} data={filteredClients} showTotals={false} />
       </CardContent>
     </Card>
   );
