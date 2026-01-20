@@ -31,11 +31,81 @@ import { UserBySex } from "./components/ecommerce/user-by-sex";
 import { UserByAge } from "./components/ecommerce/user-by-age";
 import { ChannelGroupMetricsTable } from "./components/leads/channel-group-metrics-table";
 import { ChannelGroupMetricsChangeTable } from "./components/leads/channel-group-metric-change-table";
+import { MetricCard } from "@/components/metric-card";
+import { id } from "date-fns/locale";
+import { title } from "process";
 
 export const GoogleAnalytics = () => {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [type, setType] = useState<"ecommerce" | "leads">("leads");
+
+  const fakeData = [
+    {
+    id: 1,
+    title: 'Total de usuarios',
+    value: 230143,
+    unit: 'number',
+    change: 0,
+    isPositive: true,
+  },
+  {
+    id: 2,
+    title: 'Usuarios nuevos',
+    value: 204143,
+    unit: 'number',
+    change: 0,
+    isPositive: true,
+  },
+  {
+    id: 3,
+    title: 'Sesiones',
+    value: 170143,
+    unit: 'number',
+    change: 0,
+    isPositive: true,
+  },
+  {
+    id: 4,
+    title: 'Sesiones con interacción',
+    value: 94143,
+    unit: 'number',
+    change: 0,
+    isPositive: true,
+  },
+  {
+    id: 5,
+    title: 'Duracion media de la sesión',
+    value: 147,
+    unit: 'seconds',
+    change: 0,
+    isPositive: true,
+  },
+  {
+    id:6,
+    title: 'Tasa de rebote',
+    value: 5944,
+    unit: 'percentage',
+    change: 0,
+    isPositive: false,
+  },
+  {
+    id:7,
+    title: 'Eventos Clave',
+    value: 4156,
+    unit: 'number',
+    change: 0,
+    isPositive: true,
+  },
+  {
+    id:8,
+    title: 'Tasa evento clave',
+    value: 20,
+    unit: 'percentage',
+    change: 0,
+    isPositive: true,
+  }
+]
 
   if (type === "leads") {
     return (
@@ -89,6 +159,20 @@ export const GoogleAnalytics = () => {
         <div className="space-y-5">
           <div className="space-y-5"></div>
           {/* <FunnelIndicators /> */}
+
+          <div className="grid grid-cols-4 gap-5">
+            {fakeData.map((item, i) => (
+              <MetricCard
+                key={i}
+                id={item.id}
+                title={item.title}
+                value={item.value}
+                unit={item.unit}
+                change={item.change}
+                isPositive={item.isPositive}
+              />
+            ))}
+          </div>
           <ChannelGroupMetricsTable />
           <p className="font-bold  text-2xl">Métricas</p>
           <ChannelGroupMetricsChangeTable />
