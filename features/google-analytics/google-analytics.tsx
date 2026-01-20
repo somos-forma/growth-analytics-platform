@@ -160,7 +160,7 @@ export const GoogleAnalytics = () => {
           <div className="space-y-5"></div>
           {/* <FunnelIndicators /> */}
 
-          <div className="grid grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
             {fakeData.map((item, i) => (
               <MetricCard
                 key={i}
