@@ -32,7 +32,7 @@ const formSchema = z.object({
 });
 
 export function CreateAssignmentForm() {
-  const { closeCreateAssignmentModal } = useAssignmentStore();
+  const { closeCreateAssignmentModal, setSelectedUser } = useAssignmentStore();
   const { mutate, isPending } = useCreateAssignment();
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [clients, setClients] = useState<any[]>([]);
@@ -60,9 +60,11 @@ export function CreateAssignmentForm() {
     const combinedClientsId = [...new Set([...(user.client_id || []), ...data.clientsId])];
     const payload = { id: user.id, clientsId: combinedClientsId };
     mutate(payload, {
-      onSuccess: () => {
+      onSuccess: (updatedUser) => {
         closeCreateAssignmentModal();
         toast.success("Cliente asignado exitosamente");
+        setSelectedUser({ ...user, client_id: combinedClientsId });
+        queryClient.invalidateQueries({ queryKey: ['users'] });
       },
       onError: () => {
         toast.error("Error al asignar el cliente");
