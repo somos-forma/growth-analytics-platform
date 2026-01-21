@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 
 export const DeleteAssignmentModal = () => {
-  const { client, closeDeleteAssignmentModal, user } = useAssignmentStore();
+  const { client, closeDeleteAssignmentModal, user, setSelectedUser } = useAssignmentStore();
   const { mutate, isPending } = useCreateAssignment();
   const queryClient = useQueryClient();
   const handleDelete = () => {
@@ -24,6 +24,8 @@ export const DeleteAssignmentModal = () => {
       onSuccess: () => {
         closeDeleteAssignmentModal();
         toast.success("Cliente eliminado exitosamente");
+        setSelectedUser({ ...user, client_id: newClientIds });
+        queryClient.invalidateQueries({ queryKey: ['users'] });
       },
       onError: () => {
         toast.error("Error al eliminar el cliente asignado");
