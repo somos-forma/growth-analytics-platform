@@ -41,10 +41,30 @@ export function LoginForm() {
     },
   });
   const router = useRouter();
-  function onSubmit(data: z.infer<typeof formSchema>) {
-    localStorage.setItem("userEmail", data.email);
-    toast.success("Inicio de sesión exitoso");
-    router.push("/dashboard/google-analytics");
+  //   function onSubmit(data: z.infer<typeof formSchema>) {
+  //   localStorage.setItem("userEmail", data.email);
+  //   toast.success("Inicio de sesión exitoso");
+  //   router.push("/dashboard/google-analytics");
+  // }
+  async function onSubmit(data: z.infer<typeof formSchema>) {
+    try {
+      console.log({ email: data.email, password: data.password });
+      const response = await fetch('https://auton8n.moovmediagroup.com/webhook/growth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: data.email, password: data.password }),
+      });
+      const result = await response.json();
+      if (result.status === "404") {
+        toast.error(result.message);
+      } else {
+        localStorage.setItem("userEmail", data.email);
+        toast.success("Inicio de sesión exitoso");
+        router.push("/dashboard/google-analytics");
+      }
+    } catch (error) {
+      toast.error("Error al iniciar sesión");
+    }
   }
 
   return (

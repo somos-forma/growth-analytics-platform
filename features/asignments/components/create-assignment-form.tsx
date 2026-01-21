@@ -57,7 +57,8 @@ export function CreateAssignmentForm() {
       toast.error("Usuario no encontrado");
       return;
     }
-    const payload = { id: user.id, ...data };
+    const combinedClientsId = [...new Set([...(user.client_id || []), ...data.clientsId])];
+    const payload = { id: user.id, clientsId: combinedClientsId };
     mutate(payload, {
       onSuccess: () => {
         closeCreateAssignmentModal();
@@ -70,7 +71,8 @@ export function CreateAssignmentForm() {
   }
 
   const filteredClients = clients.filter((client) =>
-    client.name.toLowerCase().includes(searchTerm.toLowerCase()) 
+    client.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    !user?.client_id?.includes(client.id)
   );
   const clientWatch = form.watch("clientsId");
   return (
