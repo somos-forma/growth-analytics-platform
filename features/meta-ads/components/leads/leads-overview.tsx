@@ -245,8 +245,8 @@ export const LeadsOverview = ({
     return <div>Error: {(error as Error).message}</div>;
   }
   return (
-    <div>
-      <div className="p-2">
+    <div className="space-y-5">
+      <div className="p-2 ">
         <h2 className="font-bold text-2xl">
           Resultados generales 
         </h2>

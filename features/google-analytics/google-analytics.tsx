@@ -160,7 +160,7 @@ export const GoogleAnalytics = () => {
           <div className="space-y-7"></div>
           {/* <FunnelIndicators /> */}
              <div className="p-2">
-            <h2 className="font-bold text-2xl">Perfomance Genera del sitio Web </h2>
+            <h2 className="font-bold text-2xl">Perfomance General del sitio Web </h2>
             <p className="text-muted-foreground">
             Visión integral del rendimiento digital del sitio, que permite evaluar la capacidad real del ecosistema para atraer, retener y convertir usuarios.
             </p>
