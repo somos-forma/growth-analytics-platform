@@ -23,7 +23,7 @@ import { OverviewLeads } from "./components/leads/overview-leads";
 
 export const GoogleAds = () => {
   const [type, _] = useState<"ecommerce" | "leads">("leads");
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [date, setDate] = useState<Date | undefined>(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
   const [open, setOpen] = useState(false);
 
   if (type === "leads") {
@@ -70,18 +70,18 @@ export const GoogleAds = () => {
           </div>
           <OverviewLeads
             date={{
-              from: getCurrentMonthStart(),
+              from: getCurrentMonthStart(date),
             }}
           />
           <LeadsCharts date={getCurrentYearRange()} />
           <LeadsTable
             date={{
-              from: getCurrentMonthStart(),
+              from: getCurrentMonthStart(date),
             }}
           />
           <LeadsKeywordsTable
             date={{
-              from: "2025-11-01",
+              from: getCurrentMonthStart(date),
             }}
           />
         </div>

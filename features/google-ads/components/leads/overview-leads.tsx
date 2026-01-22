@@ -3,7 +3,7 @@ import { MetricCard, type Unit } from "@/components/metric-card";
 import { OverviewSkeleton } from "@/components/skeletons/overview-skeleton";
 export const OverviewLeads = ({ date }: { date: { from: string } }) => {
   const { data, isPending, isError, error } = useQuery({
-    queryKey: ["google-ads-monthly-overview-leads"],
+    queryKey: ["google-ads-monthly-overview-leads", date.from],
     queryFn: async () => {
       const response = await fetch("/api/analytics", {
         method: "POST",

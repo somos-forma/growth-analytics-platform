@@ -22,7 +22,7 @@ export const columns: ColumnDef<LeadsKeywords>[] = [
   },
   {
     accessorKey: "costs",
-    header: "Costes",
+    header: "Coste",
     cell: ({ getValue }) => formatCurrency(getValue<number>()),
   },
   {
@@ -47,39 +47,39 @@ export const columns: ColumnDef<LeadsKeywords>[] = [
   },
 ];
 
-export const data: LeadsKeywords[] = [
-  {
-    id: "1",
-    keywords: "Keyword 1",
-    costs: 500,
-    impressions: 10000,
-    clics: 800,
-    conversions: 50,
-    costs_conversion: 10,
-  },
-  {
-    id: "2",
-    keywords: "Keyword 2",
-    costs: 700,
-    impressions: 15000,
-    clics: 1200,
-    conversions: 70,
-    costs_conversion: 10,
-  },
-  {
-    id: "3",
-    keywords: "Keyword 3",
-    costs: 600,
-    impressions: 12000,
-    clics: 900,
-    conversions: 60,
-    costs_conversion: 10,
-  },
-];
+// export const data: LeadsKeywords[] = [
+//   {
+//     id: "1",
+//     keywords: "Keyword 1",
+//     costs: 500,
+//     impressions: 10000,
+//     clics: 800,
+//     conversions: 50,
+//     costs_conversion: 10,
+//   },
+//   {
+//     id: "2",
+//     keywords: "Keyword 2",
+//     costs: 700,
+//     impressions: 15000,
+//     clics: 1200,
+//     conversions: 70,
+//     costs_conversion: 10,
+//   },
+//   {
+//     id: "3",
+//     keywords: "Keyword 3",
+//     costs: 600,
+//     impressions: 12000,
+//     clics: 900,
+//     conversions: 60,
+//     costs_conversion: 10,
+//   },
+// ];
 
 export const LeadsKeywordsTable = ({ date }: { date: { from: string } }) => {
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["google-ads-indicators-keywords-table-leads"],
+    queryKey: ["google-ads-indicators-keywords-table-leads", date.from],
     queryFn: async () => {
       const response = await fetch("/api/analytics", {
         method: "POST",

@@ -143,9 +143,9 @@ export const formatSpanishDate = (dateString: string, locale: string = "es-ES"):
  * Retorna la fecha del primer día del mes actual en formato YYYY-MM-DD.
  * Ejemplo: "2026-01-01"
  */
-export const getCurrentMonthStart = (): string => {
+export const getCurrentMonthStart = (date?: Date): string => {
   try {
-    const now = new Date();
+    const now = date || new Date();
     const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     return firstOfMonth.toISOString().slice(0, 10);
   } catch (error) {
@@ -154,9 +154,9 @@ export const getCurrentMonthStart = (): string => {
   }
 };
 
-export const getCurrentYearRange = (): { from: string; to: string } => {
+export const getCurrentYearRange = (date?: Date): { from: string; to: string } => {
   try {
-    const now = new Date();
+    const now = date || new Date();
     const currentYear = now.getFullYear();
     const from = new Date(currentYear, 0, 1).toISOString().slice(0, 10);
     const to = new Date(currentYear, 11, 31).toISOString().slice(0, 10);

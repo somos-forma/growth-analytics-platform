@@ -78,7 +78,7 @@ export const data: LeadsTable[] = [
 
 export const LeadsTable = ({ date }: { date: { from: string } }) => {
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["google-ads-leads-table"],
+    queryKey: ["google-ads-leads-table", date.from],
     queryFn: async () => {
       const response = await fetch("/api/analytics", {
         method: "POST",
