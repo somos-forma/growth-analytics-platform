@@ -22,8 +22,12 @@ import { OverviewLeads } from "./components/leads/overview-leads";
 
 export const GoogleAds = () => {
   const [type, _] = useState<"ecommerce" | "leads">("leads");
-  const [date, setDate] = useState<Date | undefined>(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
-  const [open, setOpen] = useState(false);
+  const [date, setDate] = useState<{ from: Date | undefined; to: Date | undefined }>({
+    from: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+    to: new Date(),
+  });
+  const [openFrom, setOpenFrom] = useState(false);
+  const [openTo, setOpenTo] = useState(false);
 
   if (type === "leads") {
     return (
@@ -67,32 +71,73 @@ export const GoogleAds = () => {
         <div className="space-y-5">
           <div className="w-full flex justify-end">
             <div className="flex flex-row items-end gap-2">
-              <p className="text-sm text-muted-foreground m-auto">Seleccione por fecha: </p>
-              <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" id="date" className="w-48 justify-between font-semibold">
-                    {format(date || new Date(), "MMMM yyyy", { locale: es })}
-                    <ChevronDown />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto overflow-hidden p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={date}
-                    onSelect={(date) => {
-                      setDate(date);
-                      setOpen(false);
-                    }}
-                    locale={es}
-                  />
-                </PopoverContent>
-              </Popover>
+              <p className="text-sm text-muted-foreground m-auto">Seleccione rango de fechas: </p>
+              <div className="flex gap-2">
+                <Popover open={openFrom} onOpenChange={setOpenFrom}>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" className="w-40 justify-between font-semibold">
+                      Desde: {format(date.from || new Date(), "MMMM yyyy", { locale: es })}
+                      <ChevronDown />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={date.from}
+                      onSelect={(selectedDate) => {
+                        setDate((prev) => ({ ...prev, from: selectedDate }));
+                        setOpenFrom(false);
+                      }}
+                      locale={es}
+                    />
+                  </PopoverContent>
+                </Popover>
+                <Popover open={openTo} onOpenChange={setOpenTo}>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" className="w-40 justify-between font-semibold">
+                      Hasta: {format(date.to || new Date(), "MMMM yyyy", { locale: es })}
+                      <ChevronDown />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={date.to}
+                      onSelect={(selectedDate) => {
+                        setDate((prev) => ({ ...prev, to: selectedDate }));
+                        setOpenTo(false);
+                      }}
+                      locale={es}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
             </div>
           </div>
-          <OverviewLeads date={{ from: "2025-01-01", to: "2026-01-31" }} />
-          <LeadsCharts date={{ from: "2025-01-01", to: "2026-01-31" }} />
-          <LeadsTable date={{ from: "2025-01-01", to: "2026-01-31" }} />
-          <LeadsKeywordsTable date={{ from: "2025-01-01", to: "2026-01-31" }} />
+          <OverviewLeads
+            date={{
+              from: format(date.from || new Date(), "yyyy-MM-dd"),
+              to: format(date.to || new Date(), "yyyy-MM-dd"),
+            }}
+          />
+          <LeadsCharts
+            date={{
+              from: format(date.from || new Date(), "yyyy-MM-dd"),
+              to: format(date.to || new Date(), "yyyy-MM-dd"),
+            }}
+          />
+          <LeadsTable
+            date={{
+              from: format(date.from || new Date(), "yyyy-MM-dd"),
+              to: format(date.to || new Date(), "yyyy-MM-dd"),
+            }}
+          />
+          <LeadsKeywordsTable
+            date={{
+              from: format(date.from || new Date(), "yyyy-MM-dd"),
+              to: format(date.to || new Date(), "yyyy-MM-dd"),
+            }}
+          />
         </div>
       </div>
     );

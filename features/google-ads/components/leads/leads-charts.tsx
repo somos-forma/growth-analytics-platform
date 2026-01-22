@@ -29,7 +29,7 @@ export const LeadsCharts = ({ date }: { date: { from: string; to: string } }) =>
   } satisfies ChartConfig;
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["google-ads-monthly-leads-charts-data"],
+    queryKey: ["google-ads-monthly-leads-charts-data", date.from, date.to],
     queryFn: async () => {
       const response = await fetch("/api/analytics", {
         method: "POST",

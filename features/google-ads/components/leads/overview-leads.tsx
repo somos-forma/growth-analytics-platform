@@ -3,7 +3,7 @@ import { MetricCard, type Unit } from "@/components/metric-card";
 import { OverviewSkeleton } from "@/components/skeletons/overview-skeleton";
 export const OverviewLeads = ({ date }: { date: { from: string; to: string } }) => {
   const { data, isPending, isError, error } = useQuery({
-    queryKey: ["google-ads-monthly-overview-leads", date.from],
+    queryKey: ["google-ads-monthly-overview-leads", date.from, date.to],
     queryFn: async () => {
       // Calculate previous year date
       const currentDate = new Date(date.from);
