@@ -1,13 +1,9 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { useWizardStore } from "../wizard-store";
 import { Box } from "lucide-react";
+import { useState } from "react";
+import { DndTransfer, type TransferItem } from "@/components/dnd-transfer";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -16,14 +12,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { DndTransfer, TransferItem } from "@/components/dnd-transfer";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useWizardStore } from "../wizard-store";
 
 export const DataClassificationStep = () => {
   const back = useWizardStore((state) => state.back);
@@ -34,9 +24,7 @@ export const DataClassificationStep = () => {
   const controlSelected = useWizardStore((state) => state.data.controlSelected);
   const kpiSelected = useWizardStore((state) => state.data.kpiSelected);
   const organicSelected = useWizardStore((state) => state.data.organicSelected);
-  const contextualSelected = useWizardStore(
-    (state) => state.data.contextualSelected
-  );
+  const contextualSelected = useWizardStore((state) => state.data.contextualSelected);
 
   const [channelAvailable, setChannelAvailable] = useState<TransferItem[]>([
     { id: "1", label: "Variable channel 1" },
@@ -62,50 +50,33 @@ export const DataClassificationStep = () => {
     { id: "3", label: "Variable Orgánica 3" },
   ]);
 
-  const [contextualAvailable, setContextualAvailable] = useState<
-    TransferItem[]
-  >([
+  const [contextualAvailable, setContextualAvailable] = useState<TransferItem[]>([
     { id: "1", label: "Variable Contextual 1" },
     { id: "2", label: "Variable Contextual 2" },
     { id: "3", label: "Variable Contextual 3" },
   ]);
 
-  const handleTransferChannel = (
-    newAvailable: TransferItem[],
-    newSelected: TransferItem[]
-  ) => {
+  const handleTransferChannel = (newAvailable: TransferItem[], newSelected: TransferItem[]) => {
     setChannelAvailable(newAvailable);
     updateData({ channelSelected: newSelected });
   };
 
-  const handleTransferControl = (
-    newAvailable: TransferItem[],
-    newSelected: TransferItem[]
-  ) => {
+  const handleTransferControl = (newAvailable: TransferItem[], newSelected: TransferItem[]) => {
     setControlAvailable(newAvailable);
     updateData({ controlSelected: newSelected });
   };
 
-  const handleTransferKpi = (
-    newAvailable: TransferItem[],
-    newSelected: TransferItem[]
-  ) => {
+  const handleTransferKpi = (newAvailable: TransferItem[], newSelected: TransferItem[]) => {
     setKpiAvailable(newAvailable);
     updateData({ kpiSelected: newSelected });
   };
 
-  const handleTransferOrganic = (
-    newAvailable: TransferItem[],
-    newSelected: TransferItem[]
-  ) => {
+  const handleTransferOrganic = (newAvailable: TransferItem[], newSelected: TransferItem[]) => {
     setOrganicAvailable(newAvailable);
     updateData({ organicSelected: newSelected });
   };
 
-  const handleTransferContextual = (
-    newAvailable: TransferItem[],
-    newSelected: TransferItem[]
-  ) => {
+  const handleTransferContextual = (newAvailable: TransferItem[], newSelected: TransferItem[]) => {
     setContextualAvailable(newAvailable);
     updateData({ contextualSelected: newSelected });
   };
@@ -122,9 +93,7 @@ export const DataClassificationStep = () => {
                   <Box className="h-6 w-6" />
                   <div>
                     <CardTitle>Canales de medios</CardTitle>
-                    <CardDescription>
-                      {channelSelected.length} variable seleccionadas
-                    </CardDescription>
+                    <CardDescription>{channelSelected.length} variable seleccionadas</CardDescription>
                   </div>
                 </div>
               </CardHeader>
@@ -141,8 +110,7 @@ export const DataClassificationStep = () => {
             <DialogHeader>
               <DialogTitle>Canales de medios</DialogTitle>
               <DialogDescription>
-                Son las variables de entrada de marketing pagado, que reflejan
-                la inversión directa en cada canal.
+                Son las variables de entrada de marketing pagado, que reflejan la inversión directa en cada canal.
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-5">
@@ -154,9 +122,7 @@ export const DataClassificationStep = () => {
                 selectedTitle="Seleccionadas"
               />
               <div className="text-sm">
-                <p className="mb-2 text-muted-foreground">
-                  Canales digitales principales:
-                </p>
+                <p className="mb-2 text-muted-foreground">Canales digitales principales:</p>
                 <div className="flex flex-wrap gap-1">
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -190,9 +156,7 @@ export const DataClassificationStep = () => {
                   <Box className="h-6 w-6" />
                   <div>
                     <CardTitle>Variables contextuales</CardTitle>
-                    <CardDescription>
-                      {contextualSelected.length} variable seleccionadas
-                    </CardDescription>
+                    <CardDescription>{contextualSelected.length} variable seleccionadas</CardDescription>
                   </div>
                 </div>
               </CardHeader>
@@ -209,8 +173,7 @@ export const DataClassificationStep = () => {
             <DialogHeader>
               <DialogTitle>Variables contextuales</DialogTitle>
               <DialogDescription>
-                Son variables que no dependen del marketing, pero que afectan el
-                comportamiento de la demanda.
+                Son variables que no dependen del marketing, pero que afectan el comportamiento de la demanda.
               </DialogDescription>
             </DialogHeader>
             <div>
@@ -222,18 +185,14 @@ export const DataClassificationStep = () => {
                 selectedTitle="Seleccionadas"
               />
               <div className="text-sm">
-                <p className="mb-2 text-muted-foreground">
-                  Variables contextuales principales:
-                </p>
+                <p className="mb-2 text-muted-foreground">Variables contextuales principales:</p>
                 <div className="flex flex-wrap gap-1">
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Badge>Eventos comerciales</Badge>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>
-                        Cyber, Black Friday, Hot Sale, campañas estacionales
-                      </p>
+                      <p>Cyber, Black Friday, Hot Sale, campañas estacionales</p>
                     </TooltipContent>
                   </Tooltip>
                   <Tooltip>
@@ -241,10 +200,7 @@ export const DataClassificationStep = () => {
                       <Badge>Clima</Badge>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>
-                        Temperatura, LLuvias, Calor, Frio (si impactan en la
-                        categoría)
-                      </p>
+                      <p>Temperatura, LLuvias, Calor, Frio (si impactan en la categoría)</p>
                     </TooltipContent>
                   </Tooltip>
 
@@ -253,9 +209,7 @@ export const DataClassificationStep = () => {
                       <Badge>Calendario</Badge>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>
-                        Feriados, Vacaciones escolares, Fines de semana largos
-                      </p>
+                      <p>Feriados, Vacaciones escolares, Fines de semana largos</p>
                     </TooltipContent>
                   </Tooltip>
 
@@ -264,10 +218,7 @@ export const DataClassificationStep = () => {
                       <Badge>Entorno macroeconómico</Badge>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>
-                        Inflación, Tipo de cambio, Poder adquisitivo (si se
-                        quiere enriquecer).
-                      </p>
+                      <p>Inflación, Tipo de cambio, Poder adquisitivo (si se quiere enriquecer).</p>
                     </TooltipContent>
                   </Tooltip>
                 </div>
@@ -284,9 +235,7 @@ export const DataClassificationStep = () => {
                   <Box className="h-6 w-6" />
                   <div>
                     <CardTitle>Variables de control</CardTitle>
-                    <CardDescription>
-                      {controlSelected.length} variable seleccionadas
-                    </CardDescription>
+                    <CardDescription>{controlSelected.length} variable seleccionadas</CardDescription>
                   </div>
                 </div>
               </CardHeader>
@@ -303,8 +252,7 @@ export const DataClassificationStep = () => {
             <DialogHeader>
               <DialogTitle>Variables de control</DialogTitle>
               <DialogDescription>
-                Son variables internas que sirven para capturar el
-                comportamiento base del sitio o negocio.
+                Son variables internas que sirven para capturar el comportamiento base del sitio o negocio.
               </DialogDescription>
             </DialogHeader>
             <div>
@@ -316,9 +264,7 @@ export const DataClassificationStep = () => {
                 selectedTitle="Seleccionadas"
               />
               <div className="text-sm">
-                <p className="mb-2 text-muted-foreground">
-                  Variables de control principales:
-                </p>
+                <p className="mb-2 text-muted-foreground">Variables de control principales:</p>
                 <div className="flex flex-wrap gap-1">
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -377,9 +323,7 @@ export const DataClassificationStep = () => {
                   <Box className="h-6 w-6" />
                   <div>
                     <CardTitle>Variables de KPI</CardTitle>
-                    <CardDescription>
-                      {kpiSelected.length} variable seleccionadas
-                    </CardDescription>
+                    <CardDescription>{kpiSelected.length} variable seleccionadas</CardDescription>
                   </div>
                 </div>
               </CardHeader>
@@ -396,8 +340,7 @@ export const DataClassificationStep = () => {
             <DialogHeader>
               <DialogTitle>Variables de KPI</DialogTitle>
               <DialogDescription>
-                Es la variable de salida principal que el modelo busca explicar
-                y descomponer.
+                Es la variable de salida principal que el modelo busca explicar y descomponer.
               </DialogDescription>
             </DialogHeader>
             <div>
@@ -409,9 +352,7 @@ export const DataClassificationStep = () => {
                 selectedTitle="Seleccionadas"
               />
               <div className="text-sm">
-                <p className="mb-2 text-muted-foreground">
-                  Variables de KPI principales:
-                </p>
+                <p className="mb-2 text-muted-foreground">Variables de KPI principales:</p>
                 <div className="flex flex-wrap gap-1">
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -428,10 +369,7 @@ export const DataClassificationStep = () => {
                       <Badge>Otro KPI </Badge>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>
-                        Otro KPI central definido por negocio (ej. compras
-                        confirmadas).
-                      </p>
+                      <p>Otro KPI central definido por negocio (ej. compras confirmadas).</p>
                     </TooltipContent>
                   </Tooltip>
                 </div>
@@ -448,9 +386,7 @@ export const DataClassificationStep = () => {
                   <Box className="h-6 w-6" />
                   <div>
                     <CardTitle>Variables Orgánicas</CardTitle>
-                    <CardDescription>
-                      {organicSelected.length} variable seleccionadas
-                    </CardDescription>
+                    <CardDescription>{organicSelected.length} variable seleccionadas</CardDescription>
                   </div>
                 </div>
               </CardHeader>
@@ -467,8 +403,7 @@ export const DataClassificationStep = () => {
             <DialogHeader>
               <DialogTitle>Variables Orgánicas</DialogTitle>
               <DialogDescription>
-                Reflejan la actividad no pagada de la marca, que también
-                contribuye al resultado.
+                Reflejan la actividad no pagada de la marca, que también contribuye al resultado.
               </DialogDescription>
             </DialogHeader>
             <div>
@@ -480,9 +415,7 @@ export const DataClassificationStep = () => {
                 selectedTitle="Seleccionadas"
               />
               <div className="text-sm">
-                <p className="mb-2 text-muted-foreground">
-                  Variables de orgánicas principales:
-                </p>
+                <p className="mb-2 text-muted-foreground">Variables de orgánicas principales:</p>
                 <div className="flex flex-wrap gap-1">
                   <Badge>Tráfico orgánico al sitio web</Badge>
                   <Tooltip>

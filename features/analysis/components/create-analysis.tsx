@@ -1,6 +1,5 @@
 "use client";
 
-import { CreateAnalysisForm } from "./create-analysis-form";
 import { Wizard } from "./wizard/Wizard";
 
 export const CreateAnalysis = () => {
@@ -9,12 +8,10 @@ export const CreateAnalysis = () => {
       <div>
         <h1 className="text-4xl font-bold">Crear análisis</h1>
         <p className="text-muted-foreground">
-          Por favor, complete el formulario a continuación para crear un nuevo
-          análisis.
+          Por favor, complete el formulario a continuación para crear un nuevo análisis.
         </p>
       </div>
       <Wizard />
-      <CreateAnalysisForm />
     </div>
   );
 };

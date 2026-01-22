@@ -14,9 +14,7 @@ export const dataSourcesSchema = z.object({
 });
 
 export const connectionsSchema = z.object({
-  integratedConnections: z
-    .array(z.string())
-    .min(2, "Selecciona al menos 2 conexiones"),
+  integratedConnections: z.array(z.string()).min(2, "Selecciona al menos 2 conexiones"),
   localConnections: z.instanceof(File).optional(),
 });
 
@@ -35,6 +33,4 @@ export type BasicInfoSchemaType = z.infer<typeof basicInfoSchema>;
 export type ModelSchemaType = z.infer<typeof modelSchema>;
 export type DataSourcesSchemaType = z.infer<typeof dataSourcesSchema>;
 export type ConnectionsSchemaType = z.infer<typeof connectionsSchema>;
-export type DataDivisionMethodSchemaType = z.infer<
-  typeof dataDivisionMethodSchema
->;
+export type DataDivisionMethodSchemaType = z.infer<typeof dataDivisionMethodSchema>;

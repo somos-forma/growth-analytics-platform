@@ -1,35 +1,17 @@
+import { useQuery } from "@tanstack/react-query";
+import { Pie, PieChart } from "recharts";
 import { ChartEmpty } from "@/components/empty/chart-empty";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  ChartConfig,
+  type ChartConfig,
   ChartContainer,
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { useQuery } from "@tanstack/react-query";
 
-import { Pie, PieChart } from "recharts";
-
-export const RevenueByDevices = ({
-  date,
-}: {
-  date: { from: string; to?: string };
-}) => {
-  const chartData = [
-    { device: "mobile", revenue: 1250000, fill: "var(--color-mobile)" },
-    { device: "desktop", revenue: 980000, fill: "var(--color-desktop)" },
-    { device: "tablet", revenue: 320000, fill: "var(--color-tablet)" },
-    { device: "smarttv", revenue: 150000, fill: "var(--color-smarttv)" },
-  ];
-
+export const RevenueByDevices = ({ date }: { date: { from: string; to?: string } }) => {
   const chartConfig = {
     revenue: {
       label: "Ingresos",
@@ -71,13 +53,11 @@ export const RevenueByDevices = ({
 
       const json = await response.json();
       const data = json.rows
-        .map((raw: any, index: number) => ({
+        .map((raw: any) => ({
           // id: String(index + 1),
           device: raw.device_category.replace(/\s+/g, ""),
           revenue: raw.ingresos_netos,
-          fill: `var(--color-${raw.device_category
-            .replace(/\s+/g, "")
-            .toLowerCase()})`,
+          fill: `var(--color-${raw.device_category.replace(/\s+/g, "").toLowerCase()})`,
         }))
         .filter((item: any) => item.device !== "(other)");
 
@@ -93,36 +73,23 @@ export const RevenueByDevices = ({
     return <div>Error: {(error as Error).message}</div>;
   }
 
-  const totalRevenue = data.reduce(
-    (sum: any, item: any) => sum + item.revenue,
-    0
-  );
+  const totalRevenue = data.reduce((sum: any, item: any) => sum + item.revenue, 0);
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>Ingresos por Dispositivo</CardTitle>
-        <CardDescription>
-          Distribución de ingresos según el tipo de dispositivo
-        </CardDescription>
+        <CardDescription>Distribución de ingresos según el tipo de dispositivo</CardDescription>
       </CardHeader>
       <CardContent>
         {totalRevenue === 0 ? (
           <ChartEmpty />
         ) : (
-          <ChartContainer
-            config={chartConfig}
-            className="mx-auto aspect-square max-h-[300px]"
-          >
+          <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[300px]">
             <PieChart>
               <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
               <ChartLegend content={<ChartLegendContent />} />
-              <Pie
-                data={data}
-                dataKey="revenue"
-                nameKey="device"
-                innerRadius={60}
-              />
+              <Pie data={data} dataKey="revenue" nameKey="device" innerRadius={60} />
             </PieChart>
           </ChartContainer>
         )}

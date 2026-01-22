@@ -1,8 +1,8 @@
 export type SourceItem = {
   sources: {
-    ga4: { check: boolean; value: string; };
-    google_ads: { check: boolean; value: string; };
-    meta_ads: { check: boolean; value: string; };
+    ga4: { check: boolean; value: string };
+    google_ads: { check: boolean; value: string };
+    meta_ads: { check: boolean; value: string };
   };
 };
 

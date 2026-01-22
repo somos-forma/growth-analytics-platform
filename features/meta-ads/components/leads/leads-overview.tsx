@@ -1,6 +1,6 @@
+import { useQuery } from "@tanstack/react-query";
 import { MetricCard } from "@/components/metric-card";
 import { OverviewSkeleton } from "@/components/skeletons/overview-skeleton";
-import { useQuery } from "@tanstack/react-query";
 
 function adaptMetaMonthlyKpis(rows: any[]) {
   if (!rows || rows.length === 0) {
@@ -12,10 +12,7 @@ function adaptMetaMonthlyKpis(rows: any[]) {
   }
 
   // Ordenar para garantizar consistencia
-  const sorted = [...rows].sort(
-    (a, b) =>
-      new Date(b.mes_inicio).getTime() - new Date(a.mes_inicio).getTime(),
-  );
+  const sorted = [...rows].sort((a, b) => new Date(b.mes_inicio).getTime() - new Date(a.mes_inicio).getTime());
 
   const current = sorted[0];
 
@@ -34,16 +31,7 @@ function adaptMetaMonthlyKpis(rows: any[]) {
     return ((curr - prev) / prev) * 100;
   }
 
-  const metricKeys = [
-    "costos",
-    "impresiones",
-    "clicks",
-    "alcance",
-    "frecuencia",
-    "ctr",
-    "cpc",
-    "cpm",
-  ];
+  const metricKeys = ["costos", "impresiones", "clicks", "alcance", "frecuencia", "ctr", "cpc", "cpm"];
 
   const metrics: any = {};
 
@@ -66,78 +54,7 @@ function adaptMetaMonthlyKpis(rows: any[]) {
   };
 }
 
-export const LeadsOverview = ({
-  date,
-}: {
-  date: { from: string; to: string };
-}) => {
-  const metrics: MetricCard[] = [
-    {
-      id: "1",
-      title: "Costos",
-      value: 12000,
-      unit: "currency",
-      change: 5.4,
-      isPositive: true,
-    },
-    {
-      id: "2",
-      title: "Impresiones",
-      value: 450000,
-      unit: "number",
-      change: -2.1,
-      isPositive: false,
-    },
-    {
-      id: "3",
-      title: "Clicks",
-      value: 30000,
-      unit: "number",
-      change: 3.2,
-      isPositive: true,
-    },
-    {
-      id: "4",
-      title: "Alcance",
-      value: 38200,
-      unit: "number",
-      change: 1.5,
-      isPositive: true,
-    },
-    {
-      id: "5",
-      title: "Frecuencia",
-      value: 1500,
-      unit: "number",
-      change: 4.8,
-      isPositive: true,
-    },
-    {
-      id: "6",
-      title: "CTR (all)",
-      value: 132,
-      unit: "percentage",
-      change: 2.1,
-      isPositive: false,
-    },
-    {
-      id: "7",
-      title: "CPC",
-      value: 20,
-      unit: "number",
-      change: 4.8,
-      isPositive: true,
-    },
-    {
-      id: "8",
-      title: "CPM",
-      value: 33,
-      unit: "number",
-      change: 1.2,
-      isPositive: true,
-    },
-  ];
-
+export const LeadsOverview = ({ date }: { date: { from: string; to: string } }) => {
   const { data, isPending, isError, error } = useQuery({
     queryKey: ["meta-ads-leads-metrics"],
     queryFn: async () => {
@@ -247,11 +164,9 @@ export const LeadsOverview = ({
   return (
     <div className="space-y-5">
       <div className="p-2 ">
-        <h2 className="font-bold text-2xl">
-          Resultados generales 
-        </h2>
+        <h2 className="font-bold text-2xl">Resultados generales</h2>
         <p className="text-muted-foreground">
-         Visión consolidada del alcance, la interacción y la eficiencia de la inversión en el período analizado.
+          Visión consolidada del alcance, la interacción y la eficiencia de la inversión en el período analizado.
         </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-3">

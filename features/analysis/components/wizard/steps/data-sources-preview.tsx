@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { use } from "react";
-import { useWizardStore } from "../wizard-store";
+import type { ColumnDef } from "@tanstack/react-table";
+
 import { DataTable } from "@/components/data-table";
-import { ColumnDef } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
 import { TableSkeleton } from "@/components/skeletons/table-skeleton";
+import { Button } from "@/components/ui/button";
+import { useWizardStore } from "../wizard-store";
 
 type TableData = {
   id: number;
@@ -45,16 +45,13 @@ const columns: ColumnDef<TableData>[] = [
 
 export const DataSourcesPreviewStep = () => {
   const dataSources = useWizardStore((state) => state.data.dataSources);
-  const data = useWizardStore((state) => state.data);
+
   const back = useWizardStore((state) => state.back);
   const next = useWizardStore((state) => state.next);
 
   return (
     <div className="space-y-5">
-      <p className="font-medium">
-        Vista previa de la fuente{" "}
-        {dataSources === "integrate" ? "integrada" : "local"}
-      </p>
+      <p className="font-medium">Vista previa de la fuente {dataSources === "integrate" ? "integrada" : "local"}</p>
       {dataSources === "integrate" ? <IntegrateTable /> : <LocalTable />}
       <div className="space-x-4">
         <Button onClick={back}>Anterior</Button>

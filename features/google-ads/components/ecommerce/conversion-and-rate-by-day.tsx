@@ -1,47 +1,18 @@
+import { useQuery } from "@tanstack/react-query";
+import { Bar, CartesianGrid, ComposedChart, Line, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import { ChartSkeleton } from "@/components/skeletons/chart-skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  Bar,
-  CartesianGrid,
-  XAxis,
-  ComposedChart,
-  Line,
-  YAxis,
-  ResponsiveContainer,
-} from "recharts";
-import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-import { ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { ChartLegend, ChartLegendContent } from "@/components/ui/chart";
-import { useQuery } from "@tanstack/react-query";
-import { ChartSkeleton } from "@/components/skeletons/chart-skeleton";
+  type ChartConfig,
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 import { formatNumberAbbreviated, formatSpanishDate } from "@/utils/formatters";
 
-export const ConversionAndRateByDay = ({
-  date,
-}: {
-  date: { from: string; to?: string };
-}) => {
-  const chartData = [
-    {
-      day: "1 ago 2025",
-      conversion: 150,
-      conversion_rate: 75,
-    },
-    {
-      day: "2 ago 2025",
-      conversion: 180,
-      conversion_rate: 380,
-    },
-    {
-      day: "3 ago 2025",
-      conversion: 180,
-      conversion_rate: 380,
-    },
-    {
-      day: "4 ago 2025",
-      conversion: 90,
-      conversion_rate: 50,
-    },
-  ];
+export const ConversionAndRateByDay = ({ date }: { date: { from: string; to?: string } }) => {
   const chartConfig = {
     conversion: {
       label: "Conversiones",
@@ -129,18 +100,9 @@ export const ConversionAndRateByDay = ({
               />
               <ChartTooltip content={<ChartTooltipContent />} />
               <ChartLegend content={<ChartLegendContent />} />
-              <Bar
-                dataKey="conversion"
-                fill="var(--color-conversion)"
-                radius={4}
-                yAxisId="left"
-              />
+              <Bar dataKey="conversion" fill="var(--color-conversion)" radius={4} yAxisId="left" />
 
-              <Line
-                dataKey="conversion_rate"
-                stroke="var(--color-conversion_rate)"
-                yAxisId="right"
-              />
+              <Line dataKey="conversion_rate" stroke="var(--color-conversion_rate)" yAxisId="right" />
             </ComposedChart>
           </ResponsiveContainer>
         </ChartContainer>

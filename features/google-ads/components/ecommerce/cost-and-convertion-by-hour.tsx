@@ -1,16 +1,13 @@
+import { Bar, CartesianGrid, ComposedChart, Line, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  Bar,
-  CartesianGrid,
-  XAxis,
-  ComposedChart,
-  Line,
-  YAxis,
-  ResponsiveContainer,
-} from "recharts";
-import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-import { ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { ChartLegend, ChartLegendContent } from "@/components/ui/chart";
+  type ChartConfig,
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 
 export const CostAndConversionByHour = () => {
   const chartData = [
@@ -87,26 +84,12 @@ export const CostAndConversionByHour = () => {
                   dx: 30,
                 }}
               />
-              <XAxis
-                dataKey="hour"
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
-              />
+              <XAxis dataKey="hour" tickLine={false} tickMargin={10} axisLine={false} />
               <ChartTooltip content={<ChartTooltipContent />} />
               <ChartLegend content={<ChartLegendContent />} />
-              <Bar
-                dataKey="cost"
-                fill="var(--color-cost)"
-                radius={4}
-                yAxisId="left"
-              />
+              <Bar dataKey="cost" fill="var(--color-cost)" radius={4} yAxisId="left" />
 
-              <Line
-                dataKey="cost_conversion"
-                stroke="var(--color-cost_conversion)"
-                yAxisId="right"
-              />
+              <Line dataKey="cost_conversion" stroke="var(--color-cost_conversion)" yAxisId="right" />
             </ComposedChart>
           </ResponsiveContainer>
         </ChartContainer>

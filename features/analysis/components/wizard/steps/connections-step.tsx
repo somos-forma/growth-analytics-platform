@@ -1,4 +1,8 @@
-import { useWizardStore } from "../wizard-store";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
+import { Controller, useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Field,
   FieldContent,
@@ -10,26 +14,21 @@ import {
   FieldSet,
   FieldTitle,
 } from "@/components/ui/field";
-import { Controller, useForm } from "react-hook-form";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ConnectionsSchemaType, connectionsSchema } from "../wizard-schemas";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { CsvUploader } from "../../csv-uploader";
-import { Button } from "@/components/ui/button";
+import { type ConnectionsSchemaType, connectionsSchema } from "../wizard-schemas";
+import { useWizardStore } from "../wizard-store";
 
 const connections = [
   {
     id: "google_ads",
     title: "Google Ads",
-    description:
-      "Gestión y seguimiento de campañas publicitarias en Google Ads.",
+    description: "Gestión y seguimiento de campañas publicitarias en Google Ads.",
     icon: "/ga2.svg",
   },
   {
     id: "ga4",
     title: "Google Analytics 4",
-    description:
-      "Análisis de datos de tráfico web y comportamiento de usuarios.",
+    description: "Análisis de datos de tráfico web y comportamiento de usuarios.",
     icon: "/ga4.svg",
   },
   {
@@ -67,50 +66,36 @@ export const ConnectionsStep = () => {
             render={({ field, fieldState }) => (
               <FieldSet data-invalid={fieldState.invalid}>
                 <FieldLegend>Conexiones</FieldLegend>
-                <FieldDescription>
-                  Selecciona al menos dos conexiones para integrar tus datos.
-                </FieldDescription>
+                <FieldDescription>Selecciona al menos dos conexiones para integrar tus datos.</FieldDescription>
                 <FieldGroup data-slot="checkbox-group">
                   {connections.map((connection) => (
-                    <FieldLabel
-                      key={connection.id}
-                      htmlFor={`connection-${connection.id}`}
-                    >
-                      <Field
-                        orientation="horizontal"
-                        data-invalid={fieldState.invalid}
-                      >
+                    <FieldLabel key={connection.id} htmlFor={`connection-${connection.id}`}>
+                      <Field orientation="horizontal" data-invalid={fieldState.invalid}>
                         <FieldContent>
                           <FieldTitle>
                             <div className="w-10 h-10  flex items-center justify-center rounded-full bg-primary/10 text-primary">
-                              <img
+                              <Image
                                 src={connection.icon}
                                 alt={connection.title}
                                 className="w-6 h-6"
+                                width={24}
+                                height={24}
                               />
                             </div>
                             {connection.title}
                           </FieldTitle>
-                          <FieldDescription>
-                            {connection.description}
-                          </FieldDescription>
+                          <FieldDescription>{connection.description}</FieldDescription>
                         </FieldContent>
                         <Checkbox
                           id={`connection-${connection.id}`}
                           value={connection.id}
-                          checked={
-                            field.value?.includes(connection.id) || false
-                          }
+                          checked={field.value?.includes(connection.id) || false}
                           onCheckedChange={(checked) => {
                             const currentValue = field.value || [];
                             if (checked) {
                               field.onChange([...currentValue, connection.id]);
                             } else {
-                              field.onChange(
-                                currentValue.filter(
-                                  (id) => id !== connection.id
-                                )
-                              );
+                              field.onChange(currentValue.filter((id) => id !== connection.id));
                             }
                           }}
                         />
@@ -118,9 +103,7 @@ export const ConnectionsStep = () => {
                     </FieldLabel>
                   ))}
                 </FieldGroup>
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
               </FieldSet>
             )}
           />
@@ -131,17 +114,9 @@ export const ConnectionsStep = () => {
             render={({ field, fieldState }) => (
               <FieldSet data-invalid={fieldState.invalid}>
                 <FieldLegend> Archivo CSV </FieldLegend>
-                <FieldDescription>
-                  Selecciona un archivo CSV para cargar tus datos.
-                </FieldDescription>
-                <CsvUploader
-                  value={field.value}
-                  onChange={field.onChange}
-                  error={fieldState.invalid}
-                />
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
+                <FieldDescription>Selecciona un archivo CSV para cargar tus datos.</FieldDescription>
+                <CsvUploader value={field.value} onChange={field.onChange} error={fieldState.invalid} />
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
               </FieldSet>
             )}
           />

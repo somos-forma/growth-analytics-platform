@@ -1,4 +1,6 @@
 "use client";
+import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Field,
@@ -12,8 +14,6 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
 
 interface Client {
   id: string;
@@ -27,16 +27,10 @@ interface CreateUserAssignmentFormProps {
   clients: Client[];
 }
 
-export function CreateUserAssignmentForm({
-  selectedClientIds,
-  onChange,
-  clients,
-}: CreateUserAssignmentFormProps) {
+export function CreateUserAssignmentForm({ selectedClientIds, onChange, clients }: CreateUserAssignmentFormProps) {
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-  const filteredClients = clients.filter((client) =>
-    client.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredClients = clients.filter((client) => client.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
   return (
     <>
@@ -69,13 +63,8 @@ export function CreateUserAssignmentForm({
             <FieldGroup data-slot="checkbox-group">
               {filteredClients.length > 0 ? (
                 filteredClients.map((client) => (
-                  <FieldLabel
-                    key={client.id}
-                    htmlFor={`client-${client.id}`}
-                  >
-                    <Field
-                      orientation="horizontal"
-                    >
+                  <FieldLabel key={client.id} htmlFor={`client-${client.id}`}>
+                    <Field orientation="horizontal">
                       <FieldContent>
                         <FieldTitle>
                           <div className="w-10 h-10  flex items-center justify-center rounded-xl bg-primary/10 text-primary">
@@ -83,9 +72,7 @@ export function CreateUserAssignmentForm({
                           </div>
                           <div>
                             <p className="font-medium">{client.name}</p>
-                            <p className="text-xs text-muted-foreground">
-                              ID:#CM-8832
-                            </p>
+                            <p className="text-xs text-muted-foreground">ID:#CM-8832</p>
                           </div>
                         </FieldTitle>
                       </FieldContent>
@@ -97,11 +84,7 @@ export function CreateUserAssignmentForm({
                           if (checked) {
                             onChange([...selectedClientIds, client.id]);
                           } else {
-                            onChange(
-                              selectedClientIds.filter(
-                                (id) => id !== client.id
-                              )
-                            );
+                            onChange(selectedClientIds.filter((id) => id !== client.id));
                           }
                         }}
                       />
@@ -109,9 +92,7 @@ export function CreateUserAssignmentForm({
                   </FieldLabel>
                 ))
               ) : (
-                <p className="p-4 text-center text-sm text-muted-foreground">
-                  No se encontraron clientes.
-                </p>
+                <p className="p-4 text-center text-sm text-muted-foreground">No se encontraron clientes.</p>
               )}
             </FieldGroup>
             <ScrollBar orientation="vertical" />

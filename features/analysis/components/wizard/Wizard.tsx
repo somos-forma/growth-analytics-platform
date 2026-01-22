@@ -1,13 +1,13 @@
 "use client";
-import { useWizardStore } from "./wizard-store";
 import { BasicInfoStep } from "./steps/basic-info-step";
-import { ModelStep } from "./steps/model-step";
-import { ConnectionTypeStep } from "./steps/data-sources-step";
 import { ConnectionsStep } from "./steps/connections-step";
-import { DataSourcesPreviewStep } from "./steps/data-sources-preview";
 import { DataClassificationStep } from "./steps/data-classification-step";
-import { DataPreviewStep } from "./steps/data-preview-step";
 import { DataDivisionMethodStep } from "./steps/data-division-method-step";
+import { DataPreviewStep } from "./steps/data-preview-step";
+import { DataSourcesPreviewStep } from "./steps/data-sources-preview";
+import { ConnectionTypeStep } from "./steps/data-sources-step";
+import { ModelStep } from "./steps/model-step";
+import { useWizardStore } from "./wizard-store";
 
 export const Wizard = () => {
   const { step } = useWizardStore();

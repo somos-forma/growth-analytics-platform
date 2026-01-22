@@ -1,25 +1,18 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { ChevronDownIcon, Download, StarsIcon } from "lucide-react";
+
+import { Download, StarsIcon } from "lucide-react";
 import { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+
 import { EcommerceOverview } from "./components/ecommerce/ecommerce-overview";
 import { EcommercePerformanceIndicatorsTable } from "./components/ecommerce/ecommerce-performance-indicators-table";
 import { InvestmentByDayChart } from "./components/ecommerce/investment-by-day-chart";
+import { CostsIndicatorsCharts } from "./components/leads/costs-indicators-charts";
 import { LeadsOverview } from "./components/leads/leads-overview";
 import { LeadsPerformanceIndicatorsTable } from "./components/leads/leads-performance-indicators-table";
-import { CostsIndicatorsCharts } from "./components/leads/costs-indicators-charts";
-import { format, startOfMonth } from "date-fns";
-import { es } from "date-fns/locale/es";
 
 export const MetaAds = () => {
-  const [type, setType] = useState<"ecommerce" | "leads">("leads");
+  const [type, _] = useState<"ecommerce" | "leads">("leads");
 
   return (
     <div className="space-y-5">

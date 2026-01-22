@@ -1,21 +1,16 @@
 "use client";
 
+import type { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/data-table";
-import { useClients } from "../hooks/useClients";
-import { Client } from "../types/client.type";
-import { ColumnDef } from "@tanstack/react-table";
-import { useClientStore } from "../store";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useClients } from "../hooks/useClients";
+import { useClientStore } from "../store";
+import type { Client } from "../types/client.type";
 
 export const ClientsList = () => {
   const { data: clients = [], isLoading, isError } = useClients();
+  const { openDeleteClientModal, openEditClientModal } = useClientStore();
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -62,16 +57,10 @@ export const ClientsList = () => {
       accessorKey: "actions",
       header: "Acciones",
       cell: ({ row }) => {
-        const { openDeleteClientModal, openEditClientModal } = useClientStore();
         return (
           <div className="flex gap-2">
-            <Button onClick={() => openEditClientModal(row.original)}>
-              Editar
-            </Button>
-            <Button
-              onClick={() => openDeleteClientModal(row.original)}
-              variant="destructive"
-            >
+            <Button onClick={() => openEditClientModal(row.original)}>Editar</Button>
+            <Button onClick={() => openDeleteClientModal(row.original)} variant="destructive">
               Eliminar
             </Button>
           </div>
@@ -83,9 +72,7 @@ export const ClientsList = () => {
     <Card>
       <CardHeader>
         <CardTitle>Lista de Clientes</CardTitle>
-        <CardDescription>
-          Gestiona los clientes de la plataforma
-        </CardDescription>
+        <CardDescription>Gestiona los clientes de la plataforma</CardDescription>
       </CardHeader>
       <CardContent>
         <DataTable columns={columns} data={clients} showTotals={false} />

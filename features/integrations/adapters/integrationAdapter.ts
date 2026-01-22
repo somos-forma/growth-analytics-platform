@@ -1,4 +1,4 @@
-import { Integration, IntegrationStatus } from "../types/integration.type";
+import type { Integration, IntegrationStatus } from "../types/integration.type";
 
 export function getActionsByStatus(status: IntegrationStatus) {
   switch (status) {

@@ -1,15 +1,10 @@
-import { useWizardStore } from "../wizard-store";
-import { Controller, useForm } from "react-hook-form";
-import { BasicInfoSchemaType, basicInfoSchema } from "../wizard-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
+import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { type BasicInfoSchemaType, basicInfoSchema } from "../wizard-schemas";
+import { useWizardStore } from "../wizard-store";
 
 export const BasicInfoStep = () => {
   const { next, data, updateData } = useWizardStore();
@@ -49,9 +44,7 @@ export const BasicInfoStep = () => {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor={field.name}>
-                Descripción del Análisis
-              </FieldLabel>
+              <FieldLabel htmlFor={field.name}>Descripción del Análisis</FieldLabel>
               <Input
                 {...field}
                 id={field.name}

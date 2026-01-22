@@ -1,53 +1,18 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Bar,
-  CartesianGrid,
-  XAxis,
-  ComposedChart,
-  Line,
-  YAxis,
-  ResponsiveContainer,
-  BarChart,
-} from "recharts";
-import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-import { ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { ChartLegend, ChartLegendContent } from "@/components/ui/chart";
 import { useQuery } from "@tanstack/react-query";
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import { ChartSkeleton } from "@/components/skeletons/chart-skeleton";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  type ChartConfig,
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 import { formatMonthYear, formatNumberAbbreviated } from "@/utils/formatters";
 
-export const LeadsCharts = ({
-  date,
-}: {
-  date: { from: string; to: string };
-}) => {
-  const chartData = [
-    {
-      month: "Enero 2025",
-      investment: 1200,
-      conversions: 300,
-      cpa: 4,
-    },
-    {
-      month: "Febrero 2025",
-      investment: 1500,
-      conversions: 350,
-      cpa: 4.3,
-    },
-    {
-      month: "Marzo 2025",
-      investment: 1800,
-      conversions: 400,
-      cpa: 4.5,
-    },
-  ];
-
+export const LeadsCharts = ({ date }: { date: { from: string; to: string } }) => {
   const chartConfig = {
     investment: {
       label: "Inversión",
@@ -101,66 +66,52 @@ export const LeadsCharts = ({
     return <div>Error: {(error as Error).message}</div>;
   }
 
-  return (<>
-    <div className="p-2">
-              <h2 className="font-bold text-2xl">Evolución de inversión, conversiones y CPA </h2>
-              <p className="text-muted-foreground">
-            Comportamiento de la inversión y su relación directa con los resultados y el costo de conversión en el tiempo.
-      </p>
-     </div>
-    <Card>
-      <CardHeader>
-        <CardTitle>Rendimiento mensual</CardTitle>
-        <CardDescription>
-          Análisis del rendimiento de Google Ads durante el año en curso
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig} className="h-[350px]  w-full">
-          <ResponsiveContainer>
-            <BarChart accessibilityLayer data={data}>
-              <CartesianGrid vertical={false} />
-              <YAxis
-                axisLine={false}
-                tickLine={false}
-                label={{
-                  value: "Inversión",
-                  angle: -90,
-                  dx: -30,
-                }}
-                tickFormatter={(value) => formatNumberAbbreviated(value)}
-              />
+  return (
+    <>
+      <div className="p-2">
+        <h2 className="font-bold text-2xl">Evolución de inversión, conversiones y CPA </h2>
+        <p className="text-muted-foreground">
+          Comportamiento de la inversión y su relación directa con los resultados y el costo de conversión en el tiempo.
+        </p>
+      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Rendimiento mensual</CardTitle>
+          <CardDescription>Análisis del rendimiento de Google Ads durante el año en curso</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ChartContainer config={chartConfig} className="h-[350px]  w-full">
+            <ResponsiveContainer>
+              <BarChart accessibilityLayer data={data}>
+                <CartesianGrid vertical={false} />
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
+                  label={{
+                    value: "Inversión",
+                    angle: -90,
+                    dx: -30,
+                  }}
+                  tickFormatter={(value) => formatNumberAbbreviated(value)}
+                />
 
-              <XAxis
-                dataKey="month"
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
-                tickFormatter={(value) => formatMonthYear(value)}
-              />
-              <ChartTooltip content={<ChartTooltipContent />} />
-              <ChartLegend content={<ChartLegendContent />} />
-              <Bar
-                dataKey="investment"
-                fill="var(--color-investment)"
-                radius={4}
-              />
-              <Bar
-                dataKey="conversions"
-                fill="var(--color-conversions)"
-                radius={4}
-              />
-              <Bar
-                dataKey="cpa"
-                fill="var(--color-cpa)"
-                radius={4}
-                minPointSize={1}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </ChartContainer>
-      </CardContent>
-    </Card>
+                <XAxis
+                  dataKey="month"
+                  tickLine={false}
+                  tickMargin={10}
+                  axisLine={false}
+                  tickFormatter={(value) => formatMonthYear(value)}
+                />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <ChartLegend content={<ChartLegendContent />} />
+                <Bar dataKey="investment" fill="var(--color-investment)" radius={4} />
+                <Bar dataKey="conversions" fill="var(--color-conversions)" radius={4} />
+                <Bar dataKey="cpa" fill="var(--color-cpa)" radius={4} minPointSize={1} />
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartContainer>
+        </CardContent>
+      </Card>
     </>
   );
 };

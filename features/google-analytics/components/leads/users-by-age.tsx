@@ -1,20 +1,8 @@
 "use client";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 
 export const description = "A horizontal bar chart";
 
@@ -39,22 +27,14 @@ export function UsersByAge() {
     <Card>
       <CardHeader>
         <CardTitle>Usuarios por edad</CardTitle>
-        <CardDescription>
-          Descripción del gráfico de usuarios por edad
-        </CardDescription>
+        <CardDescription>Descripción del gráfico de usuarios por edad</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="w-full">
           <ResponsiveContainer>
             <BarChart accessibilityLayer data={chartData} layout="vertical">
               <XAxis type="number" dataKey="quantity" />
-              <YAxis
-                dataKey="age"
-                type="category"
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
-              />
+              <YAxis dataKey="age" type="category" tickLine={false} tickMargin={10} axisLine={false} />
               <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
               <Bar dataKey="quantity" fill="var(--color-quantity)" radius={5} />
             </BarChart>

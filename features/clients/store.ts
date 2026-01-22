@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Client } from "./types/client.type";
+import type { Client } from "./types/client.type";
 
 type ClientStore = {
   client: Client | null;

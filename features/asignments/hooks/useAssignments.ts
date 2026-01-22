@@ -1,6 +1,6 @@
-import React from "react";
-import { getAssignments } from "../services/assignment";
 import { useQuery } from "@tanstack/react-query";
+
+import { getAssignments } from "../services/assignment";
 
 export const useAssignments = () => {
   return useQuery({

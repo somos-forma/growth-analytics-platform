@@ -1,31 +1,18 @@
-import { Integration } from "../types/integration.type";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  CircleCheck,
-  Pause,
-  Play,
-  PlugZap,
-  RotateCcw,
-  Unplug,
-} from "lucide-react";
+import { Pause, Play, PlugZap, RotateCcw, Unplug } from "lucide-react";
 import Image from "next/image";
-import { formatTimeAgo } from "@/utils/formatters";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useIntegrationAction } from "../hooks/useIntegrationAction";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { formatTimeAgo } from "@/utils/formatters";
+import { useIntegrationAction } from "../hooks/useIntegrationAction";
+import type { Integration } from "../types/integration.type";
 
 interface IntegrationCardProps {
   integration: Integration;
 }
 export const IntegrationCard = ({ integration }: IntegrationCardProps) => {
-  const { mutate, isPending } = useIntegrationAction();
+  const { mutate } = useIntegrationAction();
   const actionIcon: Record<string, React.ReactNode> = {
     connect: <PlugZap className="" />,
     pause: <Pause className="" />,
@@ -62,16 +49,12 @@ export const IntegrationCard = ({ integration }: IntegrationCardProps) => {
             />
             {integration.name}
           </CardTitle>
-          <Badge className={cn(statusColors[integration.status])}>
-            {status[integration.status]}
-          </Badge>
+          <Badge className={cn(statusColors[integration.status])}>{status[integration.status]}</Badge>
         </div>
         <CardDescription>{integration.description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="text-xs text-muted-foreground">
-          {formatTimeAgo(integration.lastSyncedAt)}
-        </p>
+        <p className="text-xs text-muted-foreground">{formatTimeAgo(integration.lastSyncedAt)}</p>
         <div className="flex gap-2">
           {integration.actions.map((action) => (
             <Button
@@ -79,9 +62,7 @@ export const IntegrationCard = ({ integration }: IntegrationCardProps) => {
               disabled={action.disabled}
               variant="outline"
               className="mt-4"
-              onClick={() =>
-                mutate({ integrationId: integration.id, action: action.action })
-              }
+              onClick={() => mutate({ integrationId: integration.id, action: action.action })}
             >
               {actionIcon[action.action]}
               {action.label}

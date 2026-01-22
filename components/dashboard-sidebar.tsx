@@ -1,5 +1,8 @@
 "use client";
 
+import { BarChart2, BrainCircuit, Building2, ChartColumn, Target, TrendingUp, Users } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -12,20 +15,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useState, useEffect } from "react";
-import {
-  BarChart2,
-  BrainCircuit,
-  Building2,
-  ChartColumn,
-  Command,
-  Target,
-  ToyBrick,
-  TrendingUp,
-  UserPlus,
-  Users,
-} from "lucide-react";
-import Link from "next/link";
 import { DashboardNavUser } from "./dashboard-nav-user";
 
 export function DashboardSidebar() {
@@ -51,9 +40,7 @@ export function DashboardSidebar() {
                   <ChartColumn className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">
-                    Growth Analytics Platform
-                  </span>
+                  <span className="truncate font-medium">Growth Analytics Platform</span>
                   <span className="truncate text-xs">Enterprise</span>
                 </div>
               </Link>

@@ -1,61 +1,18 @@
+import { useQuery } from "@tanstack/react-query";
+import { Bar, CartesianGrid, ComposedChart, Line, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import { ChartSkeleton } from "@/components/skeletons/chart-skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  Bar,
-  CartesianGrid,
-  XAxis,
-  ComposedChart,
-  Line,
-  YAxis,
-  ResponsiveContainer,
-} from "recharts";
-import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-import { ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { ChartLegend, ChartLegendContent } from "@/components/ui/chart";
-import { useQuery } from "@tanstack/react-query";
-import { ChartSkeleton } from "@/components/skeletons/chart-skeleton";
-import {
-  formatMonthYear,
-  formatNumberAbbreviated,
-  formatSpanishDate,
-} from "@/utils/formatters";
+  type ChartConfig,
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import { formatNumberAbbreviated, formatSpanishDate } from "@/utils/formatters";
 
-export const CostAndConversionByDay = ({
-  date,
-}: {
-  date: { from: string; to?: string };
-}) => {
-  const chartData = [
-    {
-      day: "1 ago 2025",
-      cost: 150,
-      cost_conversion: 75,
-    },
-    {
-      day: "2 ago 2025",
-      cost: 180,
-      cost_conversion: 380,
-    },
-    {
-      day: "3 ago 2025",
-      cost: 180,
-      cost_conversion: 380,
-    },
-    {
-      day: "4 ago 2025",
-      cost: 90,
-      cost_conversion: 50,
-    },
-    {
-      day: "5 ago 2025",
-      cost: 200,
-      cost_conversion: 120,
-    },
-    {
-      day: "6 ago 2025",
-      cost: 220,
-      cost_conversion: 150,
-    },
-  ];
+export const CostAndConversionByDay = ({ date }: { date: { from: string; to?: string } }) => {
   const chartConfig = {
     cost: {
       label: "Coste",
@@ -143,18 +100,9 @@ export const CostAndConversionByDay = ({
               />
               <ChartTooltip content={<ChartTooltipContent />} />
               <ChartLegend content={<ChartLegendContent />} />
-              <Bar
-                dataKey="cost"
-                fill="var(--color-cost)"
-                radius={4}
-                yAxisId="left"
-              />
+              <Bar dataKey="cost" fill="var(--color-cost)" radius={4} yAxisId="left" />
 
-              <Line
-                dataKey="cost_conversion"
-                stroke="var(--color-cost_conversion)"
-                yAxisId="right"
-              />
+              <Line dataKey="cost_conversion" stroke="var(--color-cost_conversion)" yAxisId="right" />
             </ComposedChart>
           </ResponsiveContainer>
         </ChartContainer>

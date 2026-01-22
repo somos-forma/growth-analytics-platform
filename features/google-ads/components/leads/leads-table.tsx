@@ -1,19 +1,9 @@
-import { DataTable } from "@/components/data-table";
-import { ColumnDef } from "@tanstack/react-table";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  formatCurrency,
-  formatNumber,
-  formatPercentage,
-} from "@/utils/formatters";
 import { useQuery } from "@tanstack/react-query";
+import type { ColumnDef } from "@tanstack/react-table";
+import { DataTable } from "@/components/data-table";
 import { TableSkeleton } from "@/components/skeletons/table-skeleton";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { formatCurrency, formatNumber, formatPercentage } from "@/utils/formatters";
 
 type LeadsTable = {
   id: string;
@@ -132,8 +122,7 @@ export const LeadsTable = ({ date }: { date: { from: string } }) => {
       <div className="p-2">
         <h2 className="font-bold text-2xl">Desempeño de campañas </h2>
         <p className="text-muted-foreground">
-          Aporte de cada campaña al volumen total de conversiones y a la
-          eficiencia de la inversión.
+          Aporte de cada campaña al volumen total de conversiones y a la eficiencia de la inversión.
         </p>
       </div>
       <Card>

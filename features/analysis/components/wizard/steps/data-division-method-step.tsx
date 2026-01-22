@@ -1,13 +1,9 @@
-import { useWizardStore } from "../wizard-store";
-import { Controller, useForm } from "react-hook-form";
-import { es } from "react-day-picker/locale";
-
-import {
-  dataDivisionMethodSchema,
-  DataDivisionMethodSchemaType,
-} from "../wizard-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { BrainCircuit } from "lucide-react";
+import { es } from "react-day-picker/locale";
+import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Field,
   FieldContent,
@@ -19,26 +15,18 @@ import {
   FieldSet,
   FieldTitle,
 } from "@/components/ui/field";
+
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { BrainCircuit, CalendarIcon, ChevronDownIcon } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@radix-ui/react-popover";
-import { format } from "date-fns";
-import { useState } from "react";
-import { cn } from "@/lib/utils";
 import { Slider } from "@/components/ui/slider";
+
+import { type DataDivisionMethodSchemaType, dataDivisionMethodSchema } from "../wizard-schemas";
+import { useWizardStore } from "../wizard-store";
 
 const methods = [
   {
     id: "proportion",
     title: "Proporcional",
-    description:
-      "División proporcional de los datos en entrenamiento y prueba.",
+    description: "División proporcional de los datos en entrenamiento y prueba.",
   },
   {
     id: "date",
@@ -49,8 +37,6 @@ const methods = [
 
 export const DataDivisionMethodStep = () => {
   const { next, back, data, updateData } = useWizardStore();
-  const [openStart, setOpenStart] = useState(false);
-  const [openEnd, setOpenEnd] = useState(false);
 
   const form = useForm<DataDivisionMethodSchemaType>({
     resolver: zodResolver(dataDivisionMethodSchema),
@@ -78,8 +64,7 @@ export const DataDivisionMethodStep = () => {
             <FieldSet data-invalid={fieldState.invalid}>
               <FieldLegend>Metodo de divisió́n de datos</FieldLegend>
               <FieldDescription>
-                Selecciona el metodo de divisió́n de datos que deseas para el
-                entrenamiento del modelo.
+                Selecciona el metodo de divisió́n de datos que deseas para el entrenamiento del modelo.
               </FieldDescription>
               <RadioGroup
                 name={field.name}
@@ -89,14 +74,8 @@ export const DataDivisionMethodStep = () => {
                 className="flex"
               >
                 {methods.map((method) => (
-                  <FieldLabel
-                    key={method.id}
-                    htmlFor={`form-rhf-radiogroup-${method.id}`}
-                  >
-                    <Field
-                      orientation="horizontal"
-                      data-invalid={fieldState.invalid}
-                    >
+                  <FieldLabel key={method.id} htmlFor={`form-rhf-radiogroup-${method.id}`}>
+                    <Field orientation="horizontal" data-invalid={fieldState.invalid}>
                       <FieldContent>
                         <FieldTitle>
                           <div className="w-10 h-10  flex items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -104,9 +83,7 @@ export const DataDivisionMethodStep = () => {
                           </div>
                           {method.title}
                         </FieldTitle>
-                        <FieldDescription>
-                          {method.description}
-                        </FieldDescription>
+                        <FieldDescription>{method.description}</FieldDescription>
                       </FieldContent>
                       <RadioGroupItem
                         value={method.id}
@@ -127,12 +104,9 @@ export const DataDivisionMethodStep = () => {
             control={form.control}
             render={({ field, fieldState }) => (
               <FieldSet data-invalid={fieldState.invalid}>
-                <FieldLegend>
-                  Proporción de datos para entrenamiento
-                </FieldLegend>
+                <FieldLegend>Proporción de datos para entrenamiento</FieldLegend>
                 <FieldDescription>
-                  Selecciona el porcentaje de datos que deseas usar para
-                  entrenar el modelo.
+                  Selecciona el porcentaje de datos que deseas usar para entrenar el modelo.
                 </FieldDescription>
                 <Slider
                   value={[field.value || 80]}
@@ -144,17 +118,13 @@ export const DataDivisionMethodStep = () => {
                 />
                 <div className="flex justify-between">
                   <p className="text-xs">
-                    Datos usados para el entrenamiento:{" "}
-                    <strong>{field.value || 80}%</strong>
+                    Datos usados para el entrenamiento: <strong>{field.value || 80}%</strong>
                   </p>
                   <p className="text-xs">
-                    Datos usados para las pruebas:{" "}
-                    <strong>{100 - (field.value || 80)}%</strong>
+                    Datos usados para las pruebas: <strong>{100 - (field.value || 80)}%</strong>
                   </p>
                 </div>
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
               </FieldSet>
             )}
           />
@@ -167,8 +137,7 @@ export const DataDivisionMethodStep = () => {
               <FieldSet data-invalid={fieldState.invalid}>
                 <FieldLegend>Rango de fechas para división</FieldLegend>
                 <FieldDescription>
-                  Selecciona el rango de fechas que dividirá los datos de
-                  entrenamiento y prueba.
+                  Selecciona el rango de fechas que dividirá los datos de entrenamiento y prueba.
                 </FieldDescription>
                 <Calendar
                   className="border"
@@ -195,9 +164,7 @@ export const DataDivisionMethodStep = () => {
                     }
                   }}
                 />
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
               </FieldSet>
             )}
           />

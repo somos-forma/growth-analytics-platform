@@ -1,20 +1,12 @@
-import { DataTable } from "@/components/data-table";
-import { ColumnDef } from "@tanstack/react-table";
 import { useQuery } from "@tanstack/react-query";
+import type { ColumnDef } from "@tanstack/react-table";
+import { format, startOfMonth, subYears } from "date-fns";
 import React from "react";
-import { format, subYears, startOfMonth } from "date-fns";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatNumber, formatPercentage } from "@/utils/formatters";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { DataTable } from "@/components/data-table";
 import { TableSkeleton } from "@/components/skeletons/table-skeleton";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { formatNumber, formatPercentage } from "@/utils/formatters";
 
 type ChannelGroupMetrics = {
   id: string;
@@ -106,10 +98,7 @@ export const ChannelGroupMetricsChangeTable = () => {
   const previousYearDate = subYears(currentDate, 1);
 
   const currentMonthStart = format(startOfMonth(currentDate), "yyyy-MM-dd");
-  const previousYearMonthStart = format(
-    startOfMonth(previousYearDate),
-    "yyyy-MM-dd"
-  );
+  const previousYearMonthStart = format(startOfMonth(previousYearDate), "yyyy-MM-dd");
 
   const currentMonthKey = format(currentDate, "yyyy-MM");
   const previousYearMonthKey = format(previousYearDate, "yyyy-MM");
@@ -154,17 +143,13 @@ export const ChannelGroupMetricsChangeTable = () => {
       const items = groupedData[group];
 
       // Find current month and previous year month dynamically
-      const currentMonthItem =
-        items.find((item: any) => item.anio_mes === currentMonthKey) || {};
-      const prevYearItem =
-        items.find((item: any) => item.anio_mes === previousYearMonthKey) || {};
+      const currentMonthItem = items.find((item: any) => item.anio_mes === currentMonthKey) || {};
+      const prevYearItem = items.find((item: any) => item.anio_mes === previousYearMonthKey) || {};
 
       const currentNewUsers = Number(currentMonthItem.usuarios_nuevos || 0);
       const prevNewUsers = Number(prevYearItem.usuarios_nuevos || 0);
 
-      const currentSessions = Number(
-        currentMonthItem.sesiones_con_interaccion || 0
-      );
+      const currentSessions = Number(currentMonthItem.sesiones_con_interaccion || 0);
       const prevSessions = Number(prevYearItem.sesiones_con_interaccion || 0);
 
       const calculateDelta = (current: number, previous: number) => {
@@ -178,10 +163,7 @@ export const ChannelGroupMetricsChangeTable = () => {
         new_users: currentNewUsers,
         new_users_delta: calculateDelta(currentNewUsers, prevNewUsers),
         session_interaction: currentSessions,
-        session_interaction_delta: calculateDelta(
-          currentSessions,
-          prevSessions
-        ),
+        session_interaction_delta: calculateDelta(currentSessions, prevSessions),
         step: 0,
         step_delta: 0,
       };

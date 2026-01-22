@@ -1,27 +1,10 @@
 "use client";
-import { PieChartCustom } from "@/components/charts/pie-chart-custom";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { ChartConfig } from "@/components/ui/chart";
 import { useQuery } from "@tanstack/react-query";
+import { PieChartCustom } from "@/components/charts/pie-chart-custom";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import type { ChartConfig } from "@/components/ui/chart";
 
-export function SessionsByChannel({
-  date,
-}: {
-  date: { from: string; to?: string };
-}) {
-  const chartData = [
-    { channel: "organic", value: 5000, fill: "var(--color-organic)" },
-    { channel: "paid", value: 3000, fill: "var(--color-paid)" },
-    { channel: "referral", value: 2000, fill: "var(--color-referral)" },
-    { channel: "social", value: 1000, fill: "var(--color-social)" },
-  ];
-
+export function SessionsByChannel({ date }: { date: { from: string; to?: string } }) {
   const chartConfig = {
     value: {
       label: "Ingresos",
@@ -123,11 +106,8 @@ export function SessionsByChannel({
       };
 
       const json = await response.json();
-      const data = json.rows.map((raw: any, index: number) => ({
-        channel: raw.canal
-          .toLowerCase()
-          .replace(/\s+/g, "")
-          .replace(/[()]/g, ""),
+      const data = json.rows.map((raw: any) => ({
+        channel: raw.canal.toLowerCase().replace(/\s+/g, "").replace(/[()]/g, ""),
         value: raw.sesiones,
         fill: fillMap[raw.canal.replace(/\s+/g, "").toLowerCase()],
       }));
@@ -149,9 +129,7 @@ export function SessionsByChannel({
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
         <CardTitle>Sesiones por canales</CardTitle>
-        <CardDescription>
-          Descripción de las sesiones por canales
-        </CardDescription>
+        <CardDescription>Descripción de las sesiones por canales</CardDescription>
       </CardHeader>
       <CardContent>
         {totalValue === 0 ? (
@@ -159,11 +137,7 @@ export function SessionsByChannel({
             Sin datos para mostrar
           </div>
         ) : (
-          <PieChartCustom
-            chartData={data}
-            chartConfig={chartConfig}
-            nameKey="channel"
-          />
+          <PieChartCustom chartData={data} chartConfig={chartConfig} nameKey="channel" />
         )}
       </CardContent>
     </Card>

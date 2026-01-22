@@ -1,33 +1,23 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { ChevronDownIcon, Download, StarsIcon } from "lucide-react";
+
+import { Download, StarsIcon } from "lucide-react";
 import { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Overview } from "./components/ecommerce/overview";
-import { PerformanceIndicatorsTable } from "./components/ecommerce/performance-indicators-table";
-import { PerformanceIndicatorsSearchTable } from "./components/ecommerce/performance-indicators-search-table";
-import { PerformanceIndicatorsPmaxTable } from "./components/ecommerce/performance-indicators-pmax-table";
-import { PerformanceIndicatorsGenTable } from "./components/ecommerce/performance-indicators-gen";
-import { CostAndConversionByDay } from "./components/ecommerce/cost-and-convertion-by-day";
+import { Button } from "@/components/ui/button";
 import { ConversionAndRateByDay } from "./components/ecommerce/conversion-and-rate-by-day";
+import { CostAndConversionByDay } from "./components/ecommerce/cost-and-convertion-by-day";
 import { IndicatorsKeywordsTable } from "./components/ecommerce/indicators-keywords-table";
-import { OverviewLeads } from "./components/leads/overview-leads";
+import { Overview } from "./components/ecommerce/overview";
+import { PerformanceIndicatorsGenTable } from "./components/ecommerce/performance-indicators-gen";
+import { PerformanceIndicatorsPmaxTable } from "./components/ecommerce/performance-indicators-pmax-table";
+import { PerformanceIndicatorsSearchTable } from "./components/ecommerce/performance-indicators-search-table";
+import { PerformanceIndicatorsTable } from "./components/ecommerce/performance-indicators-table";
 import { LeadsCharts } from "./components/leads/leads-charts";
-import { LeadsTable } from "./components/leads/leads-table";
 import { LeadsKeywordsTable } from "./components/leads/leads-keywords-table";
-import { format } from "date-fns";
-import { es } from "date-fns/locale";
-import { CostAndConversionByHour } from "./components/ecommerce/cost-and-convertion-by-hour";
-import { ConversionAndRateByHour } from "./components/ecommerce/conversion-and-rate-by-hour";
+import { LeadsTable } from "./components/leads/leads-table";
+import { OverviewLeads } from "./components/leads/overview-leads";
 
 export const GoogleAds = () => {
-  const [type, setType] = useState<"ecommerce" | "leads">("leads");
+  const [type, _] = useState<"ecommerce" | "leads">("leads");
 
   if (type === "leads") {
     return (
@@ -35,9 +25,7 @@ export const GoogleAds = () => {
         <div className="flex justify-between items-center">
           <div>
             <h1 className="font-bold text-4xl">Google Ads </h1>
-            <p className="text-muted-foreground">
-              Análisis detallado de tus campañas de Google Ads
-            </p>
+            <p className="text-muted-foreground">Análisis detallado de tus campañas de Google Ads</p>
           </div>
           {/* actions */}
           <div className="flex gap-3 ">
@@ -106,9 +94,7 @@ export const GoogleAds = () => {
             <p className="text-muted-foreground">
               Análisis detallado de tus campañas de Google Ads
               <br />
-              <span className=" italic">
-                (Comparación del mes actual con el mismo mes del año anterior)
-              </span>
+              <span className=" italic">(Comparación del mes actual con el mismo mes del año anterior)</span>
             </p>
           </div>
           {/* actions */}
@@ -160,18 +146,12 @@ export const GoogleAds = () => {
             <span className=" italic">(Este mes)</span>
           </div>
           <div className="grid md:grid-cols-2 gap-5">
-            <CostAndConversionByDay
-              date={{ from: "2025-11-01", to: "2025-11-30" }}
-            />
+            <CostAndConversionByDay date={{ from: "2025-11-01", to: "2025-11-30" }} />
             {/* <CostAndConversionByHour /> */}
-            <ConversionAndRateByDay
-              date={{ from: "2025-11-01", to: "2025-11-30" }}
-            />
+            <ConversionAndRateByDay date={{ from: "2025-11-01", to: "2025-11-30" }} />
             {/* <ConversionAndRateByHour /> */}
           </div>
-          <IndicatorsKeywordsTable
-            date={{ from: "2025-11-01", to: "2025-11-30" }}
-          />
+          <IndicatorsKeywordsTable date={{ from: "2025-11-01", to: "2025-11-30" }} />
         </div>
       </div>
     );

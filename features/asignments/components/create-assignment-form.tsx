@@ -1,5 +1,13 @@
 "use client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import * as z from "zod";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Field,
   FieldContent,
@@ -8,24 +16,15 @@ import {
   FieldGroup,
   FieldLabel,
   FieldLegend,
-  FieldSeparator,
   FieldSet,
   FieldTitle,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
-import { toast } from "sonner";
-import * as z from "zod";
-import { useCreateAssignment } from "../hooks/useCreateAssignment";
-import { Spinner } from "@/components/ui/spinner";
-import { useAssignmentStore } from "../store";
-import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { useState, useEffect } from "react";
-import { Badge } from "@/components/ui/badge";
+import { Spinner } from "@/components/ui/spinner";
+import { useCreateAssignment } from "../hooks/useCreateAssignment";
 import { getAssignments } from "../services/assignment";
-import { useQueryClient } from "@tanstack/react-query";
+import { useAssignmentStore } from "../store";
 
 const formSchema = z.object({
   clientsId: z.array(z.string()),
@@ -40,9 +39,11 @@ export function CreateAssignmentForm() {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    getAssignments().then((data) => {
-      setClients(data.map(client => ({ ...client, id: String(client.id) })));
-    }).catch(console.error);
+    getAssignments()
+      .then((data) => {
+        setClients(data.map((client) => ({ ...client, id: String(client.id) })));
+      })
+      .catch(console.error);
   }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -60,11 +61,11 @@ export function CreateAssignmentForm() {
     const combinedClientsId = [...new Set([...(user.client_id || []), ...data.clientsId])];
     const payload = { id: user.id, clientsId: combinedClientsId };
     mutate(payload, {
-      onSuccess: (updatedUser) => {
+      onSuccess: () => {
         closeCreateAssignmentModal();
         toast.success("Cliente asignado exitosamente");
         setSelectedUser({ ...user, client_id: combinedClientsId });
-        queryClient.invalidateQueries({ queryKey: ['users'] });
+        queryClient.invalidateQueries({ queryKey: ["users"] });
       },
       onError: () => {
         toast.error("Error al asignar el cliente");
@@ -72,9 +73,8 @@ export function CreateAssignmentForm() {
     });
   }
 
-  const filteredClients = clients.filter((client) =>
-    client.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-    !user?.client_id?.includes(client.id)
+  const filteredClients = clients.filter(
+    (client) => client.name.toLowerCase().includes(searchTerm.toLowerCase()) && !user?.client_id?.includes(client.id),
   );
   const clientWatch = form.watch("clientsId");
   return (
@@ -91,9 +91,7 @@ export function CreateAssignmentForm() {
         </p>
         {clientWatch.length > 0 && (
           <p className="text-sm">
-            <Badge className="h-5 min-w-5 rounded-full px-1 font-mono tabular-nums me-1">
-              {clientWatch.length}
-            </Badge>
+            <Badge className="h-5 min-w-5 rounded-full px-1 font-mono tabular-nums me-1">{clientWatch.length}</Badge>
             clientes seleccionados
           </p>
         )}
@@ -113,14 +111,8 @@ export function CreateAssignmentForm() {
                   <FieldGroup data-slot="checkbox-group">
                     {filteredClients.length > 0 ? (
                       filteredClients.map((client) => (
-                        <FieldLabel
-                          key={client.id}
-                          htmlFor={`client-${client.id}`}
-                        >
-                          <Field
-                            orientation="horizontal"
-                            data-invalid={fieldState.invalid}
-                          >
+                        <FieldLabel key={client.id} htmlFor={`client-${client.id}`}>
+                          <Field orientation="horizontal" data-invalid={fieldState.invalid}>
                             <FieldContent>
                               <FieldTitle>
                                 <div className="w-10 h-10  flex items-center justify-center rounded-xl bg-primary/10 text-primary">
@@ -128,28 +120,20 @@ export function CreateAssignmentForm() {
                                 </div>
                                 <div>
                                   <p className="font-medium">{client.name}</p>
-                                  <p className="text-xs text-muted-foreground">
-                                    ID:{client.id}
-                                  </p>
+                                  <p className="text-xs text-muted-foreground">ID:{client.id}</p>
                                 </div>
                               </FieldTitle>
                             </FieldContent>
                             <Checkbox
                               id={`client-${client.id}`}
                               value={client.id}
-                              checked={
-                                field.value?.includes(client.id) || false
-                              }
+                              checked={field.value?.includes(client.id) || false}
                               onCheckedChange={(checked) => {
                                 const currentValue = field.value || [];
                                 if (checked) {
                                   field.onChange([...currentValue, client.id]);
                                 } else {
-                                  field.onChange(
-                                    currentValue.filter(
-                                      (id) => id !== client.id
-                                    )
-                                  );
+                                  field.onChange(currentValue.filter((id) => id !== client.id));
                                 }
                               }}
                             />
@@ -157,16 +141,12 @@ export function CreateAssignmentForm() {
                         </FieldLabel>
                       ))
                     ) : (
-                      <p className="p-4 text-center text-sm text-muted-foreground">
-                        No se encontraron clientes.
-                      </p>
+                      <p className="p-4 text-center text-sm text-muted-foreground">No se encontraron clientes.</p>
                     )}
                   </FieldGroup>
                   <ScrollBar orientation="vertical" />
                 </ScrollArea>
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
               </FieldSet>
             )}
           />

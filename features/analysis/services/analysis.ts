@@ -1,4 +1,4 @@
-import { Analysis } from "../types/analysis.type";
+import type { Analysis } from "../types/analysis.type";
 
 export const getAnalysis = async (): Promise<Analysis[]> => {
   await new Promise((resolve) => setTimeout(resolve, 500));

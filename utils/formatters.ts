@@ -27,10 +27,7 @@ export function formatTimeAgo(date: string | Date = ""): string {
  * Formatea números grandes con separadores de miles.
  * Ejemplo: 2066178 → "2,066,178"
  */
-export const formatNumber = (
-  value: number,
-  locale: string = "es-PE"
-): string => {
+export const formatNumber = (value: number, locale: string = "es-PE"): string => {
   return new Intl.NumberFormat(locale).format(value);
 };
 
@@ -38,11 +35,7 @@ export const formatNumber = (
  * Formatea porcentajes.
  * Ejemplo: 0.31 → "0.31%" o con decimales limitados.
  */
-export const formatPercentage = (
-  value: number,
-  decimals: number = 2,
-  locale: string = "es-PE"
-): string => {
+export const formatPercentage = (value: number, decimals: number = 2): string => {
   return `${value.toFixed(decimals)}%`;
 };
 
@@ -50,11 +43,7 @@ export const formatPercentage = (
  * Formatea moneda.
  * Ejemplo: 9408 → "US$ 9,408.00"
  */
-export const formatCurrency = (
-  value: number,
-  currency: string = "USD",
-  locale: string = "US-en"
-): string => {
+export const formatCurrency = (value: number, currency: string = "USD", locale: string = "US-en"): string => {
   return new Intl.NumberFormat(locale, {
     style: "currency",
     currency,
@@ -71,7 +60,7 @@ export const formatNumberAbbreviated = (
   value: number,
   prefix: string = "$",
   decimals: number = 0,
-  locale: string = "US-en"
+  locale: string = "US-en",
 ): string => {
   if (value === 0) return `${prefix}0`;
 
@@ -108,10 +97,7 @@ export const formatNumberAbbreviated = (
  * Formatea una fecha ISO (YYYY-MM-DD) a formato abreviado en español.
  * Ejemplo: "2025-01-01" → "Ene 2025"
  */
-export const formatMonthYear = (
-  dateString: string,
-  locale: string = "es-ES"
-): string => {
+export const formatMonthYear = (dateString: string, locale: string = "es-ES"): string => {
   if (!dateString) return "";
 
   try {
@@ -132,10 +118,7 @@ export const formatMonthYear = (
  * Formatea una fecha ISO (YYYY-MM-DD) a formato español completo.
  * Ejemplo: "2025-11-03" → "3 de nov 2025"
  */
-export const formatSpanishDate = (
-  dateString: string,
-  locale: string = "es-ES"
-): string => {
+export const formatSpanishDate = (dateString: string, locale: string = "es-ES"): string => {
   if (!dateString) return "";
 
   try {

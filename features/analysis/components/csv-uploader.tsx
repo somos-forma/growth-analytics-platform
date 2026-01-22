@@ -1,14 +1,14 @@
-import { Button } from "@/components/ui/button";
-import { FileSpreadsheetIcon, Sheet, Upload, X } from "lucide-react";
-import React from "react";
+import { FileSpreadsheetIcon, Upload, X } from "lucide-react";
+import type React from "react";
 import { useDropzone } from "react-dropzone";
+import { Button } from "@/components/ui/button";
 
 interface CsvUploaderProps {
   value: File | undefined;
   onChange: (file: File | undefined) => void;
   error?: boolean;
 }
-export const CsvUploader = ({ value, onChange, error }: CsvUploaderProps) => {
+export const CsvUploader = ({ value, onChange }: CsvUploaderProps) => {
   const { getRootProps, getInputProps } = useDropzone({
     multiple: false,
     maxSize: 10485760, // 10MB
@@ -34,8 +34,7 @@ export const CsvUploader = ({ value, onChange, error }: CsvUploaderProps) => {
         <input {...getInputProps()} />
         <Upload className="mx-auto mb-4 h-8 w-8 text-gray-400" />
         <p className="text-sm text-gray-500">
-          Arrastra y suelta tu archivo CSV aquí, o haz clic para seleccionar
-          archivos
+          Arrastra y suelta tu archivo CSV aquí, o haz clic para seleccionar archivos
         </p>
       </div>
       <div>
@@ -45,9 +44,7 @@ export const CsvUploader = ({ value, onChange, error }: CsvUploaderProps) => {
               <FileSpreadsheetIcon className=" h-8 w-8 " />
               <div className="flex flex-col ">
                 <p>{value.name}</p>
-                <div className="text-sm text-gray-500">
-                  {Math.round(value.size / 1024)} KB
-                </div>
+                <div className="text-sm text-gray-500">{Math.round(value.size / 1024)} KB</div>
               </div>
             </div>
             <Button onClick={removeFile} variant="ghost">

@@ -1,35 +1,18 @@
 "use client";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-  FieldSeparator,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { BarChart3, TrendingUp } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { BarChart3, TrendingUp } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
-import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 
 const formSchema = z.object({
   email: z.email({ message: "Ingresa un correo válido" }),
-  password: z
-    .string()
-    .min(8, { message: "La contraseña debe tener al menos 8 caracteres" }),
+  password: z.string().min(8, { message: "La contraseña debe tener al menos 8 caracteres" }),
 });
 
 export function LoginForm() {
@@ -49,9 +32,9 @@ export function LoginForm() {
   async function onSubmit(data: z.infer<typeof formSchema>) {
     try {
       console.log({ email: data.email, password: data.password });
-      const response = await fetch('https://auton8n.moovmediagroup.com/webhook/growth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("https://auton8n.moovmediagroup.com/webhook/growth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: data.email, password: data.password }),
       });
       const result = await response.json();
@@ -63,6 +46,7 @@ export function LoginForm() {
         router.push("/dashboard/google-analytics");
       }
     } catch (error) {
+      console.log(error);
       toast.error("Error al iniciar sesión");
     }
   }
@@ -77,18 +61,12 @@ export function LoginForm() {
           <TrendingUp className="h-6 w-6 text-primary" />
         </div>
         <h1 className="text-3xl font-bold text-balance">Growth Analytics</h1>
-        <p className="text-muted-foreground text-pretty">
-          Analiza el rendimiento de tus campañas de marketing
-        </p>
+        <p className="text-muted-foreground text-pretty">Analiza el rendimiento de tus campañas de marketing</p>
       </div>
       <Card>
         <CardHeader>
-          <CardTitle className="text-center text-lg font-semibold">
-            Iniciar Sesión
-          </CardTitle>
-          <CardDescription className="text-center">
-            Ingresa tus credenciales para acceder a tu cuenta
-          </CardDescription>
+          <CardTitle className="text-center text-lg font-semibold">Iniciar Sesión</CardTitle>
+          <CardDescription className="text-center">Ingresa tus credenciales para acceder a tu cuenta</CardDescription>
         </CardHeader>
         <CardContent>
           <form id="form-rhf-login" onSubmit={form.handleSubmit(onSubmit)}>
@@ -105,9 +83,7 @@ export function LoginForm() {
                       aria-invalid={fieldState.invalid}
                       placeholder="example@email.com"
                     />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                   </Field>
                 )}
               />
@@ -124,9 +100,7 @@ export function LoginForm() {
                       type="password"
                       placeholder="********"
                     />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                   </Field>
                 )}
               />

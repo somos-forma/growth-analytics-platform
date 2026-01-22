@@ -1,17 +1,11 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import { Brain } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { AnalysisFilters } from "./components/analysis-filters";
 import { AnalysisList } from "./components/analysis-list";
 import { AnalysisOverview } from "./components/analysis-overview";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { AnalysisFilters } from "./components/analysis-filters";
 
 export const Analysis = () => {
   return (
@@ -20,8 +14,7 @@ export const Analysis = () => {
         <div>
           <h1 className="text-4xl font-bold">Marketing Mix Modeling</h1>
           <p className="text-muted-foreground">
-            Modelos avanzados para optimizar la asignación de presupuesto de
-            marketing
+            Modelos avanzados para optimizar la asignación de presupuesto de marketing
           </p>
         </div>
         <Button asChild>
@@ -34,9 +27,7 @@ export const Analysis = () => {
       <Card>
         <CardHeader>
           <CardTitle>Análisis Recientes</CardTitle>
-          <CardDescription>
-            Historial de modelos de Marketing Mix ejecutados
-          </CardDescription>
+          <CardDescription>Historial de modelos de Marketing Mix ejecutados</CardDescription>
         </CardHeader>
         <CardContent className="space-y-5">
           <AnalysisFilters />

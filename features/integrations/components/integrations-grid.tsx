@@ -1,4 +1,4 @@
-import { Integration } from "../types/integration.type";
+import type { Integration } from "../types/integration.type";
 import { IntegrationCard } from "./integration-card";
 
 interface IntegrationsGridProps {

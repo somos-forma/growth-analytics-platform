@@ -1,78 +1,23 @@
 "use client";
-import React, { useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
+import { Button } from "@/components/ui/button";
+import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
-import { useUserStore } from "../store";
 import { useUpdateUser } from "../hooks/useUpdateUser";
-import { useQueryClient } from "@tanstack/react-query";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { CreateUserAssignmentForm } from "./create-user-assignment-form";
-import { Eye, EyeOff } from "lucide-react";
-
-const clients = [
-  {
-    id: "a7k9x2",
-    name: "Cliente A",
-    description: "Descripción del Cliente A",
-  },
-  {
-    id: "b4m3y8",
-    name: "Cliente B",
-    description: "Descripción del Cliente B",
-  },
-  {
-    id: "c1n5z6",
-    name: "Cliente C",
-    description: "Descripción del Cliente C",
-  },
-  {
-    id: "d3p7q4",
-    name: "Cliente D",
-    description: "Descripción del Cliente D",
-  },
-  {
-    id: "e9r2s1",
-    name: "Cliente E",
-    description: "Descripción del Cliente E",
-  },
-  {
-    id: "f6t8u3",
-    name: "Cliente F",
-    description: "Descripción del Cliente F",
-  },
-  {
-    id: "g0v4w5",
-    name: "Cliente G",
-    description: "Descripción del Cliente G",
-  },
-];
+import { useUserStore } from "../store";
 
 const formSchema = z.object({
-  name: z
-    .string()
-    .min(2, { message: "El nombre debe tener al menos 2 caracteres" }),
+  name: z.string().min(2, { message: "El nombre debe tener al menos 2 caracteres" }),
   email: z.email({ message: "Ingresa un correo válido" }),
-  password: z.union([
-    z.string().min(8, { message: "La contraseña debe tener al menos 8 caracteres" }),
-    z.literal("")
-  ]),
+  password: z.union([z.string().min(8, { message: "La contraseña debe tener al menos 8 caracteres" }), z.literal("")]),
   rol: z.enum(["admin", "user"]),
   client_id: z.array(z.string()).optional(),
 });
@@ -82,24 +27,7 @@ export function UpdateUserForm() {
   const { mutate, isPending } = useUpdateUser();
   const queryClient = useQueryClient();
   const [showPassword, setShowPassword] = useState(false);
-  
-  // Combinar clientes disponibles con los que ya tiene el usuario
-  const allClients = useMemo(() => {
-    const existingClientIds = new Set(clients.map(c => c.id));
-    const userClients = user?.client_id || [];
-    
-    // Agregar clientes del usuario que no estén en la lista
-    const additionalClients = userClients
-      .filter(clientId => !existingClientIds.has(clientId))
-      .map(clientId => ({
-        id: clientId,
-        name: `Cliente ${clientId}`,
-        description: `Cliente asignado al usuario`,
-      }));
-    
-    return [...clients, ...additionalClients];
-  }, [user?.client_id]);
-  
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -113,7 +41,7 @@ export function UpdateUserForm() {
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     const client_id = data.client_id ?? user?.client_id ?? [];
-    const newUser = { ...data, id: user?.id!, client_id };
+    const newUser = { ...data, id: user?.id ?? "id-undefined", client_id };
     mutate(newUser, {
       onSuccess: () => {
         closeEditUserModal();
@@ -135,12 +63,7 @@ export function UpdateUserForm() {
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor={field.name}>Nombre</FieldLabel>
-              <Input
-                {...field}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-                placeholder="Juan Pérez"
-              />
+              <Input {...field} id={field.name} aria-invalid={fieldState.invalid} placeholder="Juan Pérez" />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
@@ -151,17 +74,12 @@ export function UpdateUserForm() {
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor={field.name}>Email</FieldLabel>
-              <Input
-                {...field}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-                placeholder="example@email.com"
-              />
+              <Input {...field} id={field.name} aria-invalid={fieldState.invalid} placeholder="example@email.com" />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
         />
-         <Controller
+        <Controller
           name="password"
           control={form.control}
           render={({ field, fieldState }) => (
@@ -209,7 +127,7 @@ export function UpdateUserForm() {
             </Field>
           )}
         />
-       
+
         <Field>
           <Button disabled={isPending} type="submit">
             {isPending && <Spinner />}

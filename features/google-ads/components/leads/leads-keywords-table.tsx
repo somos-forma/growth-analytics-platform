@@ -1,19 +1,9 @@
-import { DataTable } from "@/components/data-table";
-import { ColumnDef } from "@tanstack/react-table";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  formatCurrency,
-  formatNumber,
-  formatPercentage,
-} from "@/utils/formatters";
 import { useQuery } from "@tanstack/react-query";
+import type { ColumnDef } from "@tanstack/react-table";
+import { DataTable } from "@/components/data-table";
 import { TableSkeleton } from "@/components/skeletons/table-skeleton";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatCurrency, formatNumber } from "@/utils/formatters";
 
 type LeadsKeywords = {
   id: string;
@@ -133,8 +123,7 @@ export const LeadsKeywordsTable = ({ date }: { date: { from: string } }) => {
       <div className="p-2">
         <h2 className="font-bold text-2xl">Desempeño de keywords </h2>
         <p className="text-muted-foreground">
-          Impacto de las principales búsquedas en la generación de conversiones
-          y en el costo asociado.
+          Impacto de las principales búsquedas en la generación de conversiones y en el costo asociado.
         </p>
       </div>
       <Card>

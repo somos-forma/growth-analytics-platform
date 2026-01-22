@@ -1,19 +1,9 @@
 "use client";
-import { DataTable } from "@/components/data-table";
-import { ColumnDef } from "@tanstack/react-table";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  formatCurrency,
-  formatNumber,
-  formatPercentage,
-} from "@/utils/formatters";
 import { useQuery } from "@tanstack/react-query";
+import type { ColumnDef } from "@tanstack/react-table";
+import { DataTable } from "@/components/data-table";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatCurrency, formatNumber, formatPercentage } from "@/utils/formatters";
 
 type ResultsByPaid = {
   id: string;
@@ -87,11 +77,7 @@ export const data: ResultsByPaid[] = [
     conversion_rate: 10.0,
   },
 ];
-export const ResultsByPaidTable = ({
-  date,
-}: {
-  date: { from: string; to?: string };
-}) => {
+export const ResultsByPaidTable = ({ date }: { date: { from: string; to?: string } }) => {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["results-by-paid"],
     queryFn: async () => {
