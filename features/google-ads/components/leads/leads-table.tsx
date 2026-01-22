@@ -32,7 +32,7 @@ export const columns: ColumnDef<LeadsTable>[] = [
   },
   {
     accessorKey: "costs_conversion",
-    header: "Coste por Conversión",
+    header: "Coste / Conv.",
     cell: ({ getValue }) => formatCurrency(getValue<number>()),
   },
   {
@@ -42,7 +42,7 @@ export const columns: ColumnDef<LeadsTable>[] = [
   },
   {
     accessorKey: "lost_impression",
-    header: "Impresiones Perdidas",
+    header: "Cuota de Impresiones Perdidas",
     cell: ({ getValue }) => formatPercentage(getValue<number>()),
   },
 ];

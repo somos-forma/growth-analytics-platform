@@ -23,13 +23,17 @@ import { OverviewLeads } from "./components/leads/overview-leads";
 export const GoogleAds = () => {
   const [type, _] = useState<"ecommerce" | "leads">("leads");
   const [date, setDate] = useState<{ from: Date | undefined; to: Date | undefined }>({
-    from: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+    from: new Date(2025, 0, 1),
     to: new Date(),
   });
   const [openFrom, setOpenFrom] = useState(false);
   const [openTo, setOpenTo] = useState(false);
 
   if (type === "leads") {
+    const fromStr = format(date.from || new Date(), "yyyy-MM-dd");
+    const toStr = format(date.to || new Date(), "yyyy-MM-dd");
+    const dateKey = `${fromStr}-${toStr}`;
+
     return (
       <div className="space-y-5">
         <div className="flex justify-between items-center">
@@ -75,7 +79,7 @@ export const GoogleAds = () => {
               <div className="flex gap-2">
                 <Popover open={openFrom} onOpenChange={setOpenFrom}>
                   <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-40 justify-between font-semibold">
+                    <Button variant="outline" className="w-44 justify-between font-semibold">
                       Desde: {format(date.from || new Date(), "MMMM yyyy", { locale: es })}
                       <ChevronDown />
                     </Button>
@@ -94,7 +98,7 @@ export const GoogleAds = () => {
                 </Popover>
                 <Popover open={openTo} onOpenChange={setOpenTo}>
                   <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-40 justify-between font-semibold">
+                    <Button variant="outline" className="w-44 justify-between font-semibold">
                       Hasta: {format(date.to || new Date(), "MMMM yyyy", { locale: es })}
                       <ChevronDown />
                     </Button>
@@ -115,27 +119,31 @@ export const GoogleAds = () => {
             </div>
           </div>
           <OverviewLeads
+            key={`overview-${dateKey}`}
             date={{
-              from: format(date.from || new Date(), "yyyy-MM-dd"),
-              to: format(date.to || new Date(), "yyyy-MM-dd"),
+              from: fromStr,
+              to: toStr,
             }}
           />
           <LeadsCharts
+            key={`charts-${dateKey}`}
             date={{
-              from: format(date.from || new Date(), "yyyy-MM-dd"),
-              to: format(date.to || new Date(), "yyyy-MM-dd"),
+              from: fromStr,
+              to: toStr,
             }}
           />
           <LeadsTable
+            key={`table-${dateKey}`}
             date={{
-              from: format(date.from || new Date(), "yyyy-MM-dd"),
-              to: format(date.to || new Date(), "yyyy-MM-dd"),
+              from: fromStr,
+              to: toStr,
             }}
           />
           <LeadsKeywordsTable
+            key={`kw-${dateKey}`}
             date={{
-              from: format(date.from || new Date(), "yyyy-MM-dd"),
-              to: format(date.to || new Date(), "yyyy-MM-dd"),
+              from: fromStr,
+              to: toStr,
             }}
           />
         </div>
@@ -193,10 +201,10 @@ export const GoogleAds = () => {
         </div>
         <div className="space-y-5">
           <Overview date={{ from: "2024-11-01", to: "2025-11-01" }} />
-          <PerformanceIndicatorsTable date={{ from: "2025-11-01" }} />
-          <PerformanceIndicatorsSearchTable date={{ from: "2025-11-01" }} />
-          <PerformanceIndicatorsPmaxTable date={{ from: "2025-11-01" }} />
-          <PerformanceIndicatorsGenTable date={{ from: "2025-11-01" }} />
+          <PerformanceIndicatorsTable date={{ from: "2025-11-01", to: "2025-11-30" }} />
+          <PerformanceIndicatorsSearchTable date={{ from: "2025-11-01", to: "2025-11-30" }} />
+          <PerformanceIndicatorsPmaxTable date={{ from: "2025-11-01", to: "2025-11-30" }} />
+          <PerformanceIndicatorsGenTable date={{ from: "2025-11-01", to: "2025-11-30" }} />
           <div>
             <p className="font-bold text-xl">Indicadores de Costos</p>
             <span className=" italic">(Este mes)</span>
