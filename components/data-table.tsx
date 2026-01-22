@@ -106,14 +106,14 @@ export function DataTable<TData, TValue>({ columns, data, showTotals = true }: D
                 </TableRow>
               ))
             ) : (
-              <TableRow key="no-results">
+              <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>
             )}
             {showTotals && data.length > 0 && (
-              <TableRow key="totals" className="bg-muted font-medium">
+              <TableRow className="bg-muted font-medium">
                 {columns.map((column, index) => {
                   const accessorKey = (column as any).accessorKey;
                   const totalValue = totals[accessorKey];
