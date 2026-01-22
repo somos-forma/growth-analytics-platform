@@ -43,7 +43,15 @@ export const formatPercentage = (value: number, decimals: number = 2): string =>
  * Formatea moneda.
  * Ejemplo: 9408 → "US$ 9,408.00"
  */
+<<<<<<< Updated upstream
 export const formatCurrency = (value: number, currency: string = "USD", locale: string = "US-en"): string => {
+=======
+export const formatCurrency = (
+  value: number,
+  currency: string = "CLP",
+  locale: string = "US-en"
+): string => {
+>>>>>>> Stashed changes
   return new Intl.NumberFormat(locale, {
     style: "currency",
     currency,
@@ -136,5 +144,34 @@ export const formatSpanishDate = (dateString: string, locale: string = "es-ES"):
   } catch (error) {
     console.error("Error formateando fecha:", error);
     return dateString;
+  }
+};
+
+
+/**
+ * Retorna la fecha del primer día del mes actual en formato YYYY-MM-DD.
+ * Ejemplo: "2026-01-01"
+ */
+export const getCurrentMonthStart = (): string => {
+  try {
+    const now = new Date();
+    const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    return firstOfMonth.toISOString().slice(0, 10);
+  } catch (error) {
+    console.error("Error obteniendo el primer día del mes:", error);
+    return "";
+  }
+};
+
+export const getCurrentYearRange = (): { from: string; to: string } => {
+  try {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const from = new Date(currentYear, 0, 1).toISOString().slice(0, 10);
+    const to = new Date(currentYear, 11, 31).toISOString().slice(0, 10);
+    return { from, to };
+  } catch (error) {
+    console.error("Error obteniendo el rango del año actual:", error);
+    return { from: "", to: "" };
   }
 };

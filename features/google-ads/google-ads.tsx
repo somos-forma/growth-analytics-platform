@@ -13,8 +13,16 @@ import { PerformanceIndicatorsSearchTable } from "./components/ecommerce/perform
 import { PerformanceIndicatorsTable } from "./components/ecommerce/performance-indicators-table";
 import { LeadsCharts } from "./components/leads/leads-charts";
 import { LeadsKeywordsTable } from "./components/leads/leads-keywords-table";
+<<<<<<< Updated upstream
 import { LeadsTable } from "./components/leads/leads-table";
 import { OverviewLeads } from "./components/leads/overview-leads";
+=======
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
+import { CostAndConversionByHour } from "./components/ecommerce/cost-and-convertion-by-hour";
+import { ConversionAndRateByHour } from "./components/ecommerce/conversion-and-rate-by-hour";
+import { getCurrentMonthStart, getCurrentYearRange } from "@/utils/formatters";
+>>>>>>> Stashed changes
 
 export const GoogleAds = () => {
   const [type, _] = useState<"ecommerce" | "leads">("leads");
@@ -68,10 +76,10 @@ export const GoogleAds = () => {
         <div className="space-y-5">
           <OverviewLeads
             date={{
-              from: "2025-11-01",
+              from: getCurrentMonthStart(),
             }}
           />
-          <LeadsCharts date={{ from: "2025-01-01", to: "2025-12-31" }} />
+          <LeadsCharts date={getCurrentYearRange()} />
           <LeadsTable
             date={{
               from: "2025-11-01",
