@@ -1,15 +1,9 @@
-import { DataTable } from "@/components/data-table";
-import { ColumnDef } from "@tanstack/react-table";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { formatNumber, formatPercentage } from "@/utils/formatters";
 import { useQuery } from "@tanstack/react-query";
+import type { ColumnDef } from "@tanstack/react-table";
+import { DataTable } from "@/components/data-table";
 import { TableSkeleton } from "@/components/skeletons/table-skeleton";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatNumber, formatPercentage } from "@/utils/formatters";
 
 type PerformanceByChannel = {
   id: string;
@@ -216,9 +210,7 @@ export const PerformanceByChannelTable = () => {
         <CardDescription>
           Analiza el rendimiento de tus canales de adquisición de tráfico.
           <br />
-          <span className=" italic">
-            (Comparación del mes actual con el mismo mes del año anterior)
-          </span>
+          <span className=" italic">(Comparación del mes actual con el mismo mes del año anterior)</span>
         </CardDescription>
       </CardHeader>
       <CardContent>

@@ -1,34 +1,17 @@
+import { useQuery } from "@tanstack/react-query";
+import { Pie, PieChart } from "recharts";
 import { ChartSkeleton } from "@/components/skeletons/chart-skeleton";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  ChartConfig,
+  type ChartConfig,
   ChartContainer,
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { useQuery } from "@tanstack/react-query";
 
-import { Pie, PieChart } from "recharts";
-
-export const UserByDevice = ({
-  date,
-}: {
-  date: { from: string; to?: string };
-}) => {
-  const chartData = [
-    { device: "mobile", visitors: 275, fill: "var(--color-mobile)" },
-    { device: "desktop", visitors: 200, fill: "var(--color-desktop)" },
-    { device: "tablet", visitors: 187, fill: "var(--color-tablet)" },
-    { device: "smarttv", visitors: 173, fill: "var(--color-smarttv)" },
-  ];
+export const UserByDevice = ({ date }: { date: { from: string; to?: string } }) => {
   const chartConfig = {
     visitors: {
       label: "Visitors",
@@ -79,7 +62,7 @@ export const UserByDevice = ({
         "(other)": "var(--color-other)",
       };
       const json = await response.json();
-      const data = json.rows.map((raw: any, index: number) => ({
+      const data = json.rows.map((raw: any) => ({
         // id: String(index + 1),
         device: raw.device_category.replace(/\s+/g, "").replace(/[()]/g, ""),
         visitors: raw.usuarios_activos,
@@ -102,27 +85,14 @@ export const UserByDevice = ({
     <Card>
       <CardHeader>
         <CardTitle>Usuarios por Dispositivos</CardTitle>
-        <CardDescription>
-          Distribución de usuarios según el dispositivo utilizado
-        </CardDescription>
+        <CardDescription>Distribución de usuarios según el dispositivo utilizado</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer
-          config={chartConfig}
-          className="mx-auto aspect-square max-h-[300px]"
-        >
+        <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[300px]">
           <PieChart>
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-            <ChartLegend
-              className="flex flex-wrap"
-              content={<ChartLegendContent />}
-            />
-            <Pie
-              data={data}
-              dataKey="visitors"
-              nameKey="device"
-              innerRadius={60}
-            />
+            <ChartLegend className="flex flex-wrap" content={<ChartLegendContent />} />
+            <Pie data={data} dataKey="visitors" nameKey="device" innerRadius={60} />
           </PieChart>
         </ChartContainer>
       </CardContent>

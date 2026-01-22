@@ -1,27 +1,21 @@
 "use client";
+import { Pie, PieChart } from "recharts";
+
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  ChartConfig,
+  type ChartConfig,
   ChartContainer,
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { LabelList, Pie, PieChart } from "recharts";
 
 export function PieChartCustom({
   chartData,
   chartConfig,
   nameKey,
 }: {
-  chartData: any[];
+  chartData: unknown[];
   chartConfig: ChartConfig;
   nameKey: string;
 }) {
@@ -40,11 +34,7 @@ export function PieChartCustom({
             }}
           /> */}
         </Pie>
-        <ChartLegend
-          content={
-            <ChartLegendContent className="flex-wrap" nameKey={nameKey} />
-          }
-        />
+        <ChartLegend content={<ChartLegendContent className="flex-wrap" nameKey={nameKey} />} />
       </PieChart>
     </ChartContainer>
   );

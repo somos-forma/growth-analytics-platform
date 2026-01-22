@@ -1,15 +1,11 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Analysis } from "../types/analysis.type";
-import { Badge } from "@/components/ui/badge";
 import { Clock, DownloadIcon, FileTextIcon, Timer } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { formatTimeAgo } from "@/utils/formatters";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { formatTimeAgo } from "@/utils/formatters";
+import type { Analysis } from "../types/analysis.type";
 
 interface AnalysisCardProps {
   analysis: Analysis;

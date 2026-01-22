@@ -1,11 +1,11 @@
-import { DataTable } from "@/components/data-table";
-import { ColumnDef } from "@tanstack/react-table";
 import { useQuery } from "@tanstack/react-query";
+import type { ColumnDef } from "@tanstack/react-table";
+import { format, startOfMonth, subYears } from "date-fns";
 import React from "react";
-import { format, subYears, startOfMonth } from "date-fns";
+import { DataTable } from "@/components/data-table";
+import { TableSkeleton } from "@/components/skeletons/table-skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatNumber, formatPercentage } from "@/utils/formatters";
-import { TableSkeleton } from "@/components/skeletons/table-skeleton";
 
 type ChannelGroupMetrics = {
   id: string;
@@ -93,16 +93,9 @@ export const data: ChannelGroupMetrics[] = [
 export const ChannelGroupMetricsTable = () => {
   // Usar noviembre como mes actual ya que diciembre aún no tiene datos completos
   const currentDate = new Date();
-  const lastMonth = new Date(
-    currentDate.getFullYear(),
-    currentDate.getMonth() - 1,
-    1
-  );
+  const lastMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
   const currentMonthStart = format(startOfMonth(lastMonth), "yyyy-MM-dd");
-  const lastYearMonthStart = format(
-    startOfMonth(subYears(lastMonth, 1)),
-    "yyyy-MM-dd"
-  );
+  const lastYearMonthStart = format(startOfMonth(subYears(lastMonth, 1)), "yyyy-MM-dd");
 
   console.log("Dates:", { currentMonthStart, lastYearMonthStart });
 
@@ -171,7 +164,7 @@ export const ChannelGroupMetricsTable = () => {
         channelMap.set(channel, {});
       }
 
-      const channelData = channelMap.get(channel)!;
+      const channelData = channelMap.get(channel) ?? {};
 
       // Comparar solo la fecha (YYYY-MM-DD) sin hora
       const itemDateStr = itemDate?.substring(0, 10);
@@ -219,18 +212,13 @@ export const ChannelGroupMetricsTable = () => {
         currentDataKeys: currentData ? Object.keys(currentData) : [],
       });
 
-      const newUsersDelta =
-        previousNewUsers !== 0
-          ? (newUsers - previousNewUsers) / previousNewUsers
-          : 0;
+      const newUsersDelta = previousNewUsers !== 0 ? (newUsers - previousNewUsers) / previousNewUsers : 0;
 
       const sessionInteraction = currentData?.sesiones_con_interaccion || 0;
-      const previousSessionInteraction =
-        previousData?.sesiones_con_interaccion || 0;
+      const previousSessionInteraction = previousData?.sesiones_con_interaccion || 0;
       const sessionInteractionDelta =
         previousSessionInteraction !== 0
-          ? (sessionInteraction - previousSessionInteraction) /
-            previousSessionInteraction
+          ? (sessionInteraction - previousSessionInteraction) / previousSessionInteraction
           : 0;
 
       result.push({
@@ -260,9 +248,7 @@ export const ChannelGroupMetricsTable = () => {
           <CardTitle> Tabla 1 Leads</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-red-500">
-            Error cargando datos: {error.message}
-          </div>
+          <div className="text-red-500">Error cargando datos: {error.message}</div>
         </CardContent>
       </Card>
     );

@@ -1,35 +1,8 @@
+import { useQuery } from "@tanstack/react-query";
 import { MetricCard } from "@/components/metric-card";
 import { OverviewSkeleton } from "@/components/skeletons/overview-skeleton";
-import { useQuery } from "@tanstack/react-query";
 
 export const OverviewLeads = ({ date }: { date: { from: string } }) => {
-  const metrics: MetricCard[] = [
-    {
-      id: "1",
-      title: "Inversión",
-      value: 12000,
-      unit: "currency",
-      change: 5.4,
-      isPositive: true,
-    },
-    {
-      id: "2",
-      title: "Conversiones",
-      value: 93134,
-      unit: "number",
-      change: -2.1,
-      isPositive: true,
-    },
-    {
-      id: "3",
-      title: "Impresiones",
-      value: 15000,
-      unit: "currency",
-      change: 8.3,
-      isPositive: true,
-    },
-  ];
-
   const { data, isPending, isError, error } = useQuery({
     queryKey: ["google-ads-monthly-overview-leads"],
     queryFn: async () => {
@@ -92,11 +65,11 @@ export const OverviewLeads = ({ date }: { date: { from: string } }) => {
 
   return (
     <div className="space-y-5">
-          <div className="p-2">
-      <h1 className="text-left font-bold text-2xl">Resultados Generales</h1>
-      <p className="text-muted-foreground">
-        Visión consolidada del desempeño digital, considerando inversión, volumen de conversiones y eficiencia.
-      </p>
+      <div className="p-2">
+        <h1 className="text-left font-bold text-2xl">Resultados Generales</h1>
+        <p className="text-muted-foreground">
+          Visión consolidada del desempeño digital, considerando inversión, volumen de conversiones y eficiencia.
+        </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3   gap-3">
         {data.map((metric) => (

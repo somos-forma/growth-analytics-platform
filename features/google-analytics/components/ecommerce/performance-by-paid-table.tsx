@@ -1,14 +1,8 @@
 "use client";
-import { DataTable } from "@/components/data-table";
-import { ColumnDef } from "@tanstack/react-table";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
+import type { ColumnDef } from "@tanstack/react-table";
+import { DataTable } from "@/components/data-table";
+import { Card, CardContent } from "@/components/ui/card";
 
 type PerformanceByPaid = {
   id: string;
@@ -83,11 +77,7 @@ export const data: PerformanceByPaid[] = [
   },
 ];
 
-export const PerformanceByPaidTable = ({
-  date,
-}: {
-  date: { from: string };
-}) => {
+export const PerformanceByPaidTable = ({ date }: { date: { from: string } }) => {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["performance-by-paid"],
     queryFn: async () => {

@@ -34,10 +34,7 @@ export const getIntegrations = async () => {
   return integrationsAdapter(integrations);
 };
 
-export const performIntegrationAction = async (
-  integrationId: string,
-  action: string
-) => {
+export const performIntegrationAction = async () => {
   await new Promise((resolve) => setTimeout(resolve, 500));
   return {};
 };

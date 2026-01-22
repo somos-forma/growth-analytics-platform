@@ -1,17 +1,10 @@
 "use client";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { useClientStore } from "../store";
-import { Button } from "@/components/ui/button";
-import { useDeleteClient } from "../hooks/useDeleteClient";
-import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Spinner } from "@/components/ui/spinner";
+import { useDeleteClient } from "../hooks/useDeleteClient";
+import { useClientStore } from "../store";
 
 export const DeleteClientModal = () => {
   const { client, closeDeleteClientModal } = useClientStore();
@@ -35,17 +28,12 @@ export const DeleteClientModal = () => {
         <DialogHeader>
           <DialogTitle>Eliminar Cliente</DialogTitle>
           <DialogDescription>
-            ¿Seguro que quieres eliminar este cliente? <br /> Esta acción no se
-            puede revertir.
+            ¿Seguro que quieres eliminar este cliente? <br /> Esta acción no se puede revertir.
           </DialogDescription>
         </DialogHeader>
         <div className="flex gap-4 justify-end">
           <Button onClick={() => closeDeleteClientModal()}>Cancelar</Button>
-          <Button
-            variant="destructive"
-            disabled={isPending}
-            onClick={handleDelete}
-          >
+          <Button variant="destructive" disabled={isPending} onClick={handleDelete}>
             {isPending && <Spinner />}
             Eliminar
           </Button>

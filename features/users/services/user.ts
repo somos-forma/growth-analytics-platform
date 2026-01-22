@@ -1,9 +1,9 @@
-import { User } from "../types/user.type";
+import type { User } from "../types/user.type";
 
 export const getUsers = async (): Promise<User[]> => {
-  const response = await fetch('https://auton8n.moovmediagroup.com/webhook/growth/users');
+  const response = await fetch("https://auton8n.moovmediagroup.com/webhook/growth/users");
   if (!response.ok) {
-    throw new Error('Failed to fetch users');
+    throw new Error("Failed to fetch users");
   }
   const users: User[] = await response.json();
   return users;
@@ -23,7 +23,7 @@ export const createUser = async (data: {
       body: JSON.stringify(data),
     });
     if (!response.ok) {
-      throw new Error('Failed to create user');
+      throw new Error("Failed to create user");
     }
     const createdUser: User = await response.json();
     return createdUser;
@@ -35,11 +35,14 @@ export const createUser = async (data: {
 
 export const deleteUser = async (id: string): Promise<void> => {
   try {
-    const response = await fetch(`https://auton8n.moovmediagroup.com/webhook/45d08efd-1e10-4702-853a-5aefc36c399c/growth/users/${id}`, {
-      method: "DELETE",
-    });
+    const response = await fetch(
+      `https://auton8n.moovmediagroup.com/webhook/45d08efd-1e10-4702-853a-5aefc36c399c/growth/users/${id}`,
+      {
+        method: "DELETE",
+      },
+    );
     if (!response.ok) {
-      throw new Error('Failed to delete user');
+      throw new Error("Failed to delete user");
     }
   } catch (error) {
     console.error("Error deleting user", error);
@@ -68,7 +71,7 @@ export const updateUser = async (data: {
       }),
     });
     if (!response.ok) {
-      throw new Error('Failed to update user');
+      throw new Error("Failed to update user");
     }
     const updatedUser: User = await response.json();
     return updatedUser;

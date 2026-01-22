@@ -1,4 +1,4 @@
-import { Analysis } from "../types/analysis.type";
+import type { Analysis } from "../types/analysis.type";
 import { AnalysisCard } from "./analysis-card";
 
 type AnalysisCollectionProps = {

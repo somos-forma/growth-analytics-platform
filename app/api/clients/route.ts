@@ -1,12 +1,15 @@
-import { NextRequest, NextResponse } from "next/server";
-import { GoogleAuth } from "google-auth-library";
+import { type NextRequest, NextResponse } from "next/server";
 
-export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+type Parameters = {
+  request: NextRequest;
+  params?: Promise<{ id: string }>;
+};
+
+export async function POST({ request }: Parameters) {
   const URL = "https://auton8n.moovmediagroup.com/webhook/growth/clients";
- try{
-
+  try {
     const body = await request.json();
-    
+
     const response = await fetch(`${URL}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -16,10 +19,6 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     return NextResponse.json(response);
   } catch (error) {
     console.error(error);
-    return NextResponse.json(
-      { error: "Failed to fetch ID token" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to fetch ID token" }, { status: 500 });
   }
 }
-

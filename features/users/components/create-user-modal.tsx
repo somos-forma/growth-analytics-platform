@@ -1,12 +1,5 @@
 "use client";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { CreateUserForm } from "./create-user-form";
 
 type CreateUserModalProps = {
@@ -19,9 +12,7 @@ export const CreateUserModal = ({ onClose }: CreateUserModalProps) => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Crear Usuario</DialogTitle>
-          <DialogDescription>
-            Aquí va el formulario para crear un nuevo usuario.
-          </DialogDescription>
+          <DialogDescription>Aquí va el formulario para crear un nuevo usuario.</DialogDescription>
         </DialogHeader>
         <CreateUserForm />
       </DialogContent>

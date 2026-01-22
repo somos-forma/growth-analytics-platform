@@ -1,31 +1,26 @@
 "use client";
 
-import { useState } from "react";
-import { createPortal } from "react-dom";
 import {
-  DndContext,
-  DragEndEvent,
-  DragOverlay,
-  DragStartEvent,
-  MouseSensor,
-  TouchSensor,
   closestCenter,
-  useSensor,
-  useSensors,
+  DndContext,
+  type DragEndEvent,
+  DragOverlay,
+  type DragStartEvent,
   type DropAnimation,
   defaultDropAnimationSideEffects,
+  MouseSensor,
+  TouchSensor,
+  useDroppable,
+  useSensor,
+  useSensors,
 } from "@dnd-kit/core";
-import {
-  SortableContext,
-  arrayMove,
-  useSortable,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { useDroppable } from "@dnd-kit/core";
+import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { GripVertical, X } from "lucide-react";
+import { useState } from "react";
+import { createPortal } from "react-dom";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 export interface TransferItem {
@@ -75,16 +70,13 @@ function SortableItem({ item, onRemove, isDragging }: SortableItemProps) {
       className={cn(
         "flex items-center gap-2 rounded-md border bg-background p-3 transition-colors hover:bg-accent",
         item.disabled && "cursor-not-allowed opacity-50",
-        isDragging && "opacity-0"
+        isDragging && "opacity-0",
       )}
     >
       <div
         {...attributes}
         {...listeners}
-        className={cn(
-          "cursor-grab active:cursor-grabbing",
-          item.disabled && "cursor-not-allowed"
-        )}
+        className={cn("cursor-grab active:cursor-grabbing", item.disabled && "cursor-not-allowed")}
       >
         <GripVertical className="h-4 w-4 text-muted-foreground" />
       </div>
@@ -112,7 +104,7 @@ function EmptyDropZone({ id }: { id: string }) {
       ref={setNodeRef}
       className={cn(
         "flex h-32 items-center justify-center rounded-md border-2 border-dashed text-sm text-muted-foreground transition-colors",
-        isOver && "border-primary bg-accent"
+        isOver && "border-primary bg-accent",
       )}
     >
       Arrastra elementos aquí
@@ -142,12 +134,7 @@ function DroppableList({
             <EmptyDropZone id={droppableId} />
           ) : (
             items.map((item) => (
-              <SortableItem
-                key={item.id}
-                item={item}
-                onRemove={onRemove}
-                isDragging={activeId === item.id}
-              />
+              <SortableItem key={item.id} item={item} onRemove={onRemove} isDragging={activeId === item.id} />
             ))
           )}
         </SortableContext>
@@ -179,7 +166,7 @@ export function DndTransfer({
         delay: 200,
         tolerance: 6,
       },
-    })
+    }),
   );
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -286,9 +273,7 @@ export function DndTransfer({
     }
   };
 
-  const activeItem = [...available, ...selected].find(
-    (item) => item.id === activeId
-  );
+  const activeItem = [...available, ...selected].find((item) => item.id === activeId);
 
   const dropAnimation: DropAnimation = {
     sideEffects: defaultDropAnimationSideEffects({
@@ -308,12 +293,7 @@ export function DndTransfer({
       onDragEnd={handleDragEnd}
     >
       <div className={cn("flex gap-4", className)}>
-        <DroppableList
-          items={available}
-          title={availableTitle}
-          activeId={activeId}
-          droppableId="available-empty"
-        />
+        <DroppableList items={available} title={availableTitle} activeId={activeId} droppableId="available-empty" />
         <DroppableList
           items={selected}
           title={selectedTitle}
@@ -332,7 +312,7 @@ export function DndTransfer({
               </div>
             ) : null}
           </DragOverlay>,
-          document.body
+          document.body,
         )}
     </DndContext>
   );

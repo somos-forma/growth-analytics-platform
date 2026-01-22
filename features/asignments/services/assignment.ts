@@ -1,20 +1,15 @@
-import { success } from "zod";
-
 export const getAssignments = async (): Promise<any[]> => {
-  const response = await fetch('https://auton8n.moovmediagroup.com/webhook/growth/clients');
+  const response = await fetch("https://auton8n.moovmediagroup.com/webhook/growth/clients");
   if (!response.ok) {
-    throw new Error('Failed to fetch assignments');
+    throw new Error("Failed to fetch assignments");
   }
   const data = await response.json();
   return data;
 };
 
-export const createAssignment = async (data: {
-  id: string;
-  clientsId: string[];
-}): Promise<any> => {
+export const createAssignment = async (data: { id: string; clientsId: string[] }): Promise<any> => {
   try {
-    console.log('sending update', data);
+    console.log("sending update", data);
     const response = await fetch(`/api/users/${data.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -24,7 +19,7 @@ export const createAssignment = async (data: {
       }),
     });
     if (!response.ok) {
-      throw new Error('Failed to update user assignments');
+      throw new Error("Failed to update user assignments");
     }
     const updatedUser = await response.json();
     return updatedUser;
@@ -34,7 +29,7 @@ export const createAssignment = async (data: {
   }
 };
 
-export const deleteAssignment = async (id: string): Promise<any> => {
+export const deleteAssignment = async (): Promise<any> => {
   await new Promise((resolve) => setTimeout(resolve, 1500));
   return {
     success: true,

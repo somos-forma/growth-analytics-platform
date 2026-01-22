@@ -1,62 +1,17 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Bar,
-  CartesianGrid,
-  XAxis,
-  ComposedChart,
-  Line,
-  YAxis,
-  ResponsiveContainer,
-} from "recharts";
-import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-import { ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { ChartLegend, ChartLegendContent } from "@/components/ui/chart";
 import { useQuery } from "@tanstack/react-query";
+import { Bar, CartesianGrid, ComposedChart, Line, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import { ChartSkeleton } from "@/components/skeletons/chart-skeleton";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  type ChartConfig,
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 
-export const InvestmentByDayChart = ({
-  date,
-}: {
-  date: { from: string; to?: string };
-}) => {
-  const chartData = [
-    {
-      day: "1 ago 2025",
-      cost: 150,
-      cpm: 75,
-      cpc: 25,
-    },
-    {
-      day: "2 ago 2025",
-      cost: 180,
-      cpm: 90,
-      cpc: 30,
-    },
-    {
-      day: "3 ago 2025",
-      cost: 180,
-      cpm: 90,
-      cpc: 30,
-    },
-    {
-      day: "4 ago 2025",
-      cost: 90,
-      cpm: 45,
-      cpc: 15,
-    },
-    {
-      day: "5 ago 2025",
-      cost: 200,
-      cpm: 100,
-      cpc: 33,
-    },
-  ];
+export const InvestmentByDayChart = ({ date }: { date: { from: string; to?: string } }) => {
   const chartConfig = {
     cost: {
       label: "Total Coste",
@@ -129,12 +84,7 @@ export const InvestmentByDayChart = ({
                 }}
               />
 
-              <XAxis
-                dataKey="day"
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
-              />
+              <XAxis dataKey="day" tickLine={false} tickMargin={10} axisLine={false} />
               <ChartTooltip content={<ChartTooltipContent />} />
               <ChartLegend content={<ChartLegendContent />} />
               <Bar dataKey="cost" fill="var(--color-cost)" radius={4} />

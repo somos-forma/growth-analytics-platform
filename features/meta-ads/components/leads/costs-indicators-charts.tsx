@@ -1,64 +1,19 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Bar,
-  CartesianGrid,
-  XAxis,
-  ComposedChart,
-  Line,
-  YAxis,
-  ResponsiveContainer,
-} from "recharts";
-import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-import { ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { ChartLegend, ChartLegendContent } from "@/components/ui/chart";
 import { useQuery } from "@tanstack/react-query";
-import { ChartSkeleton } from "@/components/skeletons/chart-skeleton";
-import { formatNumberAbbreviated, formatSpanishDate } from "@/utils/formatters";
-import { format } from "date-fns/format";
 
-export const CostsIndicatorsCharts = ({
-  date,
-}: {
-  date: { from: string; to: string };
-}) => {
-  const chartData = [
-    {
-      day: "1 ago 2025",
-      cost: 150,
-      cpm: 75,
-      cpc: 25,
-    },
-    {
-      day: "2 ago 2025",
-      cost: 180,
-      cpm: 90,
-      cpc: 30,
-    },
-    {
-      day: "3 ago 2025",
-      cost: 180,
-      cpm: 90,
-      cpc: 30,
-    },
-    {
-      day: "4 ago 2025",
-      cost: 90,
-      cpm: 45,
-      cpc: 15,
-    },
-    {
-      day: "5 ago 2025",
-      cost: 200,
-      cpm: 100,
-      cpc: 33,
-    },
-  ];
+import { Bar, CartesianGrid, ComposedChart, Line, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import { ChartSkeleton } from "@/components/skeletons/chart-skeleton";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  type ChartConfig,
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import { formatNumberAbbreviated, formatSpanishDate } from "@/utils/formatters";
+
+export const CostsIndicatorsCharts = ({ date }: { date: { from: string; to: string } }) => {
   const chartConfig = {
     cost: {
       label: "Total Coste",
@@ -113,12 +68,8 @@ export const CostsIndicatorsCharts = ({
   return (
     <>
       <div className="p-2">
-        <h2 className="font-bold text-2xl">
-          Evolución de la eficiencia de la inversión en medios
-        </h2>
-        <p className="text-muted-foreground">
-          Comportamiento diario del gasto, CPM y CPC en el período analizado
-        </p>
+        <h2 className="font-bold text-2xl">Evolución de la eficiencia de la inversión en medios</h2>
+        <p className="text-muted-foreground">Comportamiento diario del gasto, CPM y CPC en el período analizado</p>
       </div>
       <Card>
         <CardHeader>

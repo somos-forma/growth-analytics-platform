@@ -1,16 +1,13 @@
+import { Bar, CartesianGrid, ComposedChart, Line, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  Bar,
-  CartesianGrid,
-  XAxis,
-  ComposedChart,
-  Line,
-  YAxis,
-  ResponsiveContainer,
-} from "recharts";
-import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-import { ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { ChartLegend, ChartLegendContent } from "@/components/ui/chart";
+  type ChartConfig,
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 
 export const MonthlyIndicators = () => {
   const chartData = [
@@ -107,31 +104,12 @@ export const MonthlyIndicators = () => {
                   dx: 30,
                 }}
               />
-              <XAxis
-                dataKey="month"
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
-              />
+              <XAxis dataKey="month" tickLine={false} tickMargin={10} axisLine={false} />
               <ChartTooltip content={<ChartTooltipContent />} />
               <ChartLegend content={<ChartLegendContent />} />
-              <Bar
-                dataKey="sessions"
-                fill="var(--color-sessions)"
-                radius={4}
-                yAxisId="left"
-              />
-              <Bar
-                dataKey="previousYearSessions"
-                fill="var(--color-previousYearSessions)"
-                radius={4}
-                yAxisId="left"
-              />
-              <Line
-                dataKey="revenue"
-                stroke="var(--color-revenue)"
-                yAxisId="right"
-              />
+              <Bar dataKey="sessions" fill="var(--color-sessions)" radius={4} yAxisId="left" />
+              <Bar dataKey="previousYearSessions" fill="var(--color-previousYearSessions)" radius={4} yAxisId="left" />
+              <Line dataKey="revenue" stroke="var(--color-revenue)" yAxisId="right" />
               <Line
                 dataKey="previousYearRevenue"
                 stroke="var(--color-previousYearRevenue)"

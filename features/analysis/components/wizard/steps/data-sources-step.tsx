@@ -1,7 +1,6 @@
-import { useWizardStore } from "../wizard-store";
-import { Controller, useForm } from "react-hook-form";
-import { dataSourcesSchema, DataSourcesSchemaType } from "../wizard-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Database, FileSpreadsheet } from "lucide-react";
+import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -15,7 +14,8 @@ import {
   FieldTitle,
 } from "@/components/ui/field";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Database, FileSpreadsheet } from "lucide-react";
+import { type DataSourcesSchemaType, dataSourcesSchema } from "../wizard-schemas";
+import { useWizardStore } from "../wizard-store";
 
 const types = [
   {
@@ -27,8 +27,7 @@ const types = [
   {
     id: "local",
     title: "Local",
-    description:
-      "Sube tus propios archivos CSV con datos históricos para un análisis personalizado y control total.",
+    description: "Sube tus propios archivos CSV con datos históricos para un análisis personalizado y control total.",
   },
 ] as const;
 
@@ -54,10 +53,7 @@ export const ConnectionTypeStep = () => {
           render={({ field, fieldState }) => (
             <FieldSet data-invalid={fieldState.invalid}>
               <FieldLegend>Fuentes de Datos</FieldLegend>
-              <FieldDescription>
-                Selecciona la fuente de datos que deseas utilizar para tu
-                análisis.
-              </FieldDescription>
+              <FieldDescription>Selecciona la fuente de datos que deseas utilizar para tu análisis.</FieldDescription>
               <RadioGroup
                 name={field.name}
                 value={field.value}
@@ -66,33 +62,20 @@ export const ConnectionTypeStep = () => {
                 className="flex"
               >
                 {types.map((resource) => (
-                  <FieldLabel
-                    key={resource.id}
-                    htmlFor={`form-rhf-radiogroup-${resource.id}`}
-                  >
+                  <FieldLabel key={resource.id} htmlFor={`form-rhf-radiogroup-${resource.id}`}>
                     <Field
                       orientation="horizontal"
                       data-invalid={fieldState.invalid}
-                      className={
-                        resource.id === "local"
-                          ? "opacity-50 pointer-events-none"
-                          : undefined
-                      }
+                      className={resource.id === "local" ? "opacity-50 pointer-events-none" : undefined}
                     >
                       <FieldContent>
                         <FieldTitle>
                           <div className="w-10 h-10  flex items-center justify-center rounded-full bg-primary/10 text-primary">
-                            {resource.id === "integrate" ? (
-                              <Database />
-                            ) : (
-                              <FileSpreadsheet />
-                            )}
+                            {resource.id === "integrate" ? <Database /> : <FileSpreadsheet />}
                           </div>
                           {resource.title}
                         </FieldTitle>
-                        <FieldDescription>
-                          {resource.description}
-                        </FieldDescription>
+                        <FieldDescription>{resource.description}</FieldDescription>
                       </FieldContent>
                       <RadioGroupItem
                         value={resource.id}

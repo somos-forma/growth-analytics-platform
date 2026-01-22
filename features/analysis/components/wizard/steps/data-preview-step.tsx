@@ -1,26 +1,13 @@
-import React from "react";
-import { useWizardStore } from "../wizard-store";
-import { Button } from "@/components/ui/button";
-import { DataTable } from "@/components/data-table";
-import { ColumnDef } from "@tanstack/react-table";
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
-import { toast } from "sonner";
+import type { ColumnDef } from "@tanstack/react-table";
 import { Rocket } from "lucide-react";
-import { useRouter } from "next/navigation";
+import type React from "react";
+import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
+import { toast } from "sonner";
+import { DataTable } from "@/components/data-table";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { useWizardStore } from "../wizard-store";
 
 type TableData = {
   id: number;
@@ -60,11 +47,10 @@ const columns: ColumnDef<TableData>[] = [
 ];
 
 export const DataPreviewStep = () => {
-  const router = useRouter();
   const back = useWizardStore((state) => state.back);
-  const next = useWizardStore((state) => state.next);
+
   const allData = useWizardStore((state) => state.data);
-  const resetAll = useWizardStore((state) => state.resetAll);
+
   const data: TableData[] = [
     {
       id: 1,
@@ -713,8 +699,7 @@ export const DataPreviewStep = () => {
         <CardHeader>
           <CardTitle>Variables medias</CardTitle>
           <CardDescription>
-            Relación temporal entre inversión publicitaria por canal y los
-            ingresos generados
+            Relación temporal entre inversión publicitaria por canal y los ingresos generados
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -728,17 +713,9 @@ export const DataPreviewStep = () => {
               }}
             >
               <CartesianGrid vertical={false} />
-              <XAxis
-                dataKey="date"
-                tickLine={false}
-                axisLine={false}
-                tickMargin={8}
-              />
+              <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} />
 
-              <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent hideLabel />}
-              />
+              <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
               {/* <Line
                 dataKey="desktop"
                 type="natural"
@@ -746,42 +723,12 @@ export const DataPreviewStep = () => {
                 strokeWidth={2}
                 dot={false}
               /> */}
-              <Line
-                dataKey="revenue"
-                type="natural"
-                stroke={chartConfig.revenue.color}
-                dot={false}
-              />
-              <Line
-                dataKey="mntn_tv_spend"
-                type="natural"
-                stroke={chartConfig.mntn_tv_spend.color}
-                dot={false}
-              />
-              <Line
-                dataKey="fb_ads_mof_spend"
-                type="natural"
-                stroke={chartConfig.fb_ads_mof_spend.color}
-                dot={false}
-              />
-              <Line
-                dataKey="fb_ads_tof_spend"
-                type="natural"
-                stroke={chartConfig.fb_ads_tof_spend.color}
-                dot={false}
-              />
-              <Line
-                dataKey="fb_ads_bof_spend"
-                type="natural"
-                stroke={chartConfig.fb_ads_bof_spend.color}
-                dot={false}
-              />
-              <Line
-                dataKey="fb_ads_ret_spend"
-                type="natural"
-                stroke={chartConfig.fb_ads_ret_spend.color}
-                dot={false}
-              />
+              <Line dataKey="revenue" type="natural" stroke={chartConfig.revenue.color} dot={false} />
+              <Line dataKey="mntn_tv_spend" type="natural" stroke={chartConfig.mntn_tv_spend.color} dot={false} />
+              <Line dataKey="fb_ads_mof_spend" type="natural" stroke={chartConfig.fb_ads_mof_spend.color} dot={false} />
+              <Line dataKey="fb_ads_tof_spend" type="natural" stroke={chartConfig.fb_ads_tof_spend.color} dot={false} />
+              <Line dataKey="fb_ads_bof_spend" type="natural" stroke={chartConfig.fb_ads_bof_spend.color} dot={false} />
+              <Line dataKey="fb_ads_ret_spend" type="natural" stroke={chartConfig.fb_ads_ret_spend.color} dot={false} />
               <Line
                 dataKey="google_ads_search_no_brand_spend"
                 type="natural"
@@ -812,24 +759,9 @@ export const DataPreviewStep = () => {
                 stroke={chartConfig.google_ads_performance_max_spend.color}
                 dot={false}
               />
-              <Line
-                dataKey="tiktok_spend"
-                type="natural"
-                stroke={chartConfig.tiktok_spend.color}
-                dot={false}
-              />
-              <Line
-                dataKey="snapchat_spend"
-                type="natural"
-                stroke={chartConfig.snapchat_spend.color}
-                dot={false}
-              />
-              <Line
-                dataKey="bing_spend"
-                type="natural"
-                stroke={chartConfig.bing_spend.color}
-                dot={false}
-              />
+              <Line dataKey="tiktok_spend" type="natural" stroke={chartConfig.tiktok_spend.color} dot={false} />
+              <Line dataKey="snapchat_spend" type="natural" stroke={chartConfig.snapchat_spend.color} dot={false} />
+              <Line dataKey="bing_spend" type="natural" stroke={chartConfig.bing_spend.color} dot={false} />
             </LineChart>
           </ChartContainer>
         </CardContent>

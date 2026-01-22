@@ -1,6 +1,6 @@
+import { useQuery } from "@tanstack/react-query";
 import { MetricCard } from "@/components/metric-card";
 import { OverviewSkeleton } from "@/components/skeletons/overview-skeleton";
-import { useQuery } from "@tanstack/react-query";
 
 export function adaptGoogleMonthlyPerformance(rows: any[]) {
   if (!rows || rows.length === 0) {
@@ -12,10 +12,7 @@ export function adaptGoogleMonthlyPerformance(rows: any[]) {
   }
 
   // Ordenamos por fecha (más reciente primero)
-  const sorted = [...rows].sort(
-    (a, b) =>
-      new Date(b.month_date).getTime() - new Date(a.month_date).getTime()
-  );
+  const sorted = [...rows].sort((a, b) => new Date(b.month_date).getTime() - new Date(a.month_date).getTime());
 
   const current = sorted[0];
 
@@ -71,105 +68,6 @@ export function adaptGoogleMonthlyPerformance(rows: any[]) {
 }
 
 export const Overview = ({ date }: { date: { from: string; to: string } }) => {
-  const metrics: MetricCard[] = [
-    {
-      id: "1",
-      title: "Inversión",
-      value: 12000,
-      unit: "currency",
-      change: 5.4,
-      isPositive: false,
-    },
-    {
-      id: "2",
-      title: "Ingresos Neto",
-      value: 93134,
-      unit: "currency",
-      change: -2.1,
-      isPositive: false,
-    },
-    {
-      id: "3",
-      title: "Impresiones",
-      value: 15000,
-      unit: "number",
-      change: 8.3,
-      isPositive: true,
-    },
-    {
-      id: "4",
-      title: "Conversiones",
-      value: 300,
-      unit: "currency",
-      change: 3.5,
-      isPositive: true,
-    },
-    {
-      id: "5",
-      title: "Sesiones",
-      value: 300,
-      unit: "number",
-      change: 3.5,
-      isPositive: true,
-    },
-    {
-      id: "6",
-      title: "CPS",
-      value: 5449967,
-      unit: "currency",
-      change: 3.5,
-      isPositive: true,
-    },
-    {
-      id: "7",
-      title: "Transacciones",
-      value: 1234567,
-      unit: "number",
-      change: 4.2,
-      isPositive: true,
-    },
-    {
-      id: "8",
-      title: "ROAS",
-      value: 4937,
-      unit: "number",
-      change: 2.1,
-      isPositive: false,
-    },
-    {
-      id: "9",
-      title: "CTR",
-      value: 27,
-      unit: "percentage",
-      change: 6.3,
-      isPositive: true,
-    },
-    {
-      id: "10",
-      title: "Conversiónes clics",
-      value: 80,
-      unit: "percentage",
-      change: 5.0,
-      isPositive: true,
-    },
-    {
-      id: "11",
-      title: "Clics",
-      value: 4500,
-      unit: "number",
-      change: 4.5,
-      isPositive: true,
-    },
-    {
-      id: "12",
-      title: "CPC promedio",
-      value: 1500,
-      unit: "currency",
-      change: 3.2,
-      isPositive: true,
-    },
-  ];
-
   const { data, isPending, isError, error } = useQuery({
     queryKey: ["fetch-metrics-google-ads"],
     queryFn: async () => {

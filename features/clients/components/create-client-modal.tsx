@@ -1,12 +1,5 @@
 "use client";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { CreateClientForm } from "./create-client-form";
 
 type CreateClientModalProps = {
@@ -19,9 +12,7 @@ export const CreateClientModal = ({ onClose }: CreateClientModalProps) => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Crear Clientes</DialogTitle>
-          <DialogDescription>
-            Aquí va el formulario para crear un nuevo cliente.
-          </DialogDescription>
+          <DialogDescription>Aquí va el formulario para crear un nuevo cliente.</DialogDescription>
         </DialogHeader>
         <CreateClientForm />
       </DialogContent>

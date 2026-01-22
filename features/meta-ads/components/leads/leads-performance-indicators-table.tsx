@@ -1,21 +1,10 @@
-import { DataTable } from "@/components/data-table";
-import { ColumnDef } from "@tanstack/react-table";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  formatCurrency,
-  formatNumber,
-  formatPercentage,
-} from "@/utils/formatters";
 import { useQuery } from "@tanstack/react-query";
-import { Table } from "lucide-react";
+import type { ColumnDef } from "@tanstack/react-table";
+
+import { DataTable } from "@/components/data-table";
 import { TableSkeleton } from "@/components/skeletons/table-skeleton";
-import { format } from "date-fns/format";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatCurrency, formatNumber } from "@/utils/formatters";
 
 type PerformanceIndicators = {
   id: string;
@@ -79,11 +68,7 @@ export const data: PerformanceIndicators[] = [
   },
 ];
 
-export const LeadsPerformanceIndicatorsTable = ({
-  date,
-}: {
-  date: { from: string; to: string };
-}) => {
+export const LeadsPerformanceIndicatorsTable = ({ date }: { date: { from: string; to: string } }) => {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["meta-ads-fetch-performance-indicators-table-leads"],
     queryFn: async () => {
@@ -112,9 +97,7 @@ export const LeadsPerformanceIndicatorsTable = ({
         frequency: raw.frecuencia ?? 0,
         scope: raw.alcance ?? 0,
       }));
-      const filteredData = data.filter(
-        (item: any) => item.campaign !== "Total",
-      );
+      const filteredData = data.filter((item: any) => item.campaign !== "Total");
       return filteredData;
     },
   });
@@ -132,8 +115,7 @@ export const LeadsPerformanceIndicatorsTable = ({
       <div className="p-2">
         <h2 className="font-bold text-2xl">Desempeño de campañas</h2>
         <p className="text-muted-foreground">
-          Aporte de cada campaña a la inversión, alcance e interacción con los
-          usuarios.
+          Aporte de cada campaña a la inversión, alcance e interacción con los usuarios.
         </p>
       </div>
       <Card>

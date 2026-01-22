@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteUser } from "../services/user";
 import { toast } from "sonner";
+import { deleteUser } from "../services/user";
 
 export const useDeleteUser = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: deleteUser,
     onSuccess: () => {

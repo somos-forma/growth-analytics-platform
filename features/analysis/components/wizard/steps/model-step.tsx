@@ -1,7 +1,6 @@
-import { useWizardStore } from "../wizard-store";
-import { Controller, useForm } from "react-hook-form";
-import { modelSchema, ModelSchemaType } from "../wizard-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { BrainCircuit } from "lucide-react";
+import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -15,7 +14,8 @@ import {
   FieldTitle,
 } from "@/components/ui/field";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { BrainCircuit } from "lucide-react";
+import { type ModelSchemaType, modelSchema } from "../wizard-schemas";
+import { useWizardStore } from "../wizard-store";
 
 const models = [
   {
@@ -54,9 +54,7 @@ export const ModelStep = () => {
           render={({ field, fieldState }) => (
             <FieldSet data-invalid={fieldState.invalid}>
               <FieldLegend>Modelo</FieldLegend>
-              <FieldDescription>
-                Selecciona el modelo que deseas utilizar para tu análisis.
-              </FieldDescription>
+              <FieldDescription>Selecciona el modelo que deseas utilizar para tu análisis.</FieldDescription>
               <RadioGroup
                 name={field.name}
                 value={field.value}
@@ -65,18 +63,11 @@ export const ModelStep = () => {
                 className="flex"
               >
                 {models.map((model) => (
-                  <FieldLabel
-                    key={model.id}
-                    htmlFor={`form-rhf-radiogroup-${model.id}`}
-                  >
+                  <FieldLabel key={model.id} htmlFor={`form-rhf-radiogroup-${model.id}`}>
                     <Field
                       orientation="horizontal"
                       data-invalid={fieldState.invalid}
-                      className={
-                        model.id === "robyn"
-                          ? "opacity-50 pointer-events-none"
-                          : undefined
-                      }
+                      className={model.id === "robyn" ? "opacity-50 pointer-events-none" : undefined}
                     >
                       <FieldContent>
                         <FieldTitle>

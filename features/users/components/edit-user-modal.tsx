@@ -1,12 +1,5 @@
 "use client";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useUserStore } from "../store";
 import { UpdateUserForm } from "./update-user-form";
 
@@ -17,9 +10,7 @@ export const EditUserModal = () => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Editar Usuario</DialogTitle>
-          <DialogDescription>
-            Aquí va el formulario para editar un usuario existente.
-          </DialogDescription>
+          <DialogDescription>Aquí va el formulario para editar un usuario existente.</DialogDescription>
         </DialogHeader>
         <UpdateUserForm />
       </DialogContent>

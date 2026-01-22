@@ -52,8 +52,7 @@ export const useWizardStore = create<WizardState>()(
       kpiSelected: [],
       organicSelected: [],
     },
-    updateData: (partial) =>
-      set((state) => ({ data: { ...state.data, ...partial } })),
+    updateData: (partial) => set((state) => ({ data: { ...state.data, ...partial } })),
     resetAll: () =>
       set(() => ({
         step: 1,
@@ -71,5 +70,5 @@ export const useWizardStore = create<WizardState>()(
           organicSelected: [],
         },
       })),
-  }))
+  })),
 );

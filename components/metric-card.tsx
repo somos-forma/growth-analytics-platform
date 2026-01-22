@@ -1,10 +1,6 @@
-import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
-import {
-  formatCurrency,
-  formatNumber,
-  formatPercentage,
-} from "@/utils/formatters";
 import { TrendingDown, TrendingUp } from "lucide-react";
+import { formatCurrency, formatNumber, formatPercentage } from "@/utils/formatters";
+import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 
 export type Unit = "number" | "percentage" | "currency";
 
@@ -17,21 +13,14 @@ export interface MetricCard {
   isPositive: boolean; // Indica si el cambio es positivo o negativo
 }
 
-export const MetricCard = ({
-  id,
-  title,
-  value,
-  unit,
-  change,
-  isPositive,
-}: MetricCard) => {
+export const MetricCard = ({ title, value, unit, change, isPositive }: MetricCard) => {
   function formatValue(value: number, unit: Unit) {
     switch (unit) {
       case "currency":
         return formatCurrency(value);
       case "percentage":
         return formatPercentage(value);
-      case "number":
+
       default:
         return formatNumber(value);
     }
@@ -44,22 +33,14 @@ export const MetricCard = ({
   return (
     <Card>
       <CardHeader>
-        <CardDescription className="flex justify-center">
-          {title}
-        </CardDescription>
-        <CardTitle className="text-xl flex justify-center sm:text-2xl  font-bold">
-          {newValue}
-        </CardTitle>
-        <p className={`flex justify-center ${isHardcodedPositive ? 'text-green-500' : 'text-destructive'}`}>
+        <CardDescription className="flex justify-center">{title}</CardDescription>
+        <CardTitle className="text-xl flex justify-center sm:text-2xl  font-bold">{newValue}</CardTitle>
+        <p className={`flex justify-center ${isHardcodedPositive ? "text-green-500" : "text-destructive"}`}>
           {formatPercentage(hardcodedChange, 1)}
         </p>
         {change !== 0 && (
           <p className="flex justify-center gap-2">
-            {isPositive ? (
-              <TrendingUp className="text-green-500" />
-            ) : (
-              <TrendingDown className="text-destructive" />
-            )}{" "}
+            {isPositive ? <TrendingUp className="text-green-500" /> : <TrendingDown className="text-destructive" />}{" "}
             {formatPercentage(change, 1)}
           </p>
         )}

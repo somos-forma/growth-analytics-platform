@@ -1,22 +1,17 @@
+// biome-ignore-all lint/suspicious/noDebugger: its intentional
+
 "use client";
 import {
-  ColumnDef,
+  type ColumnDef,
   flexRender,
   getCoreRowModel,
-  useReactTable,
   getPaginationRowModel,
+  useReactTable,
 } from "@tanstack/react-table";
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { formatNumber } from "@/utils/formatters";
 import { Button } from "./ui/button";
-import { formatNumber, formatPercentage } from "@/utils/formatters";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -24,11 +19,7 @@ interface DataTableProps<TData, TValue> {
   showTotals?: boolean;
 }
 
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-  showTotals = true,
-}: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data, showTotals = true }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,
@@ -65,22 +56,21 @@ export function DataTable<TData, TValue>({
   const totals = calculateTotals();
 
   // Función para formatear valores de totales usando la definición de la columna
-  const formatTotalValue = (
-    column: ColumnDef<TData, TValue>,
-    value: number
-  ) => {
+  const formatTotalValue = (column: ColumnDef<TData, TValue>, value: number) => {
     const cellRenderer = (column as any).cell;
     if (cellRenderer) {
       // Crear un contexto mock para el formatter
       const mockContext = {
         getValue: () => value,
         row: { original: {} },
+
         column: { id: (column as any).accessorKey },
       };
 
       try {
         return cellRenderer(mockContext);
       } catch (error) {
+        console.log(error);
         // Fallback a formato de número básico
         return formatNumber(value);
       }
@@ -99,12 +89,7 @@ export function DataTable<TData, TValue>({
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   );
                 })}
@@ -114,26 +99,15 @@ export function DataTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
+                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
+                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>
@@ -145,12 +119,8 @@ export function DataTable<TData, TValue>({
                   const totalValue = totals[accessorKey];
 
                   return (
-                    <TableCell key={index}>
-                      {index === 0
-                        ? "Total"
-                        : totalValue !== undefined
-                        ? formatTotalValue(column, totalValue)
-                        : "-"}
+                    <TableCell key={column.id}>
+                      {index === 0 ? "Total" : totalValue !== undefined ? formatTotalValue(column, totalValue) : "-"}
                     </TableCell>
                   );
                 })}
@@ -161,24 +131,13 @@ export function DataTable<TData, TValue>({
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex w-fit items-center justify-center text-sm font-medium">
-          Página {table.getState().pagination.pageIndex + 1} de{" "}
-          {table.getPageCount()}
+          Página {table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
+        <Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
           Anterior
         </Button>
 
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
+        <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
           Siguiente
         </Button>
       </div>

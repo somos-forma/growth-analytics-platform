@@ -1,18 +1,8 @@
-import { DataTable } from "@/components/data-table";
-import { ColumnDef } from "@tanstack/react-table";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  formatCurrency,
-  formatNumber,
-  formatPercentage,
-} from "@/utils/formatters";
 import { useQuery } from "@tanstack/react-query";
+import type { ColumnDef } from "@tanstack/react-table";
+import { DataTable } from "@/components/data-table";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatCurrency, formatNumber } from "@/utils/formatters";
 
 type IndicatorsKeywords = {
   id: string;
@@ -67,11 +57,7 @@ export const data: IndicatorsKeywords[] = [
   },
 ];
 
-export const IndicatorsKeywordsTable = ({
-  date,
-}: {
-  date: { from: string; to?: string };
-}) => {
+export const IndicatorsKeywordsTable = ({ date }: { date: { from: string; to?: string } }) => {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["indicators-keywords-table"],
     queryFn: async () => {
@@ -114,9 +100,7 @@ export const IndicatorsKeywordsTable = ({
     <Card>
       <CardHeader>
         <CardTitle>Indicadores keywords</CardTitle>
-        <CardDescription>
-          Tabla de indicadores clave relacionados con las keywords.
-        </CardDescription>
+        <CardDescription>Tabla de indicadores clave relacionados con las keywords.</CardDescription>
       </CardHeader>
       <CardContent>
         <DataTable columns={columns} data={data} />

@@ -1,29 +1,20 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-  FieldSeparator,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
-import { useCreateClient } from "../hooks/useCreateClient";
-import { Spinner } from "@/components/ui/spinner";
-import { useClientStore } from "../store";
-import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
+import { Textarea } from "@/components/ui/textarea";
+import { useCreateClient } from "../hooks/useCreateClient";
+import { useClientStore } from "../store";
 
 const formSchema = z
   .object({
-    name: z
-      .string()
-      .min(2, { message: "El nombre debe tener al menos 2 caracteres" }),
+    name: z.string().min(2, { message: "El nombre debe tener al menos 2 caracteres" }),
     website_url: z.string().url({ message: "URL inválida" }).or(z.literal("")),
     gcp_id: z.string().min(1, { message: "GCP ID requerido" }),
     description: z.string().optional(),
@@ -34,31 +25,18 @@ const formSchema = z
     meta_ads_check: z.boolean(),
     meta_ads_value: z.string().optional(),
   })
-  .refine(
-    (data) => !data.ga4_check || (data.ga4_value && data.ga4_value.length > 0),
-    {
-      message: "Valor GA4 requerido si está marcado",
-      path: ["ga4_value"],
-    }
-  )
-  .refine(
-    (data) =>
-      !data.google_ads_check ||
-      (data.google_ads_value && data.google_ads_value.length > 0),
-    {
-      message: "Valor Google Ads requerido si está marcado",
-      path: ["google_ads_value"],
-    }
-  )
-  .refine(
-    (data) =>
-      !data.meta_ads_check ||
-      (data.meta_ads_value && data.meta_ads_value.length > 0),
-    {
-      message: "Valor Meta Ads requerido si está marcado",
-      path: ["meta_ads_value"],
-    }
-  );
+  .refine((data) => !data.ga4_check || (data.ga4_value && data.ga4_value.length > 0), {
+    message: "Valor GA4 requerido si está marcado",
+    path: ["ga4_value"],
+  })
+  .refine((data) => !data.google_ads_check || (data.google_ads_value && data.google_ads_value.length > 0), {
+    message: "Valor Google Ads requerido si está marcado",
+    path: ["google_ads_value"],
+  })
+  .refine((data) => !data.meta_ads_check || (data.meta_ads_value && data.meta_ads_value.length > 0), {
+    message: "Valor Meta Ads requerido si está marcado",
+    path: ["meta_ads_value"],
+  });
 
 export function CreateClientForm() {
   const { closeCreateClientModal } = useClientStore();
@@ -125,12 +103,7 @@ export function CreateClientForm() {
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor={field.name}>Nombre</FieldLabel>
-              <Input
-                {...field}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-                placeholder="Mi Empresa S.A."
-              />
+              <Input {...field} id={field.name} aria-invalid={fieldState.invalid} placeholder="Mi Empresa S.A." />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
@@ -157,12 +130,7 @@ export function CreateClientForm() {
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor={field.name}>URL del Sitio Web</FieldLabel>
-              <Input
-                {...field}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-                placeholder="https://cliente.com"
-              />
+              <Input {...field} id={field.name} aria-invalid={fieldState.invalid} placeholder="https://cliente.com" />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
@@ -173,12 +141,7 @@ export function CreateClientForm() {
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor={field.name}>GCP ID</FieldLabel>
-              <Input
-                {...field}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-                placeholder="uui-google-cloud-id"
-              />
+              <Input {...field} id={field.name} aria-invalid={fieldState.invalid} placeholder="uui-google-cloud-id" />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
@@ -190,11 +153,7 @@ export function CreateClientForm() {
             control={form.control}
             render={({ field }) => (
               <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="ga4_check"
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
+                <Checkbox id="ga4_check" checked={field.value} onCheckedChange={field.onChange} />
                 <label htmlFor="ga4_check">GA4</label>
               </div>
             )}
@@ -205,14 +164,8 @@ export function CreateClientForm() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Input
-                    {...field}
-                    placeholder="G-24124213"
-                    aria-invalid={fieldState.invalid}
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
+                  <Input {...field} placeholder="G-24124213" aria-invalid={fieldState.invalid} />
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}
             />
@@ -222,11 +175,7 @@ export function CreateClientForm() {
             control={form.control}
             render={({ field }) => (
               <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="google_ads_check"
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
+                <Checkbox id="google_ads_check" checked={field.value} onCheckedChange={field.onChange} />
                 <label htmlFor="google_ads_check">Google Ads</label>
               </div>
             )}
@@ -237,14 +186,8 @@ export function CreateClientForm() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Input
-                    {...field}
-                    placeholder="1234567890"
-                    aria-invalid={fieldState.invalid}
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
+                  <Input {...field} placeholder="1234567890" aria-invalid={fieldState.invalid} />
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}
             />
@@ -254,11 +197,7 @@ export function CreateClientForm() {
             control={form.control}
             render={({ field }) => (
               <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="meta_ads_check"
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
+                <Checkbox id="meta_ads_check" checked={field.value} onCheckedChange={field.onChange} />
                 <label htmlFor="meta_ads_check">Meta Ads</label>
               </div>
             )}
@@ -269,14 +208,8 @@ export function CreateClientForm() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Input
-                    {...field}
-                    placeholder="12345678900000"
-                    aria-invalid={fieldState.invalid}
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
+                  <Input {...field} placeholder="12345678900000" aria-invalid={fieldState.invalid} />
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}
             />

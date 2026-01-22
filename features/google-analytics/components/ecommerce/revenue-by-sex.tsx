@@ -1,20 +1,13 @@
+import { Pie, PieChart } from "recharts";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  ChartConfig,
+  type ChartConfig,
   ChartContainer,
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-
-import { Pie, PieChart } from "recharts";
 
 export const RevenueBySex = () => {
   const chartData = [
@@ -44,24 +37,14 @@ export const RevenueBySex = () => {
     <Card>
       <CardHeader>
         <CardTitle>Ingresos por Sexo</CardTitle>
-        <CardDescription>
-          Distribución de ingresos según el sexo
-        </CardDescription>
+        <CardDescription>Distribución de ingresos según el sexo</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer
-          config={chartConfig}
-          className="mx-auto aspect-square max-h-[300px]"
-        >
+        <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[300px]">
           <PieChart>
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <ChartLegend content={<ChartLegendContent />} />
-            <Pie
-              data={chartData}
-              dataKey="revenue"
-              nameKey="sex"
-              innerRadius={60}
-            />
+            <Pie data={chartData} dataKey="revenue" nameKey="sex" innerRadius={60} />
           </PieChart>
         </ChartContainer>
       </CardContent>

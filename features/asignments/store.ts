@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { Client } from "../clients/types/client.type";
-import { User } from "../users/types/user.type";
+import type { Client } from "../clients/types/client.type";
+import type { User } from "../users/types/user.type";
 
 type AsignmentStore = {
   user: User | null;
