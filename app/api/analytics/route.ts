@@ -2,8 +2,7 @@ import { GoogleAuth } from "google-auth-library";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-  const TARGET_AUDIENCE =
-    process.env.CLOUD_RUN_URL ?? "https://your-cloud-run-service-url";
+  const TARGET_AUDIENCE = process.env.CLOUD_RUN_URL ?? "http://your-cloud-run-service-url";
   try {
     const auth = new GoogleAuth({
       credentials: {
@@ -23,9 +22,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(response.data);
   } catch (error) {
     console.error(error);
-    return NextResponse.json(
-      { error: "Failed to fetch ID token" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to fetch ID token" }, { status: 500 });
   }
 }
