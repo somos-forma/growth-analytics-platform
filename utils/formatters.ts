@@ -43,15 +43,7 @@ export const formatPercentage = (value: number, decimals: number = 2): string =>
  * Formatea moneda.
  * Ejemplo: 9408 → "US$ 9,408.00"
  */
-<<<<<<< Updated upstream
-export const formatCurrency = (value: number, currency: string = "USD", locale: string = "US-en"): string => {
-=======
-export const formatCurrency = (
-  value: number,
-  currency: string = "CLP",
-  locale: string = "US-en"
-): string => {
->>>>>>> Stashed changes
+export const formatCurrency = (value: number, currency: string = "CLP", locale: string = "US-en"): string => {
   return new Intl.NumberFormat(locale, {
     style: "currency",
     currency,
@@ -146,7 +138,6 @@ export const formatSpanishDate = (dateString: string, locale: string = "es-ES"):
     return dateString;
   }
 };
-
 
 /**
  * Retorna la fecha del primer día del mes actual en formato YYYY-MM-DD.
