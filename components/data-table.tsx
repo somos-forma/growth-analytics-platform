@@ -106,20 +106,20 @@ export function DataTable<TData, TValue>({ columns, data, showTotals = true }: D
                 </TableRow>
               ))
             ) : (
-              <TableRow>
+              <TableRow key="no-results">
                 <TableCell colSpan={columns.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>
             )}
             {showTotals && data.length > 0 && (
-              <TableRow className="bg-muted font-medium">
+              <TableRow key="totals" className="bg-muted font-medium">
                 {columns.map((column, index) => {
                   const accessorKey = (column as any).accessorKey;
                   const totalValue = totals[accessorKey];
-
+                  console.log(column);
                   return (
-                    <TableCell key={column.id}>
+                    <TableCell key={index}>
                       {index === 0 ? "Total" : totalValue !== undefined ? formatTotalValue(column, totalValue) : "-"}
                     </TableCell>
                   );

@@ -1,44 +1,7 @@
-<<<<<<< Updated upstream
 import { useQuery } from "@tanstack/react-query";
-import { MetricCard } from "@/components/metric-card";
-=======
-import { MetricCard, Unit } from "@/components/metric-card";
->>>>>>> Stashed changes
+import { MetricCard, type Unit } from "@/components/metric-card";
 import { OverviewSkeleton } from "@/components/skeletons/overview-skeleton";
-
 export const OverviewLeads = ({ date }: { date: { from: string } }) => {
-<<<<<<< Updated upstream
-=======
-  const metrics: MetricCard[] = [
-    {
-      id: "1",
-      title: "Inversión",
-      value: 12000,
-      unit: "currency",
-      change: 5.4,
-      isPositive: true,
-    },
-    {
-      id: "2",
-      title: "Conversiones",
-      value: 93134,
-      unit: "number",
-      change: -2.1,
-      isPositive: true,
-    },
-    {
-      id: "3",
-      title: "Impresiones",
-      value: 15000,
-      unit: "currency",
-      change: 8.3,
-      isPositive: true,
-    },
-  ];
-
-  console.log('OverviewLeads Date: ', date.from);
-
->>>>>>> Stashed changes
   const { data, isPending, isError, error } = useQuery({
     queryKey: ["google-ads-monthly-overview-leads"],
     queryFn: async () => {
@@ -81,7 +44,6 @@ export const OverviewLeads = ({ date }: { date: { from: string } }) => {
           isPositive: true,
         };
       });
-
       return transformed;
     },
   });
@@ -98,8 +60,6 @@ export const OverviewLeads = ({ date }: { date: { from: string } }) => {
   if (isError) {
     return <div>Error: {(error as Error).message}</div>;
   }
-
-  console.log(data)
 
   return (
     <div className="space-y-5">

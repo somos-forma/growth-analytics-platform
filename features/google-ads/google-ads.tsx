@@ -1,8 +1,13 @@
 "use client";
 
-import { Download, StarsIcon } from "lucide-react";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
+import { ChevronDown, Download, StarsIcon } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { getCurrentMonthStart, getCurrentYearRange } from "@/utils/formatters";
 import { ConversionAndRateByDay } from "./components/ecommerce/conversion-and-rate-by-day";
 import { CostAndConversionByDay } from "./components/ecommerce/cost-and-convertion-by-day";
 import { IndicatorsKeywordsTable } from "./components/ecommerce/indicators-keywords-table";
@@ -13,19 +18,13 @@ import { PerformanceIndicatorsSearchTable } from "./components/ecommerce/perform
 import { PerformanceIndicatorsTable } from "./components/ecommerce/performance-indicators-table";
 import { LeadsCharts } from "./components/leads/leads-charts";
 import { LeadsKeywordsTable } from "./components/leads/leads-keywords-table";
-<<<<<<< Updated upstream
 import { LeadsTable } from "./components/leads/leads-table";
 import { OverviewLeads } from "./components/leads/overview-leads";
-=======
-import { format } from "date-fns";
-import { es } from "date-fns/locale";
-import { CostAndConversionByHour } from "./components/ecommerce/cost-and-convertion-by-hour";
-import { ConversionAndRateByHour } from "./components/ecommerce/conversion-and-rate-by-hour";
-import { getCurrentMonthStart, getCurrentYearRange } from "@/utils/formatters";
->>>>>>> Stashed changes
 
 export const GoogleAds = () => {
   const [type, _] = useState<"ecommerce" | "leads">("leads");
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [open, setOpen] = useState(false);
 
   if (type === "leads") {
     return (
@@ -37,32 +36,6 @@ export const GoogleAds = () => {
           </div>
           {/* actions */}
           <div className="flex gap-3 ">
-            {/* <Popover open={open} onOpenChange={setOpen}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  id="date"
-                  className="w-48 justify-between font-semibold"
-                >
-                  {format(date || new Date(), "MMMM yyyy", { locale: es })}
-                  <ChevronDownIcon />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent
-                className="w-auto overflow-hidden p-0"
-                align="start"
-              >
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={(date) => {
-                    setDate(date);
-                    setOpen(false);
-                  }}
-                  locale={es}
-                />
-              </PopoverContent>
-            </Popover> */}
             <Button variant="outline">
               <StarsIcon />
               Resumen con AI
@@ -74,6 +47,27 @@ export const GoogleAds = () => {
           </div>
         </div>
         <div className="space-y-5">
+          <div className="w-full flex justify-end">
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <Button variant="outline" id="date" className="w-48 justify-between font-semibold">
+                  {format(date || new Date(), "MMMM yyyy", { locale: es })}
+                  <ChevronDown />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={date}
+                  onSelect={(date) => {
+                    setDate(date);
+                    setOpen(false);
+                  }}
+                  locale={es}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
           <OverviewLeads
             date={{
               from: getCurrentMonthStart(),
@@ -82,7 +76,7 @@ export const GoogleAds = () => {
           <LeadsCharts date={getCurrentYearRange()} />
           <LeadsTable
             date={{
-              from: "2025-11-01",
+              from: getCurrentMonthStart(),
             }}
           />
           <LeadsKeywordsTable
