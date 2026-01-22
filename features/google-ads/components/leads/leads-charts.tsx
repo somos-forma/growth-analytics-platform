@@ -34,7 +34,7 @@ export const LeadsCharts = ({ date }: { date: { from: string; to: string } }) =>
       const response = await fetch("/api/analytics", {
         method: "POST",
         body: JSON.stringify({
-          table: "monthly_google_ads_summary",
+          table: "monthly_google_ads_performance",
           filters: {
             event_date_between: [date.from, date.to],
           },
@@ -46,6 +46,7 @@ export const LeadsCharts = ({ date }: { date: { from: string; to: string } }) =>
       }
 
       const json = await response.json();
+      console.log(json);
 
       const transformed = json.rows.map((raw: any) => ({
         month: raw.mes,
@@ -53,8 +54,6 @@ export const LeadsCharts = ({ date }: { date: { from: string; to: string } }) =>
         conversions: raw.conversiones ?? 0,
         cpa: raw.cpa ?? 0,
       }));
-
-      console.log(`CHART`, transformed);
 
       return transformed;
     },

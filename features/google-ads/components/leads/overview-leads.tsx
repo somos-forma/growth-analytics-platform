@@ -1,26 +1,49 @@
 import { useQuery } from "@tanstack/react-query";
 import { MetricCard, type Unit } from "@/components/metric-card";
 import { OverviewSkeleton } from "@/components/skeletons/overview-skeleton";
-export const OverviewLeads = ({ date }: { date: { from: string } }) => {
+export const OverviewLeads = ({ date }: { date: { from: string; to: string } }) => {
   const { data, isPending, isError, error } = useQuery({
     queryKey: ["google-ads-monthly-overview-leads", date.from],
     queryFn: async () => {
-      const response = await fetch("/api/analytics", {
+      // Calculate previous year date
+      const currentDate = new Date(date.from);
+      const previousDate = new Date(currentDate);
+      previousDate.setFullYear(previousDate.getFullYear() - 1);
+      const previousFrom = previousDate.toISOString().split("T")[0];
+
+      // Fetch current period data
+      const currentResponse = await fetch("/api/analytics", {
         method: "POST",
         body: JSON.stringify({
           table: "campaign_google_ads_summary",
           filters: {
-            event_date_between: [date.from],
+            event_date_between: [date.from, date.to],
           },
           limit: 1000,
         }),
       });
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
+      if (!currentResponse.ok) {
+        throw new Error("Network response was not ok for current data");
       }
+      const currentJson = await currentResponse.json();
+      const currentOverview = currentJson.rows[0] || {};
 
-      const json = await response.json();
-      const overview = json.rows[0];
+      // Fetch previous period data
+      const previousResponse = await fetch("/api/analytics", {
+        method: "POST",
+        body: JSON.stringify({
+          table: "campaign_google_ads_summary",
+          filters: {
+            event_date_between: [previousFrom],
+          },
+          limit: 1000,
+        }),
+      });
+      if (!previousResponse.ok) {
+        throw new Error("Network response was not ok for previous data");
+      }
+      const previousJson = await previousResponse.json();
+      const previousOverview = previousJson.rows[0] || {};
 
       const titlesMap: { [key: string]: string } = {
         inversion_total: "Inversión",
@@ -34,14 +57,22 @@ export const OverviewLeads = ({ date }: { date: { from: string } }) => {
         cpa_total: "currency",
       };
 
+      function calcChange(curr: number, prev: number) {
+        if (!prev || prev === 0) return 0;
+        return ((curr - prev) / prev) * 100;
+      }
+
       const transformed = Object.keys(titlesMap).map((key) => {
+        const currValue = currentOverview[key] ?? 0;
+        const prevValue = previousOverview[key] ?? 0;
+        const change = calcChange(currValue, prevValue);
         return {
           id: key,
           title: titlesMap[key],
-          value: overview[key] ?? 0,
+          value: currValue,
           unit: unitsByKey[key] || "number",
-          change: 0,
-          isPositive: true,
+          change,
+          isPositive: change > 0,
         };
       });
       return transformed;
@@ -60,7 +91,6 @@ export const OverviewLeads = ({ date }: { date: { from: string } }) => {
   if (isError) {
     return <div>Error: {(error as Error).message}</div>;
   }
-
   return (
     <div className="space-y-5">
       <div className="p-2">

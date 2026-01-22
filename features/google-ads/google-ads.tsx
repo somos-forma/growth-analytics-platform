@@ -7,7 +7,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { getCurrentMonthStart, getCurrentYearRange } from "@/utils/formatters";
 import { ConversionAndRateByDay } from "./components/ecommerce/conversion-and-rate-by-day";
 import { CostAndConversionByDay } from "./components/ecommerce/cost-and-convertion-by-day";
 import { IndicatorsKeywordsTable } from "./components/ecommerce/indicators-keywords-table";
@@ -36,19 +35,7 @@ export const GoogleAds = () => {
           </div>
           {/* actions */}
           <div className="flex gap-3 ">
-            <Button variant="outline">
-              <StarsIcon />
-              Resumen con AI
-            </Button>
-            <Button variant="outline">
-              <Download />
-              Exportar
-            </Button>
-          </div>
-        </div>
-        <div className="space-y-5">
-          <div className="w-full flex justify-end">
-            <Popover open={open} onOpenChange={setOpen}>
+            {/* <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
                 <Button variant="outline" id="date" className="w-48 justify-between font-semibold">
                   {format(date || new Date(), "MMMM yyyy", { locale: es })}
@@ -66,24 +53,46 @@ export const GoogleAds = () => {
                   locale={es}
                 />
               </PopoverContent>
-            </Popover>
+            </Popover> */}
+            <Button variant="outline">
+              <StarsIcon />
+              Resumen con AI
+            </Button>
+            <Button variant="outline">
+              <Download />
+              Exportar
+            </Button>
           </div>
-          <OverviewLeads
-            date={{
-              from: getCurrentMonthStart(date),
-            }}
-          />
-          <LeadsCharts date={getCurrentYearRange()} />
-          <LeadsTable
-            date={{
-              from: getCurrentMonthStart(date),
-            }}
-          />
-          <LeadsKeywordsTable
-            date={{
-              from: getCurrentMonthStart(date),
-            }}
-          />
+        </div>
+        <div className="space-y-5">
+          <div className="w-full flex justify-end">
+            <div className="flex flex-row items-end gap-2">
+              <p className="text-sm text-muted-foreground m-auto">Seleccione por fecha: </p>
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" id="date" className="w-48 justify-between font-semibold">
+                    {format(date || new Date(), "MMMM yyyy", { locale: es })}
+                    <ChevronDown />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={(date) => {
+                      setDate(date);
+                      setOpen(false);
+                    }}
+                    locale={es}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+          </div>
+          <OverviewLeads date={{ from: "2025-01-01", to: "2026-01-31" }} />
+          <LeadsCharts date={{ from: "2025-01-01", to: "2026-01-31" }} />
+          <LeadsTable date={{ from: "2025-01-01", to: "2026-01-31" }} />
+          <LeadsKeywordsTable date={{ from: "2025-01-01", to: "2026-01-31" }} />
         </div>
       </div>
     );

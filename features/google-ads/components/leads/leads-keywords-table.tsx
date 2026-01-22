@@ -77,7 +77,7 @@ export const columns: ColumnDef<LeadsKeywords>[] = [
 //   },
 // ];
 
-export const LeadsKeywordsTable = ({ date }: { date: { from: string } }) => {
+export const LeadsKeywordsTable = ({ date }: { date: { from: string; to: string } }) => {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["google-ads-indicators-keywords-table-leads", date.from],
     queryFn: async () => {

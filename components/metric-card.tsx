@@ -27,17 +27,19 @@ export const MetricCard = ({ title, value, unit, change, isPositive }: MetricCar
   }
   const newValue = formatValue(value, unit);
 
-  const hardcodedChange = 6.5;
-  const isHardcodedPositive = hardcodedChange >= 0;
+  // console.log(isPositive, change);
+
+  // const hardcodedChange = 6.5;
+  // const isHardcodedPositive = hardcodedChange >= 0;
 
   return (
     <Card>
       <CardHeader>
         <CardDescription className="flex justify-center">{title}</CardDescription>
         <CardTitle className="text-xl flex justify-center sm:text-2xl  font-bold">{newValue}</CardTitle>
-        <p className={`flex justify-center ${isHardcodedPositive ? "text-green-500" : "text-destructive"}`}>
+        {/* <p className={`flex justify-center ${isHardcodedPositive ? "text-green-500" : "text-destructive"}`}>
           {formatPercentage(hardcodedChange, 1)}
-        </p>
+        </p> */}
         {change !== 0 && (
           <p className="flex justify-center gap-2">
             {isPositive ? <TrendingUp className="text-green-500" /> : <TrendingDown className="text-destructive" />}{" "}

@@ -76,7 +76,7 @@ export const data: LeadsTable[] = [
   },
 ];
 
-export const LeadsTable = ({ date }: { date: { from: string } }) => {
+export const LeadsTable = ({ date }: { date: { from: string; to: string } }) => {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["google-ads-leads-table", date.from],
     queryFn: async () => {

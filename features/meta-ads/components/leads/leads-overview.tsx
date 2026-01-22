@@ -73,8 +73,9 @@ export const LeadsOverview = ({ date }: { date: { from: string; to: string } }) 
       }
 
       const json = await response.json();
-      const adapted = adaptMetaMonthlyKpis(json.rows);
 
+      const adapted = adaptMetaMonthlyKpis(json.rows);
+      console.log(json.rows);
       const titlesMap: Record<string, string> = {
         costos: "Costos",
         impresiones: "Impresiones",
@@ -149,7 +150,6 @@ export const LeadsOverview = ({ date }: { date: { from: string; to: string } }) 
         change: adapted.metrics[key].change,
         isPositive: adapted.metrics[key].change > 0,
       }));
-      console.log(x);
       return x;
     },
   });

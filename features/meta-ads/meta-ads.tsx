@@ -81,7 +81,7 @@ export const MetaAds = () => {
           <LeadsOverview
             date={{
               from: "2024-11-01",
-              to: "2025-11-01",
+              to: "2026-01-01",
             }}
           />
           <LeadsPerformanceIndicatorsTable
