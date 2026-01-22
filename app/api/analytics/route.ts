@@ -2,7 +2,7 @@ import { GoogleAuth } from "google-auth-library";
 import { type NextRequest, NextResponse } from "next/server";
 
 const test = undefined;
-const test2 = null;
+const test2 = "";
 export async function POST(request: NextRequest) {
   const TARGET_AUDIENCE = process.env.CLOUD_RUN_URL!;
   try {
