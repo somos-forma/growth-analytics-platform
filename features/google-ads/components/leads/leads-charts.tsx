@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/chart";
 import { formatMonthYear, formatNumberAbbreviated } from "@/utils/formatters";
 
-export const LeadsCharts = ({ date }: { date: { from: string; to: string } }) => {
+export const LeadsCharts = ({ date }: { date: { from: string; to?: string } }) => {
   const chartConfig = {
     investment: {
       label: "Inversión",
