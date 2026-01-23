@@ -1,11 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-type Parameters = {
-  request: NextRequest;
-  params?: Promise<{ id: string }>;
-};
+type RouteHandler = (request: NextRequest, context?: { params: Promise<{ id: string }> }) => Promise<Response>;
 
-export async function POST({ request }: Parameters) {
+export const POST: RouteHandler = async (request) => {
   const URL = "https://auton8n.moovmediagroup.com/webhook/growth/clients";
   try {
     const body = await request.json();
@@ -16,9 +13,9 @@ export async function POST({ request }: Parameters) {
       body: JSON.stringify(body),
     });
 
-    return NextResponse.json(response);
+    return NextResponse.json(await response.json());
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Failed to fetch ID token" }, { status: 500 });
   }
-}
+};

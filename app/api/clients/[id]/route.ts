@@ -1,9 +1,11 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+type RouteHandler = (request: NextRequest, context: { params: Promise<{ id: string }> }) => Promise<Response>;
+
+export const PUT: RouteHandler = async (request, context) => {
   const URL = "https://auton8n.moovmediagroup.com/webhook/31e5ab5d-d54b-40ed-a59c-7d107521920d/clients";
   try {
-    const { id } = await params;
+    const { id } = await context.params;
     const body = await request.json();
 
     const response = await fetch(`${URL}/${id}`, {
@@ -12,9 +14,9 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       body: JSON.stringify(body),
     });
 
-    return NextResponse.json(response);
+    return NextResponse.json(await response.json());
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Failed to fetch ID token" }, { status: 500 });
   }
-}
+};
