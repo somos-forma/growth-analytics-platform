@@ -1,8 +1,8 @@
 import { TrendingDown, TrendingUp } from "lucide-react";
-import { formatCurrency, formatNumber, formatPercentage } from "@/utils/formatters";
+import { formatCurrency, formatNumber, formatPercentage, formatTime } from "@/utils/formatters";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 
-export type Unit = "number" | "percentage" | "currency";
+export type Unit = "number" | "percentage" | "currency" | "time";
 
 export interface MetricCard {
   id: string;
@@ -20,7 +20,8 @@ export const MetricCard = ({ title, value, unit, change, isPositive }: MetricCar
         return formatCurrency(value);
       case "percentage":
         return formatPercentage(value);
-
+      case "time":
+        return formatTime(value);
       default:
         return formatNumber(value);
     }
