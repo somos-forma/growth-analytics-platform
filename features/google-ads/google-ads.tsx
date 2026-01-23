@@ -1,13 +1,11 @@
 "use client";
 
 import { format } from "date-fns";
-import { es } from "date-fns/locale";
-import { ChevronDown, Download, StarsIcon } from "lucide-react";
+import { Download, StarsIcon } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { getCurrentMonthStart, getCurrentYearRange } from "@/utils/formatters";
+
+import { MonthRangePicker } from "@/components/ui/month-range-picker";
 import { ConversionAndRateByDay } from "./components/ecommerce/conversion-and-rate-by-day";
 import { CostAndConversionByDay } from "./components/ecommerce/cost-and-convertion-by-day";
 import { IndicatorsKeywordsTable } from "./components/ecommerce/indicators-keywords-table";
@@ -23,10 +21,19 @@ import { OverviewLeads } from "./components/leads/overview-leads";
 
 export const GoogleAds = () => {
   const [type, _] = useState<"ecommerce" | "leads">("leads");
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  const [open, setOpen] = useState(false);
+  const [date, setDate] = useState<{
+    from?: Date | undefined;
+    to?: Date | undefined;
+  }>({
+    from: new Date(2025, 0, 1),
+    to: new Date(),
+  });
 
   if (type === "leads") {
+    const fromStr = format(date.from || new Date(), "yyyy-MM-dd");
+    const toStr = format(date.to || new Date(), "yyyy-MM-dd");
+    const dateKey = `${fromStr}-${toStr}`;
+
     return (
       <div className="space-y-5">
         <div className="flex justify-between items-center">
@@ -36,19 +43,7 @@ export const GoogleAds = () => {
           </div>
           {/* actions */}
           <div className="flex gap-3 ">
-            <Button variant="outline">
-              <StarsIcon />
-              Resumen con AI
-            </Button>
-            <Button variant="outline">
-              <Download />
-              Exportar
-            </Button>
-          </div>
-        </div>
-        <div className="space-y-5">
-          <div className="w-full flex justify-end">
-            <Popover open={open} onOpenChange={setOpen}>
+            {/* <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
                 <Button variant="outline" id="date" className="w-48 justify-between font-semibold">
                   {format(date || new Date(), "MMMM yyyy", { locale: es })}
@@ -66,22 +61,45 @@ export const GoogleAds = () => {
                   locale={es}
                 />
               </PopoverContent>
-            </Popover>
+            </Popover> */}
+            <Button variant="outline">
+              <StarsIcon />
+              Resumen con AI
+            </Button>
+            <Button variant="outline">
+              <Download />
+              Exportar
+            </Button>
           </div>
+        </div>
+        <div className="space-y-5">
+          <MonthRangePicker initialFrom={date.from} initialTo={date.to} onChange={(range) => setDate(range)} />
           <OverviewLeads
+            key={`overview-${dateKey}`}
             date={{
-              from: getCurrentMonthStart(),
+              from: fromStr,
+              to: toStr,
             }}
           />
-          <LeadsCharts date={getCurrentYearRange()} />
-          <LeadsTable
+          <LeadsCharts
+            key={`charts-${dateKey}`}
             date={{
-              from: getCurrentMonthStart(),
+              from: fromStr,
+              to: toStr,
+            }}
+          />
+          <LeadsTable
+            key={`table-${dateKey}`}
+            date={{
+              from: fromStr,
+              to: toStr,
             }}
           />
           <LeadsKeywordsTable
+            key={`kw-${dateKey}`}
             date={{
-              from: "2025-11-01",
+              from: fromStr,
+              to: toStr,
             }}
           />
         </div>
@@ -139,10 +157,10 @@ export const GoogleAds = () => {
         </div>
         <div className="space-y-5">
           <Overview date={{ from: "2024-11-01", to: "2025-11-01" }} />
-          <PerformanceIndicatorsTable date={{ from: "2025-11-01" }} />
-          <PerformanceIndicatorsSearchTable date={{ from: "2025-11-01" }} />
-          <PerformanceIndicatorsPmaxTable date={{ from: "2025-11-01" }} />
-          <PerformanceIndicatorsGenTable date={{ from: "2025-11-01" }} />
+          <PerformanceIndicatorsTable date={{ from: "2025-11-01", to: "2025-11-30" }} />
+          <PerformanceIndicatorsSearchTable date={{ from: "2025-11-01", to: "2025-11-30" }} />
+          <PerformanceIndicatorsPmaxTable date={{ from: "2025-11-01", to: "2025-11-30" }} />
+          <PerformanceIndicatorsGenTable date={{ from: "2025-11-01", to: "2025-11-30" }} />
           <div>
             <p className="font-bold text-xl">Indicadores de Costos</p>
             <span className=" italic">(Este mes)</span>

@@ -117,7 +117,6 @@ export function DataTable<TData, TValue>({ columns, data, showTotals = true }: D
                 {columns.map((column, index) => {
                   const accessorKey = (column as any).accessorKey;
                   const totalValue = totals[accessorKey];
-                  console.log(column);
                   return (
                     <TableCell key={index}>
                       {index === 0 ? "Total" : totalValue !== undefined ? formatTotalValue(column, totalValue) : "-"}

@@ -30,7 +30,7 @@ export const CostsIndicatorsCharts = ({ date }: { date: { from: string; to: stri
   } satisfies ChartConfig;
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["meta-ads-daily-investment-cpm-cpc-leads"],
+    queryKey: ["meta-ads-daily-investment-cpm-cpc-leads", date.from, date.to],
     queryFn: async () => {
       const response = await fetch("/api/analytics", {
         method: "POST",

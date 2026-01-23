@@ -33,7 +33,7 @@ export const columns: ColumnDef<PerformanceIndicators>[] = [
   },
   {
     accessorKey: "clicks",
-    header: "Clics",
+    header: "Clicks",
     cell: ({ getValue }) => formatNumber(getValue<number>()),
   },
   {
@@ -70,14 +70,14 @@ export const data: PerformanceIndicators[] = [
 
 export const LeadsPerformanceIndicatorsTable = ({ date }: { date: { from: string; to: string } }) => {
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["meta-ads-fetch-performance-indicators-table-leads"],
+    queryKey: ["meta-ads-fetch-performance-indicators-table-leads", date.from, date.to],
     queryFn: async () => {
       const response = await fetch("/api/analytics", {
         method: "POST",
         body: JSON.stringify({
           table: "monthly_meta_campaign_performance",
           filters: {
-            event_date_between: [date.from],
+            event_date_between: [date.from, date.to],
           },
           limit: 1000,
         }),

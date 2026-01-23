@@ -29,12 +29,12 @@ export const LeadsCharts = ({ date }: { date: { from: string; to: string } }) =>
   } satisfies ChartConfig;
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["google-ads-monthly-leads-charts-data"],
+    queryKey: ["google-ads-monthly-leads-charts-data", date.from, date.to],
     queryFn: async () => {
       const response = await fetch("/api/analytics", {
         method: "POST",
         body: JSON.stringify({
-          table: "monthly_google_ads_summary",
+          table: "monthly_google_ads_performance",
           filters: {
             event_date_between: [date.from, date.to],
           },
@@ -53,8 +53,6 @@ export const LeadsCharts = ({ date }: { date: { from: string; to: string } }) =>
         conversions: raw.conversiones ?? 0,
         cpa: raw.cpa ?? 0,
       }));
-
-      console.log(`CHART`, transformed);
 
       return transformed;
     },

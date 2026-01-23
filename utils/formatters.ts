@@ -101,7 +101,13 @@ export const formatMonthYear = (dateString: string, locale: string = "es-ES"): s
   if (!dateString) return "";
 
   try {
-    const date = new Date(dateString);
+    // Parse as local year-month to avoid timezone shifting one month back.
+    // Supports both "YYYY-MM" and "YYYY-MM-DD" inputs.
+    const parts = dateString.split("-");
+    const year = Number(parts[0]);
+    const monthIndex = parts.length > 1 ? Number(parts[1]) - 1 : 0; // 0-based
+    const date = new Date(year, isNaN(monthIndex) ? 0 : monthIndex, 1);
+
     const formatter = new Intl.DateTimeFormat(locale, {
       month: "short",
       year: "numeric",
@@ -143,9 +149,9 @@ export const formatSpanishDate = (dateString: string, locale: string = "es-ES"):
  * Retorna la fecha del primer día del mes actual en formato YYYY-MM-DD.
  * Ejemplo: "2026-01-01"
  */
-export const getCurrentMonthStart = (): string => {
+export const getCurrentMonthStart = (date?: Date): string => {
   try {
-    const now = new Date();
+    const now = date || new Date();
     const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     return firstOfMonth.toISOString().slice(0, 10);
   } catch (error) {
@@ -154,9 +160,9 @@ export const getCurrentMonthStart = (): string => {
   }
 };
 
-export const getCurrentYearRange = (): { from: string; to: string } => {
+export const getCurrentYearRange = (date?: Date): { from: string; to: string } => {
   try {
-    const now = new Date();
+    const now = date || new Date();
     const currentYear = now.getFullYear();
     const from = new Date(currentYear, 0, 1).toISOString().slice(0, 10);
     const to = new Date(currentYear, 11, 31).toISOString().slice(0, 10);
