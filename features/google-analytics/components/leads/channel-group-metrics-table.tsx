@@ -68,9 +68,9 @@ export const data: ChannelGroupMetrics[] = [
   },
 ];
 
-export const ChannelGroupMetricsTable = () => {
+export const ChannelGroupMetricsTable = ({ date }: { date: { from: string; to?: string } }) => {
   const { data, isLoading, error } = useQuery({
-    queryKey: ["channel-group-metrics"],
+    queryKey: ["channel-group-metrics", date.from],
     queryFn: async () => {
       const response = await fetch("/api/analytics", {
         method: "POST",
@@ -80,7 +80,7 @@ export const ChannelGroupMetricsTable = () => {
         body: JSON.stringify({
           table: "ga4_traffic_channel_monthly_kpis",
           filters: {
-            event_date_between: ["2025-06-01"],
+            event_date_between: [date.from],
           },
           limit: 1000,
         }),
