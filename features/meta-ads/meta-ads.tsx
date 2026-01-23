@@ -1,33 +1,49 @@
 "use client";
 
 import { Download, StarsIcon } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
-
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { EcommerceOverview } from "./components/ecommerce/ecommerce-overview";
 import { EcommercePerformanceIndicatorsTable } from "./components/ecommerce/ecommerce-performance-indicators-table";
 import { InvestmentByDayChart } from "./components/ecommerce/investment-by-day-chart";
 import { CostsIndicatorsCharts } from "./components/leads/costs-indicators-charts";
 import { LeadsOverview } from "./components/leads/leads-overview";
 import { LeadsPerformanceIndicatorsTable } from "./components/leads/leads-performance-indicators-table";
-import { MonthRangePicker } from "@/components/ui/month-range-picker";
-import { format } from "date-fns";
 
 export const MetaAds = () => {
   const [type, _] = useState<"ecommerce" | "leads">("leads");
+  const [selectedYear, setSelectedYear] = useState<string>(new Date().getFullYear().toString());
+  const [selectedMonth, setSelectedMonth] = useState<string>((new Date().getMonth() + 1).toString());
 
-  const [date, setDate] = useState<{
-    from?: Date | undefined;
-    to?: Date | undefined;
-  }>({
-    from: new Date(2025, 0, 1),
-    to: new Date(),
-  });
-  const fromStr = format(date.from || new Date(), "yyyy-MM-dd");
-  const toStr = format(date.to || new Date(), "yyyy-MM-dd");
-  const dateKey = `${fromStr}-${toStr}`;
+  // Generar años (últimos 5 años)
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 3 }, (_, i) => (currentYear - i).toString());
+
+  // Meses
+  const months = [
+    { value: "1", label: "Enero" },
+    { value: "2", label: "Febrero" },
+    { value: "3", label: "Marzo" },
+    { value: "4", label: "Abril" },
+    { value: "5", label: "Mayo" },
+    { value: "6", label: "Junio" },
+    { value: "7", label: "Julio" },
+    { value: "8", label: "Agosto" },
+    { value: "9", label: "Septiembre" },
+    { value: "10", label: "Octubre" },
+    { value: "11", label: "Noviembre" },
+    { value: "12", label: "Diciembre" },
+  ];
+
+  // Formatear fecha en formato 'YYYY-MM-DD'
+  const formattedDate = useMemo(() => {
+    const month = selectedMonth.padStart(2, "0");
+    return `${selectedYear}-${month}-01`;
+  }, [selectedYear, selectedMonth]);
+
   return (
-    <div className="space-y-5">
+    <div className="space-y-7">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="font-bold text-4xl">Meta Ads </h1>
@@ -88,28 +104,51 @@ export const MetaAds = () => {
           </Button>
         </div>
       </div>
+
+      <div className="flex gap-3 items-center justify-end ">
+        <div className="flex items-center gap-2 ">
+          {/* <span className="text-sm font-medium">Año:</span> */}
+          <Select value={selectedYear} onValueChange={setSelectedYear}>
+            <SelectTrigger className="w-32 font-bold">
+              <SelectValue placeholder="Seleccionar año" />
+            </SelectTrigger>
+            <SelectContent>
+              {years.map((year) => (
+                <SelectItem key={year} value={year}>
+                  {year}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex items-center gap-2">
+          {/* <span className="text-sm font-medium">Mes:</span> */}
+          <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+            <SelectTrigger className="w-40 font-bold">
+              <SelectValue placeholder="Seleccionar mes" />
+            </SelectTrigger>
+            <SelectContent>
+              {months.map((month) => (
+                <SelectItem key={month.value} value={month.value}>
+                  {month.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
       {type === "leads" ? (
         <div className="space-y-5">
-          <MonthRangePicker initialFrom={date.from} initialTo={date.to} onChange={(range) => setDate(range)} />
-          <LeadsOverview
-            key={`overview-${dateKey}`}
-            date={{
-              from: fromStr,
-              to: toStr,
-            }}
-          />
-          <LeadsPerformanceIndicatorsTable
-            key={`table-${dateKey}`}
-            date={{
-              from: fromStr,
-              to: toStr,
-            }}
-          />
+          {/* <MonthRangePicker initialFrom={date.from} initialTo={date.to} onChange={(range) => setDate(range)} /> */}
+
+          <LeadsOverview date={{ from: formattedDate }} />
+
+          <LeadsPerformanceIndicatorsTable date={{ from: formattedDate }} />
           <CostsIndicatorsCharts
-            key={`charts-${dateKey}`}
             date={{
-              from: fromStr,
-              to: toStr,
+              from: formattedDate,
+              to: "2026-01-01",
             }}
           />
         </div>

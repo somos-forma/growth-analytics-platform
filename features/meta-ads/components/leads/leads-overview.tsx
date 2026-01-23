@@ -54,7 +54,7 @@ function adaptMetaMonthlyKpis(rows: any[]) {
   };
 }
 
-export const LeadsOverview = ({ date }: { date: { from: string; to: string } }) => {
+export const LeadsOverview = ({ date }: { date: { from: string; to?: string } }) => {
   const formatDate = (d: Date) => d.toISOString().slice(0, 10); // YYYY-MM-DD
 
   const fromDate = new Date(date.from);
@@ -66,7 +66,7 @@ export const LeadsOverview = ({ date }: { date: { from: string; to: string } }) 
   const effectiveFrom = formatDate(previousYearFrom) < date.from ? formatDate(previousYearFrom) : date.from;
 
   const { data, isPending, isError, error } = useQuery({
-    queryKey: ["meta-ads-leads-metrics", date.from, date.to],
+    queryKey: ["meta-ads-leads-metrics", effectiveFrom, date.from],
     queryFn: async () => {
       const response = await fetch("/api/analytics", {
         method: "POST",
@@ -75,7 +75,7 @@ export const LeadsOverview = ({ date }: { date: { from: string; to: string } }) 
           filters: {
             // We request a 13‑month window (current month + same month last year)
             // so the variation calculation always has the reference period available.
-            event_date_between: [effectiveFrom, date.to],
+            event_date_between: [effectiveFrom, date.from],
           },
         }),
       });

@@ -76,16 +76,16 @@ export const data: LeadsTable[] = [
   },
 ];
 
-export const LeadsTable = ({ date }: { date: { from: string; to: string } }) => {
+export const LeadsTable = ({ date }: { date: { from: string; to?: string } }) => {
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["google-ads-leads-table", date.from, date.to],
+    queryKey: ["google-ads-leads-table", date.from],
     queryFn: async () => {
       const response = await fetch("/api/analytics", {
         method: "POST",
         body: JSON.stringify({
           table: "campaign_google_ads_summary",
           filters: {
-            event_date_between: [date.from, date.to],
+            event_date_between: [date.from],
           },
           limit: 1000,
         }),
