@@ -53,6 +53,19 @@ export const formatCurrency = (value: number, currency: string = "CLP", locale: 
 };
 
 /**
+ * Formatea tiempo en segundos a formato HH:MM:SS.
+ * Ejemplo: 107 → "00:01:47"
+ */
+export const formatTime = (seconds: number): string => {
+  const hours = Math.floor(seconds / 3600);
+  const remainingAfterHours = seconds % 3600;
+  const minutes = Math.floor(remainingAfterHours / 60);
+  const secs = Math.ceil(remainingAfterHours % 60);
+
+  return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+};
+
+/**
  * Formatea números grandes con abreviaciones (K, M, B, T) usando Intl.NumberFormat.
  * Ejemplo: 2046642 → "$2.0M"
  */

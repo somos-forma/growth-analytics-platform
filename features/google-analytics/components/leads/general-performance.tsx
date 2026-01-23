@@ -78,13 +78,18 @@ export const GeneralPerformance = ({ date }: { date: { from: string; to?: string
         id: key,
         title: DICTIONARY[key as keyof typeof DICTIONARY] || key,
         value: value,
-        unit: key === "bounce_rate" || key === "key_event_rate" ? "percentage" : "number",
+        unit:
+          key === "bounce_rate" || key === "key_event_rate"
+            ? "percentage"
+            : key === "average_session_duration"
+              ? "time"
+              : "number",
         diff: adaptedData[0][diffKey],
         isPositive: adaptedData[0][diffKey] >= 0,
       };
     })
     .filter((item) => item !== null);
-
+  console.log("DATA", test);
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
       {test.map((item, i) => (
