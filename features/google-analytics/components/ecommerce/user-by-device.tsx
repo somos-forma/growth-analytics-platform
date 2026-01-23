@@ -85,14 +85,14 @@ export const UserByDevice = ({ date }: { date: { from: string; to?: string } }) 
     <Card>
       <CardHeader>
         <CardTitle>Usuarios por Dispositivos</CardTitle>
-        <CardDescription>Distribución de usuarios según el dispositivo utilizado</CardDescription>
+        <CardDescription>Distribución del tráfico por tipo de dispositivo.</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[300px]">
           <PieChart>
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <ChartLegend className="flex flex-wrap" content={<ChartLegendContent />} />
-            <Pie data={data} dataKey="visitors" nameKey="device" innerRadius={60} />
+            <Pie data={data} dataKey="visitors" nameKey="device" innerRadius={50} />
           </PieChart>
         </ChartContainer>
       </CardContent>
