@@ -10,6 +10,7 @@ export const getClients = async (): Promise<Client[]> => {
 };
 
 export const createClient = async (data: CreateClientInput): Promise<Client> => {
+  console.log(data);
   try {
     const response = await fetch("/api/clients", {
       method: "POST",
