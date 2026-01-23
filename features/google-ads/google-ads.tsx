@@ -1,12 +1,11 @@
 "use client";
 
 import { format } from "date-fns";
-import { es } from "date-fns/locale";
-import { ChevronDown, Download, StarsIcon } from "lucide-react";
+import { Download, StarsIcon } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+
+import { MonthRangePicker } from "@/components/ui/month-range-picker";
 import { ConversionAndRateByDay } from "./components/ecommerce/conversion-and-rate-by-day";
 import { CostAndConversionByDay } from "./components/ecommerce/cost-and-convertion-by-day";
 import { IndicatorsKeywordsTable } from "./components/ecommerce/indicators-keywords-table";
@@ -22,12 +21,13 @@ import { OverviewLeads } from "./components/leads/overview-leads";
 
 export const GoogleAds = () => {
   const [type, _] = useState<"ecommerce" | "leads">("leads");
-  const [date, setDate] = useState<{ from: Date | undefined; to: Date | undefined }>({
+  const [date, setDate] = useState<{
+    from?: Date | undefined;
+    to?: Date | undefined;
+  }>({
     from: new Date(2025, 0, 1),
     to: new Date(),
   });
-  const [openFrom, setOpenFrom] = useState(false);
-  const [openTo, setOpenTo] = useState(false);
 
   if (type === "leads") {
     const fromStr = format(date.from || new Date(), "yyyy-MM-dd");
@@ -73,51 +73,7 @@ export const GoogleAds = () => {
           </div>
         </div>
         <div className="space-y-5">
-          <div className="w-full flex justify-end">
-            <div className="flex flex-row items-end gap-2">
-              <p className="text-sm text-muted-foreground m-auto">Seleccione rango de fechas: </p>
-              <div className="flex gap-2">
-                <Popover open={openFrom} onOpenChange={setOpenFrom}>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-44 justify-between font-semibold">
-                      Desde: {format(date.from || new Date(), "MMMM yyyy", { locale: es })}
-                      <ChevronDown />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto overflow-hidden p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={date.from}
-                      onSelect={(selectedDate) => {
-                        setDate((prev) => ({ ...prev, from: selectedDate }));
-                        setOpenFrom(false);
-                      }}
-                      locale={es}
-                    />
-                  </PopoverContent>
-                </Popover>
-                <Popover open={openTo} onOpenChange={setOpenTo}>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-44 justify-between font-semibold">
-                      Hasta: {format(date.to || new Date(), "MMMM yyyy", { locale: es })}
-                      <ChevronDown />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto overflow-hidden p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={date.to}
-                      onSelect={(selectedDate) => {
-                        setDate((prev) => ({ ...prev, to: selectedDate }));
-                        setOpenTo(false);
-                      }}
-                      locale={es}
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-            </div>
-          </div>
+          <MonthRangePicker initialFrom={date.from} initialTo={date.to} onChange={(range) => setDate(range)} />
           <OverviewLeads
             key={`overview-${dateKey}`}
             date={{
