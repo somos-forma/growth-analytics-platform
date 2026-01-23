@@ -43,7 +43,7 @@ export const formatPercentage = (value: number, decimals: number = 2): string =>
  * Formatea moneda.
  * Ejemplo: 9408 → "US$ 9,408.00"
  */
-export const formatCurrency = (value: number, currency: string = "USD", locale: string = "US-en"): string => {
+export const formatCurrency = (value: number, currency: string = "CLP", locale: string = "US-en"): string => {
   return new Intl.NumberFormat(locale, {
     style: "currency",
     currency,
@@ -101,7 +101,13 @@ export const formatMonthYear = (dateString: string, locale: string = "es-ES"): s
   if (!dateString) return "";
 
   try {
-    const date = new Date(dateString);
+    // Parse as local year-month to avoid timezone shifting one month back.
+    // Supports both "YYYY-MM" and "YYYY-MM-DD" inputs.
+    const parts = dateString.split("-");
+    const year = Number(parts[0]);
+    const monthIndex = parts.length > 1 ? Number(parts[1]) - 1 : 0; // 0-based
+    const date = new Date(year, isNaN(monthIndex) ? 0 : monthIndex, 1);
+
     const formatter = new Intl.DateTimeFormat(locale, {
       month: "short",
       year: "numeric",
@@ -136,5 +142,33 @@ export const formatSpanishDate = (dateString: string, locale: string = "es-ES"):
   } catch (error) {
     console.error("Error formateando fecha:", error);
     return dateString;
+  }
+};
+
+/**
+ * Retorna la fecha del primer día del mes actual en formato YYYY-MM-DD.
+ * Ejemplo: "2026-01-01"
+ */
+export const getCurrentMonthStart = (date?: Date): string => {
+  try {
+    const now = date || new Date();
+    const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    return firstOfMonth.toISOString().slice(0, 10);
+  } catch (error) {
+    console.error("Error obteniendo el primer día del mes:", error);
+    return "";
+  }
+};
+
+export const getCurrentYearRange = (date?: Date): { from: string; to: string } => {
+  try {
+    const now = date || new Date();
+    const currentYear = now.getFullYear();
+    const from = new Date(currentYear, 0, 1).toISOString().slice(0, 10);
+    const to = new Date(currentYear, 11, 31).toISOString().slice(0, 10);
+    return { from, to };
+  } catch (error) {
+    console.error("Error obteniendo el rango del año actual:", error);
+    return { from: "", to: "" };
   }
 };

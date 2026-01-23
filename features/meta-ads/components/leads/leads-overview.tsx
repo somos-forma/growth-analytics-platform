@@ -55,15 +55,27 @@ function adaptMetaMonthlyKpis(rows: any[]) {
 }
 
 export const LeadsOverview = ({ date }: { date: { from: string; to: string } }) => {
+  const formatDate = (d: Date) => d.toISOString().slice(0, 10); // YYYY-MM-DD
+
+  const fromDate = new Date(date.from);
+  const previousYearFrom = new Date(fromDate);
+  previousYearFrom.setFullYear(previousYearFrom.getFullYear() - 1);
+
+  // Extend the window so the query also brings the same month of the previous year.
+  // This prevents change/isPositive from becoming 0 when the user changes the date.
+  const effectiveFrom = formatDate(previousYearFrom) < date.from ? formatDate(previousYearFrom) : date.from;
+
   const { data, isPending, isError, error } = useQuery({
-    queryKey: ["meta-ads-leads-metrics"],
+    queryKey: ["meta-ads-leads-metrics", date.from, date.to],
     queryFn: async () => {
       const response = await fetch("/api/analytics", {
         method: "POST",
         body: JSON.stringify({
           table: "monthly_meta_ads_kpis",
           filters: {
-            event_date_between: [date.from, date.to],
+            // We request a 13‑month window (current month + same month last year)
+            // so the variation calculation always has the reference period available.
+            event_date_between: [effectiveFrom, date.to],
           },
         }),
       });
@@ -73,8 +85,8 @@ export const LeadsOverview = ({ date }: { date: { from: string; to: string } }) 
       }
 
       const json = await response.json();
-      const adapted = adaptMetaMonthlyKpis(json.rows);
 
+      const adapted = adaptMetaMonthlyKpis(json.rows);
       const titlesMap: Record<string, string> = {
         costos: "Costos",
         impresiones: "Impresiones",
@@ -149,7 +161,6 @@ export const LeadsOverview = ({ date }: { date: { from: string; to: string } }) 
         change: adapted.metrics[key].change,
         isPositive: adapted.metrics[key].change > 0,
       }));
-      console.log(x);
       return x;
     },
   });
@@ -176,7 +187,7 @@ export const LeadsOverview = ({ date }: { date: { from: string; to: string } }) 
             id={metric.id}
             title={metric.title}
             value={metric.value}
-            unit={metric.unit}
+            unit={metric.unit as any}
             change={metric.change}
             isPositive={metric.isPositive}
           />

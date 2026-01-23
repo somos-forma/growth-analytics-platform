@@ -10,10 +10,22 @@ import { InvestmentByDayChart } from "./components/ecommerce/investment-by-day-c
 import { CostsIndicatorsCharts } from "./components/leads/costs-indicators-charts";
 import { LeadsOverview } from "./components/leads/leads-overview";
 import { LeadsPerformanceIndicatorsTable } from "./components/leads/leads-performance-indicators-table";
+import { MonthRangePicker } from "@/components/ui/month-range-picker";
+import { format } from "date-fns";
 
 export const MetaAds = () => {
   const [type, _] = useState<"ecommerce" | "leads">("leads");
 
+  const [date, setDate] = useState<{
+    from?: Date | undefined;
+    to?: Date | undefined;
+  }>({
+    from: new Date(2025, 0, 1),
+    to: new Date(),
+  });
+  const fromStr = format(date.from || new Date(), "yyyy-MM-dd");
+  const toStr = format(date.to || new Date(), "yyyy-MM-dd");
+  const dateKey = `${fromStr}-${toStr}`;
   return (
     <div className="space-y-5">
       <div className="flex justify-between items-center">
@@ -78,22 +90,26 @@ export const MetaAds = () => {
       </div>
       {type === "leads" ? (
         <div className="space-y-5">
+          <MonthRangePicker initialFrom={date.from} initialTo={date.to} onChange={(range) => setDate(range)} />
           <LeadsOverview
+            key={`overview-${dateKey}`}
             date={{
-              from: "2024-11-01",
-              to: "2025-11-01",
+              from: fromStr,
+              to: toStr,
             }}
           />
           <LeadsPerformanceIndicatorsTable
+            key={`table-${dateKey}`}
             date={{
-              from: "2025-11-01",
-              to: "2025-11-31",
+              from: fromStr,
+              to: toStr,
             }}
           />
           <CostsIndicatorsCharts
+            key={`charts-${dateKey}`}
             date={{
-              from: "2025-11-01",
-              to: "2025-11-30",
+              from: fromStr,
+              to: toStr,
             }}
           />
         </div>
