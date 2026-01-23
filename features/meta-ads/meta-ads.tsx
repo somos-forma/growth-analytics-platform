@@ -43,7 +43,7 @@ export const MetaAds = () => {
   }, [selectedYear, selectedMonth]);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-7">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="font-bold text-4xl">Meta Ads </h1>
@@ -106,7 +106,7 @@ export const MetaAds = () => {
       </div>
 
       <div className="flex gap-3 items-center justify-end ">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 ">
           {/* <span className="text-sm font-medium">Año:</span> */}
           <Select value={selectedYear} onValueChange={setSelectedYear}>
             <SelectTrigger className="w-32 font-bold">

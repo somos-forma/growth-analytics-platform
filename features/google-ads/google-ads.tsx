@@ -50,7 +50,7 @@ export const GoogleAds = () => {
 
   if (type === "leads") {
     return (
-      <div className="space-y-5">
+      <div className="space-y-7">
         <div className="flex justify-between items-center">
           <div>
             <h1 className="font-bold text-4xl">Google Ads </h1>
