@@ -46,7 +46,6 @@ export const LeadsCharts = ({ date }: { date: { from: string; to: string } }) =>
       }
 
       const json = await response.json();
-      console.log(json);
 
       const transformed = json.rows.map((raw: any) => ({
         month: raw.mes,

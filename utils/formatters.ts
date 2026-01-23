@@ -101,7 +101,13 @@ export const formatMonthYear = (dateString: string, locale: string = "es-ES"): s
   if (!dateString) return "";
 
   try {
-    const date = new Date(dateString);
+    // Parse as local year-month to avoid timezone shifting one month back.
+    // Supports both "YYYY-MM" and "YYYY-MM-DD" inputs.
+    const parts = dateString.split("-");
+    const year = Number(parts[0]);
+    const monthIndex = parts.length > 1 ? Number(parts[1]) - 1 : 0; // 0-based
+    const date = new Date(year, isNaN(monthIndex) ? 0 : monthIndex, 1);
+
     const formatter = new Intl.DateTimeFormat(locale, {
       month: "short",
       year: "numeric",

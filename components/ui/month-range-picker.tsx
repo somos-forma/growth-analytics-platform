@@ -43,6 +43,7 @@ export function MonthRangePicker({ initialFrom, initialTo, onChange, className }
               <Calendar
                 mode="single"
                 selected={date.from}
+                defaultMonth={date.from || new Date()}
                 onSelect={(selectedDate) => {
                   const next = { ...date, from: selectedDate };
                   updateRange(next);
@@ -63,6 +64,7 @@ export function MonthRangePicker({ initialFrom, initialTo, onChange, className }
               <Calendar
                 mode="single"
                 selected={date.to}
+                defaultMonth={date.to || new Date()}
                 onSelect={(selectedDate) => {
                   const next = { ...date, to: selectedDate };
                   updateRange(next);
