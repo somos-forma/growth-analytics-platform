@@ -1,23 +1,37 @@
 import { useQuery } from "@tanstack/react-query";
 import type { ColumnDef } from "@tanstack/react-table";
-import { format, startOfMonth, subYears } from "date-fns";
-import React from "react";
 import { DataTable } from "@/components/data-table";
 import { TableSkeleton } from "@/components/skeletons/table-skeleton";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { formatNumber, formatPercentage } from "@/utils/formatters";
 
 type ChannelGroupMetrics = {
   id: string;
   medium: string;
   new_users: number;
-  new_users_delta: number;
-  session_interaction: number;
-  session_interaction_delta: number;
-  step: number;
-  step_delta: number;
+  sessions: number;
+  key_events: number;
+  key_events_rate: number;
 };
+
+export const fake: ChannelGroupMetrics[] = [
+  {
+    id: "1",
+    medium: "google / cpc",
+    new_users: 1200,
+    sessions: 0.05,
+    key_events: 0.25,
+    key_events_rate: 0.15,
+  },
+  {
+    id: "2",
+    medium: "(direct) / (none)",
+    new_users: 900,
+    sessions: 0.03,
+    key_events: 0.2,
+    key_events_rate: 0.1,
+  },
+];
 
 export const columns: ColumnDef<ChannelGroupMetrics>[] = [
   {
@@ -32,79 +46,31 @@ export const columns: ColumnDef<ChannelGroupMetrics>[] = [
     },
   },
   {
-    accessorKey: "new_users_delta",
+    accessorKey: "sessions",
     header: "Sesiones",
     cell: (data) => {
-      return formatPercentage(data.getValue() as number);
+      return formatNumber(data.getValue() as number);
     },
   },
   {
-    accessorKey: "session_interaction",
+    accessorKey: "key_events",
     header: "Eventos Clave",
     cell: (data) => {
       return formatNumber(data.getValue() as number);
     },
   },
   {
-    accessorKey: "session_interaction_delta",
-    header: "tasa evento clave",
+    accessorKey: "key_events_rate",
+    header: "Tasa evento clave",
     cell: (data) => {
       return formatPercentage(data.getValue() as number);
     },
   },
-  // {
-  //   accessorKey: "step",
-  //   header: "Step 1",
-  //   cell: (data) => {
-  //     return formatNumber(data.getValue() as number);
-  //   },
-  // },
-  // {
-  //   accessorKey: "step_delta",
-  //   header: " % Δ",
-  //   cell: (data) => {
-  //     return formatPercentage(data.getValue() as number);
-  //   },
-  // },
-];
-
-export const data: ChannelGroupMetrics[] = [
-  {
-    id: "1",
-    medium: "google / cpc",
-    new_users: 1200,
-    new_users_delta: 0.05,
-    session_interaction: 0.25,
-    session_interaction_delta: 0.02,
-    step: 0.15,
-    step_delta: 0.01,
-  },
-  {
-    id: "2",
-    medium: "(direct) / (none)",
-    new_users: 900,
-    new_users_delta: -0.03,
-    session_interaction: 0.2,
-    session_interaction_delta: -0.01,
-    step: 0.1,
-    step_delta: -0.005,
-  },
 ];
 
 export const ChannelGroupMetricsChangeTable = () => {
-  const [selectedMedium, setSelectedMedium] = React.useState<string>("all");
-
-  const currentDate = new Date();
-  const previousYearDate = subYears(currentDate, 1);
-
-  const currentMonthStart = format(startOfMonth(currentDate), "yyyy-MM-dd");
-  const previousYearMonthStart = format(startOfMonth(previousYearDate), "yyyy-MM-dd");
-
-  const currentMonthKey = format(currentDate, "yyyy-MM");
-  const previousYearMonthKey = format(previousYearDate, "yyyy-MM");
-
-  const { data: apiData, isLoading } = useQuery({
-    queryKey: ["google-organic-monthly", currentMonthKey, previousYearMonthKey],
+  const { data, isLoading } = useQuery({
+    queryKey: ["ga4_traffic_source_medium_monthly_kpis"],
     queryFn: async () => {
       const response = await fetch("/api/analytics", {
         method: "POST",
@@ -112,11 +78,11 @@ export const ChannelGroupMetricsChangeTable = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          table: "google_organic_monthly",
+          table: "ga4_traffic_source_medium_monthly_kpis",
           filters: {
-            event_date_between: [previousYearMonthStart, currentMonthStart],
+            event_date_between: ["2025-06-01"],
           },
-          limit: 1000,
+          limit: 200,
         }),
       });
       if (!response.ok) {
@@ -126,78 +92,32 @@ export const ChannelGroupMetricsChangeTable = () => {
     },
   });
 
-  const processedData: ChannelGroupMetrics[] = React.useMemo(() => {
-    if (!apiData || !apiData.rows) return [];
-
-    // Group data by medium (session_source_medium)
-    const groupedData: Record<string, any[]> = {};
-    apiData.rows.forEach((item: any) => {
-      const group = item.session_source_medium;
-      if (!groupedData[group]) {
-        groupedData[group] = [];
-      }
-      groupedData[group].push(item);
-    });
-
-    return Object.keys(groupedData).map((group, index) => {
-      const items = groupedData[group];
-
-      // Find current month and previous year month dynamically
-      const currentMonthItem = items.find((item: any) => item.anio_mes === currentMonthKey) || {};
-      const prevYearItem = items.find((item: any) => item.anio_mes === previousYearMonthKey) || {};
-
-      const currentNewUsers = Number(currentMonthItem.usuarios_nuevos || 0);
-      const prevNewUsers = Number(prevYearItem.usuarios_nuevos || 0);
-
-      const currentSessions = Number(currentMonthItem.sesiones_con_interaccion || 0);
-      const prevSessions = Number(prevYearItem.sesiones_con_interaccion || 0);
-
-      const calculateDelta = (current: number, previous: number) => {
-        if (previous === 0) return 0; // Avoid division by zero
-        return (current - previous) / previous;
-      };
-
-      return {
-        id: index.toString(),
-        medium: group,
-        new_users: currentNewUsers,
-        new_users_delta: calculateDelta(currentNewUsers, prevNewUsers),
-        session_interaction: currentSessions,
-        session_interaction_delta: calculateDelta(currentSessions, prevSessions),
-        step: 0,
-        step_delta: 0,
-      };
-    });
-  }, [apiData, currentMonthKey, previousYearMonthKey]);
-
-  // Filter data based on selected medium
-  const filteredData = React.useMemo(() => {
-    if (selectedMedium === "all") {
-      return processedData;
-    }
-    return processedData.filter((item) => item.medium === selectedMedium);
-  }, [processedData, selectedMedium]);
-
-  // Get unique mediums for the select options
-  const uniqueMediums = React.useMemo(() => {
-    return Array.from(new Set(processedData.map((item) => item.medium)));
-  }, [processedData]);
-
   if (isLoading) {
     return <TableSkeleton />;
   }
+
+  const transformedData: ChannelGroupMetrics[] = data.rows?.map((item: unknown, index: number) => ({
+    id: index.toString(),
+    medium: item?.session_source_medium,
+    new_users: item?.usuarios_nuevos,
+    sessions: item?.sesiones,
+    key_events: item?.eventos_clave,
+    key_events_rate: item?.tasa_eventos_clave,
+  }));
 
   return (
     <Card>
       <CardHeader className="">
         <div className="flex justify-between">
           <div>
-            <CardTitle> Tabla 2 Leads</CardTitle>
-            {/* <CardDescription>
-              Analiza el rendimiento de tus canales de adquisición de leads
+            {/* <CardTitle> Performance del sitio web por fuente / medio</CardTitle>
+            <CardDescription>
+              Profundización a nivel de origen de tráfico para entender qué
+              combinaciones de fuente y medio generan impacto real en los
+              objetivos de negocio.
             </CardDescription> */}
           </div>
-          <Select value={selectedMedium} onValueChange={setSelectedMedium}>
+          {/* <Select value={selectedMedium} onValueChange={setSelectedMedium}>
             <SelectTrigger className="w-[280px]">
               <SelectValue placeholder="Fuente/medio de la sesión" />
             </SelectTrigger>
@@ -211,11 +131,11 @@ export const ChannelGroupMetricsChangeTable = () => {
                 ))}
               </SelectGroup>
             </SelectContent>
-          </Select>
+          </Select> */}
         </div>
       </CardHeader>
       <CardContent>
-        <DataTable columns={columns} data={filteredData} />
+        <DataTable columns={columns} data={transformedData} />
       </CardContent>
     </Card>
   );
