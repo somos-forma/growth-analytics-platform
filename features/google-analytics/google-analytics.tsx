@@ -1,108 +1,67 @@
 "use client";
 import { ChevronDownIcon, Download, StarsIcon } from "lucide-react";
-import { useState } from "react";
-import { MetricCard } from "@/components/metric-card";
+import { useMemo, useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { GoogleAnalyticsOverview } from "./components/ecommerce/google-analytics-overview";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 import { MonthlyIndicators } from "./components/ecommerce/monthly-indicators";
 import { NewUsersByChannel } from "./components/ecommerce/new-users-by-channel";
 import { PerformanceByChannelTable } from "./components/ecommerce/performance-by-channel-table";
 import { PerformanceByPaidTable } from "./components/ecommerce/performance-by-paid-table";
 import { ResultsByPaidTable } from "./components/ecommerce/results-by-paid-table";
-
 import { RevenueByChannel } from "./components/ecommerce/revenue-by-channel";
 import { RevenueByDevices } from "./components/ecommerce/revenue-by-devices";
 import { RevenueByPaidMedium } from "./components/ecommerce/revenue-by-paid-medium";
-
 import { SessionsByChannel } from "./components/ecommerce/sessions-by-channel";
 import { SessionByPaidMedium } from "./components/ecommerce/sessions-by-paid-medium";
 import { TransactionsByPaidMedium } from "./components/ecommerce/transactions-by-paid-medium";
-
 import { UserByDevice } from "./components/ecommerce/user-by-device";
-
 import { ChannelGroupMetricsChangeTable } from "./components/leads/channel-group-metric-change-table";
 import { ChannelGroupMetricsTable } from "./components/leads/channel-group-metrics-table";
-
-import { UsersByAge } from "./components/leads/users-by-age";
-import { UsersBySex } from "./components/leads/users-by-sex";
+import { GeneralPerformance } from "./components/leads/general-performance";
+// import { UsersByAge } from "./components/leads/users-by-age";
+// import { UsersBySex } from "./components/leads/users-by-sex";
 
 export const GoogleAnalytics = () => {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [type, _] = useState<"ecommerce" | "leads">("leads");
+  const [selectedYear, setSelectedYear] = useState<string>(new Date().getFullYear().toString());
+  const [selectedMonth, setSelectedMonth] = useState<string>((new Date().getMonth() + 1).toString());
 
-  const fakeData = [
-    {
-      id: 1,
-      title: "Total de usuarios",
-      value: 230143,
-      unit: "number",
-      change: 0,
-      isPositive: true,
-    },
-    {
-      id: 2,
-      title: "Usuarios nuevos",
-      value: 204143,
-      unit: "number",
-      change: 0,
-      isPositive: true,
-    },
-    {
-      id: 3,
-      title: "Sesiones",
-      value: 170143,
-      unit: "number",
-      change: 0,
-      isPositive: true,
-    },
-    {
-      id: 4,
-      title: "Sesiones con interacción",
-      value: 94143,
-      unit: "number",
-      change: 0,
-      isPositive: true,
-    },
-    {
-      id: 5,
-      title: "Duracion media de la sesión",
-      value: 147,
-      unit: "seconds",
-      change: 0,
-      isPositive: true,
-    },
-    {
-      id: 6,
-      title: "Tasa de rebote",
-      value: 5944,
-      unit: "percentage",
-      change: 0,
-      isPositive: false,
-    },
-    {
-      id: 7,
-      title: "Eventos Clave",
-      value: 4156,
-      unit: "number",
-      change: 0,
-      isPositive: true,
-    },
-    {
-      id: 8,
-      title: "Tasa evento clave",
-      value: 20,
-      unit: "percentage",
-      change: 0,
-      isPositive: true,
-    },
+  // Generar años (últimos 5 años)
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 3 }, (_, i) => (currentYear - i).toString());
+
+  // Meses
+  const months = [
+    { value: "1", label: "Enero" },
+    { value: "2", label: "Febrero" },
+    { value: "3", label: "Marzo" },
+    { value: "4", label: "Abril" },
+    { value: "5", label: "Mayo" },
+    { value: "6", label: "Junio" },
+    { value: "7", label: "Julio" },
+    { value: "8", label: "Agosto" },
+    { value: "9", label: "Septiembre" },
+    { value: "10", label: "Octubre" },
+    { value: "11", label: "Noviembre" },
+    { value: "12", label: "Diciembre" },
   ];
+
+  // Formatear fecha en formato 'YYYY-MM-DD'
+  const formattedDate = useMemo(() => {
+    const month = selectedMonth.padStart(2, "0");
+    return `${selectedYear}-${month}-01`;
+  }, [selectedYear, selectedMonth]);
 
   if (type === "leads") {
     return (
-      <div className="space-y-5">
+      <div className="space-y-7">
+        {/* header */}
         <div className="flex justify-between items-center">
           <div>
             <h1 className="font-bold text-4xl">Google Analytics 4 </h1>
@@ -112,32 +71,6 @@ export const GoogleAnalytics = () => {
           </div>
           {/* actions */}
           <div className="flex gap-3 ">
-            {/* <Popover open={open} onOpenChange={setOpen}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  id="date"
-                  className="w-48 justify-between font-semibold"
-                >
-                  {date ? date.toLocaleDateString() : "Seleccionar fecha"}
-                  <ChevronDownIcon />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent
-                className="w-auto overflow-hidden p-0"
-                align="start"
-              >
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  captionLayout="dropdown"
-                  onSelect={(date) => {
-                    setDate(date);
-                    setOpen(false);
-                  }}
-                />
-              </PopoverContent>
-            </Popover> */}
             <Button variant="outline">
               <StarsIcon />
               Resumen con AI
@@ -148,50 +81,81 @@ export const GoogleAnalytics = () => {
             </Button>
           </div>
         </div>
-        <div className="space-y-7">
-          <div className="space-y-7"></div>
-          {/* <FunnelIndicators /> */}
-          <div className="p-2">
-            <h2 className="font-bold text-2xl">Perfomance General del sitio Web </h2>
-            <p className="text-muted-foreground">
-              Visión integral del rendimiento digital del sitio, que permite evaluar la capacidad real del ecosistema
-              para atraer, retener y convertir usuarios.
-            </p>
+        {/* sections */}
+        <div className="flex gap-3 items-center justify-end ">
+          <div className="flex items-center gap-2">
+            {/* <span className="text-sm font-medium">Año:</span> */}
+            <Select value={selectedYear} onValueChange={setSelectedYear}>
+              <SelectTrigger className="w-32 font-bold">
+                <SelectValue placeholder="Seleccionar año" />
+              </SelectTrigger>
+              <SelectContent>
+                {years.map((year) => (
+                  <SelectItem key={year} value={year}>
+                    {year}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-            {fakeData.map((item, i) => (
-              <MetricCard
-                key={i}
-                id={item.id}
-                title={item.title}
-                value={item.value}
-                unit={item.unit}
-                change={item.change}
-                isPositive={item.isPositive}
-              />
-            ))}
+          <div className="flex items-center gap-2">
+            {/* <span className="text-sm font-medium">Mes:</span> */}
+            <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+              <SelectTrigger className="w-40 font-bold">
+                <SelectValue placeholder="Seleccionar mes" />
+              </SelectTrigger>
+              <SelectContent>
+                {months.map((month) => (
+                  <SelectItem key={month.value} value={month.value}>
+                    {month.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          <div className="p-2">
-            <h2 className="font-bold text-2xl">Performance del sitio web por canal de adquisición</h2>
-            <p className="text-muted-foreground">
-              Análisis comparativo de los canales para identificar cuáles aportan mayor volumen, eficiencia y calidad de
-              resultados, y dónde existen oportunidades de optimización.
-            </p>
-          </div>
-          <ChannelGroupMetricsTable />
-          <div className="p-2">
-            <h2 className="font-bold text-2xl">Performance del sitio web por fuente / medio</h2>
-            <p className="text-muted-foreground">
-              Profundización a nivel de origen de tráfico para entender qué combinaciones de fuente y medio generan
-              impacto real en los objetivos de negocio.
-            </p>
-          </div>
-          <ChannelGroupMetricsChangeTable />
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-            <UserByDevice date={{ from: "2025-11-01" }} />
-            <UsersByAge />
-            <UsersBySex />
-          </div>
+        </div>
+        <div className="space-y-16">
+          {/* section 01 */}
+          <section>
+            <div className="p-2 mb-4">
+              <h2 className="font-bold text-2xl">Performance general del sitio web </h2>
+              <p className="text-muted-foreground">
+                Visión integral del rendimiento digital del sitio, que permite evaluar la capacidad real del ecosistema
+                para atraer, retener y convertir usuarios.
+              </p>
+            </div>
+            <GeneralPerformance date={{ from: formattedDate }} />
+          </section>
+          {/* sections 02 */}
+          <section>
+            <div className="p-2 mb-4">
+              <h2 className="font-bold text-2xl">Performance del sitio web por canal de adquisición</h2>
+              <p className="text-muted-foreground">
+                Análisis comparativo de los canales para identificar cuáles aportan mayor volumen, eficiencia y calidad
+                de resultados, y dónde existen oportunidades de optimización.
+              </p>
+            </div>
+            <ChannelGroupMetricsTable date={{ from: formattedDate }} />
+          </section>
+          {/* sections 03 */}
+          <section>
+            <div className="p-2 mb-4">
+              <h2 className="font-bold text-2xl">Performance del sitio web por fuente / medio</h2>
+              <p className="text-muted-foreground">
+                Profundización a nivel de origen de tráfico para entender qué combinaciones de fuente y medio generan
+                impacto real en los objetivos de negocio.
+              </p>
+            </div>
+            <ChannelGroupMetricsChangeTable date={{ from: formattedDate }} />
+          </section>
+          {/* sections 04 */}
+          <section>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+              <UserByDevice date={{ from: formattedDate }} />
+              {/* <UsersByAge /> */}
+              {/* <UsersBySex /> */}
+            </div>
+          </section>
         </div>
       </div>
     );
@@ -239,7 +203,7 @@ export const GoogleAnalytics = () => {
           </div>
         </div>
         <div className="space-y-5">
-          <GoogleAnalyticsOverview />
+          {/* <GoogleAnalyticsOverview /> */}
           <PerformanceByChannelTable />
           <PerformanceByPaidTable date={{ from: "2025-11-01" }} />
           <MonthlyIndicators />
