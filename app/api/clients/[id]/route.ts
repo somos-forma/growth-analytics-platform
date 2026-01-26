@@ -1,6 +1,5 @@
-import { type NextRequest, NextResponse } from "next/server";
-
-type RouteHandler = (request: NextRequest, context: { params: Promise<{ id: string }> }) => Promise<Response>;
+import { NextResponse } from "next/server";
+import type { RouteHandler } from "../../types/api.types";
 
 export const PUT: RouteHandler = async (request, context) => {
   const URL = "https://auton8n.moovmediagroup.com/webhook/31e5ab5d-d54b-40ed-a59c-7d107521920d/clients";
