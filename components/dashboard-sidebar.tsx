@@ -15,19 +15,22 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { useAuthStore } from "@/features/auth/store";
 import { DashboardNavUser } from "./dashboard-nav-user";
 
 export function DashboardSidebar() {
+  const { authStore } = useAuthStore();
   const [isAdmin, setIsAdmin] = useState(false);
   const [user, setUser] = useState({ name: "", email: "" });
 
   useEffect(() => {
-    const userEmail = localStorage.getItem("userEmail") || "";
+    const { email } = authStore || {};
+    const userEmail = email || "";
     setIsAdmin(userEmail === "admin@example.com");
 
     const name = userEmail.split("@")[0];
     setUser({ name, email: userEmail });
-  }, []);
+  }, [authStore]);
 
   return (
     <Sidebar>
