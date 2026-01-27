@@ -5,7 +5,7 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import Providers from "../providers";
+import Providers from "../react-query-providers";
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
