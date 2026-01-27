@@ -12,9 +12,7 @@ export const loginAuth = async (data: Auth): Promise<Auth> => {
     if (result.status === "404") {
       throw new Error(result.message);
     } else {
-      localStorage.setItem("userEmail", data.email);
       const loginconfirm: Auth = result;
-      console.log(loginconfirm);
       return loginconfirm;
     }
   } catch (error) {
