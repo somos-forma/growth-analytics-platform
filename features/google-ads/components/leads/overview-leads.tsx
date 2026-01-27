@@ -3,7 +3,7 @@ import { MetricCard, type Unit } from "@/components/metric-card";
 import { OverviewSkeleton } from "@/components/skeletons/overview-skeleton";
 export const OverviewLeads = ({ date }: { date: { from: string; to?: string } }) => {
   const { data, isPending, isError, error } = useQuery({
-    queryKey: ["google-ads-monthly-overview-leads", date.from],
+    queryKey: ["google-ads-monthly-overview-leads", date.from, date.to],
     queryFn: async () => {
       // Calculate previous year date
       const currentDate = new Date(date.from);
@@ -15,9 +15,9 @@ export const OverviewLeads = ({ date }: { date: { from: string; to?: string } })
       const currentResponse = await fetch("/api/analytics", {
         method: "POST",
         body: JSON.stringify({
-          table: "campaign_google_ads_summary",
+          table: "daily_campaign_google_ads_summary",
           filters: {
-            event_date_between: [date.from],
+            event_date_between: [date.from, date.to],
           },
           limit: 1000,
         }),
@@ -32,9 +32,9 @@ export const OverviewLeads = ({ date }: { date: { from: string; to?: string } })
       const previousResponse = await fetch("/api/analytics", {
         method: "POST",
         body: JSON.stringify({
-          table: "campaign_google_ads_summary",
+          table: "daily_campaign_google_ads_summary",
           filters: {
-            event_date_between: [previousFrom],
+            event_date_between: [previousFrom, previousDate.toISOString().split("T")[0]],
           },
           limit: 1000,
         }),

@@ -79,14 +79,14 @@ export const columns: ColumnDef<LeadsKeywords>[] = [
 
 export const LeadsKeywordsTable = ({ date }: { date: { from: string; to?: string } }) => {
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["google-ads-indicators-keywords-table-leads", date.from],
+    queryKey: ["google-ads-indicators-keywords-table-leads", date.from, date.to],
     queryFn: async () => {
       const response = await fetch("/api/analytics", {
         method: "POST",
         body: JSON.stringify({
-          table: "monthly_gads_top_keywords",
+          table: "daily_gads_top_keywords",
           filters: {
-            event_date_between: [date.from],
+            event_date_between: [date.from, date.to],
           },
           limit: 1000,
         }),
