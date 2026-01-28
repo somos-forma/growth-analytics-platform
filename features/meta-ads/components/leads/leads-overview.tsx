@@ -2,58 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { MetricCard } from "@/components/metric-card";
 import { OverviewSkeleton } from "@/components/skeletons/overview-skeleton";
 
-function adaptMetaMonthlyKpis(rows: any[]) {
-  if (!rows || rows.length === 0) {
-    return {
-      current_period: null,
-      previous_period: null,
-      metrics: {},
-    };
-  }
-
-  // Ordenar para garantizar consistencia
-  const sorted = [...rows].sort((a, b) => new Date(b.mes_inicio).getTime() - new Date(a.mes_inicio).getTime());
-
-  const current = sorted[0];
-
-  const currentDate = new Date(current.mes_inicio);
-  const currentMonth = currentDate.getMonth(); // 0–11
-  const currentYear = currentDate.getFullYear();
-
-  // Encontrar el mismo mes del año anterior
-  const previous = sorted.find((r) => {
-    const d = new Date(r.mes_inicio);
-    return d.getMonth() === currentMonth && d.getFullYear() === currentYear - 1;
-  });
-
-  function calcChange(curr: number, prev: number) {
-    if (!prev || prev === 0) return 0;
-    return ((curr - prev) / prev) * 100;
-  }
-
-  const metricKeys = ["costos", "impresiones", "clicks", "alcance", "frecuencia", "ctr", "cpc", "cpm"];
-
-  const metrics: any = {};
-
-  // Construcción del contrato ideal
-  for (const key of metricKeys) {
-    const currValue = current[key] ?? 0;
-    const prevValue = previous?.[key] ?? 0;
-
-    metrics[key] = {
-      value: currValue,
-      previous: prevValue,
-      change: calcChange(currValue, prevValue),
-    };
-  }
-
-  return {
-    current_period: current.mes_inicio.slice(0, 7), // YYYY-MM
-    previous_period: previous ? previous.mes_inicio.slice(0, 7) : null,
-    metrics,
-  };
-}
-
 export const LeadsOverview = ({ date }: { date: { from: string; to?: string } }) => {
   const formatDate = (d: Date) => d.toISOString().slice(0, 10); // YYYY-MM-DD
 
@@ -68,25 +16,76 @@ export const LeadsOverview = ({ date }: { date: { from: string; to?: string } })
   const { data, isPending, isError, error } = useQuery({
     queryKey: ["meta-ads-leads-metrics", effectiveFrom, date.from, date.to],
     queryFn: async () => {
-      const response = await fetch("/api/analytics", {
+      // Fetch current period data
+      const currentResponse = await fetch("/api/analytics", {
         method: "POST",
         body: JSON.stringify({
           table: "daily_meta_ads_kpis",
           filters: {
-            // We request a 13‑month window (current month + same month last year)
-            // so the variation calculation always has the reference period available.
             event_date_between: [date.from, date.to],
           },
+          limit: 1000,
         }),
       });
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
+      if (!currentResponse.ok) {
+        throw new Error("Network response was not ok for current data");
       }
+      const currentJson = await currentResponse.json();
+      const currentRows = currentJson.rows || [];
+      const currentOverview = currentRows.reduce(
+        (acc: any, row: any) => {
+          acc.costos += row.costos || 0;
+          acc.impresiones += row.impresiones || 0;
+          acc.clicks += row.clicks || 0;
+          acc.alcance += row.alcance || 0;
+          acc.frecuencia = acc.frecuencia || row.frecuencia; // assuming same
+          acc.ctr = acc.ctr || row.ctr; // assuming same
+          acc.cpc = acc.cpc || row.cpc; // assuming same
+          acc.cpm = acc.cpm || row.cpm; // assuming same
+          return acc;
+        },
+        { costos: 0, impresiones: 0, clicks: 0, alcance: 0, frecuencia: 0, ctr: 0, cpc: 0, cpm: 0 },
+      );
 
-      const json = await response.json();
+      // Fetch previous period data
+      const currentDate = new Date(date.from);
+      const previousDate = new Date(currentDate);
+      previousDate.setFullYear(previousDate.getFullYear() - 1);
+      const previousFrom = previousDate.toISOString().split("T")[0];
+      const previousTo = date.to ? new Date(date.to) : new Date(date.from);
+      previousTo.setFullYear(previousTo.getFullYear() - 1);
+      const previousToStr = previousTo.toISOString().split("T")[0];
 
-      const adapted = adaptMetaMonthlyKpis(json.rows);
+      const previousResponse = await fetch("/api/analytics", {
+        method: "POST",
+        body: JSON.stringify({
+          table: "daily_meta_ads_kpis",
+          filters: {
+            event_date_between: [previousFrom, previousToStr],
+          },
+          limit: 1000,
+        }),
+      });
+      if (!previousResponse.ok) {
+        throw new Error("Network response was not ok for previous data");
+      }
+      const previousJson = await previousResponse.json();
+      const previousRows = previousJson.rows || [];
+      const previousOverview = previousRows.reduce(
+        (acc: any, row: any) => {
+          acc.costos += row.costos || 0;
+          acc.impresiones += row.impresiones || 0;
+          acc.clicks += row.clicks || 0;
+          acc.alcance += row.alcance || 0;
+          acc.frecuencia = acc.frecuencia || row.frecuencia;
+          acc.ctr = acc.ctr || row.ctr;
+          acc.cpc = acc.cpc || row.cpc;
+          acc.cpm = acc.cpm || row.cpm;
+          return acc;
+        },
+        { costos: 0, impresiones: 0, clicks: 0, alcance: 0, frecuencia: 0, ctr: 0, cpc: 0, cpm: 0 },
+      );
+
       const titlesMap: Record<string, string> = {
         costos: "Costos",
         impresiones: "Impresiones",
@@ -109,59 +108,25 @@ export const LeadsOverview = ({ date }: { date: { from: string; to?: string } })
         cpm: "number",
       };
 
-      // const currentMonth = json.rows[0];
-      // const previousMonth = json.rows[1];
+      function calcChange(curr: number, prev: number) {
+        if (!prev || prev === 0) return 0;
+        return ((curr - prev) / prev) * 100;
+      }
 
-      // const titlesMap: { [key: string]: string } = {
-      //   costos: "Costos",
-      //   impresiones: "Impresiones",
-      //   clicks: "Clicks",
-      //   alcance: "Alcance",
-      //   frecuencia: "Frecuencia",
-      //   ctr: "CTR (all)",
-      //   cpc: "CPC",
-      //   cpm: "CPM",
-      // };
-
-      // const unitsByKey: { [key: string]: string } = {
-      //   costos: "currency",
-      //   impresiones: "number",
-      //   clicks: "number",
-      //   alcance: "number",
-      //   frecuencia: "number",
-      //   ctr: "percentage",
-      //   cpc: "number",
-      //   cpm: "number",
-      // };
-
-      // function calcVariation(current: number, prev: number) {
-      //   if (!prev || prev === 0) return 0;
-      //   return ((current - prev) / prev) * 100;
-      // }
-
-      // const transformed = Object.keys(titlesMap).map((key) => {
-      //   const delta = calcVariation(
-      //     currentMonth[key] ?? 0,
-      //     previousMonth[key] ?? 0
-      //   );
-      //   return {
-      //     id: key,
-      //     title: titlesMap[key],
-      //     value: currentMonth[key] ?? 0,
-      //     unit: unitsByKey[key] || "number",
-      //     change: delta,
-      //     isPositive: delta > 0,
-      //   };
-      // });
-      const x = Object.keys(adapted.metrics).map((key) => ({
-        id: key,
-        title: titlesMap[key],
-        value: adapted.metrics[key].value,
-        unit: units[key],
-        change: adapted.metrics[key].change,
-        isPositive: adapted.metrics[key].change > 0,
-      }));
-      return x;
+      const transformed = Object.keys(titlesMap).map((key) => {
+        const currValue = currentOverview[key] ?? 0;
+        const prevValue = previousOverview[key] ?? 0;
+        const change = calcChange(currValue, prevValue);
+        return {
+          id: key,
+          title: titlesMap[key],
+          value: currValue,
+          unit: units[key],
+          change,
+          isPositive: change > 0,
+        };
+      });
+      return transformed;
     },
   });
 
