@@ -112,8 +112,8 @@ export function LoginForm() {
               Iniciar Sesión
             </Button>
           </Field>
-          <p className="text-xs">demo: admin@example.com | admin12345</p>
-          <p className="text-xs">demo: user@example.com | user12345</p>
+          <p className="text-xs">demo:admin@example.com | admin12345</p>
+          <p className="text-xs">demo:user@example.com | user12345</p>
         </CardFooter>
       </Card>
       <div className="grid grid-cols-3 gap-4 text-center">
