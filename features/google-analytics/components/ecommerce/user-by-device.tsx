@@ -39,14 +39,14 @@ export const UserByDevice = ({ date }: { date: { from: string; to?: string } }) 
   } satisfies ChartConfig;
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["fetch-users-by-device", date.from],
+    queryKey: ["fetch-users-by-device", date.from, date.to],
     queryFn: async () => {
       const response = await fetch("/api/analytics", {
         method: "POST",
         body: JSON.stringify({
-          table: "monthly_device_users",
+          table: "daily_device_users",
           filters: {
-            event_date_between: [date.from],
+            event_date_between: [date.from, date.to || date.from],
           },
         }),
       });
