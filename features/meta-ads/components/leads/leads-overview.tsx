@@ -66,16 +66,16 @@ export const LeadsOverview = ({ date }: { date: { from: string; to?: string } })
   const effectiveFrom = formatDate(previousYearFrom) < date.from ? formatDate(previousYearFrom) : date.from;
 
   const { data, isPending, isError, error } = useQuery({
-    queryKey: ["meta-ads-leads-metrics", effectiveFrom, date.from],
+    queryKey: ["meta-ads-leads-metrics", effectiveFrom, date.from, date.to],
     queryFn: async () => {
       const response = await fetch("/api/analytics", {
         method: "POST",
         body: JSON.stringify({
-          table: "monthly_meta_ads_kpis",
+          table: "daily_meta_ads_kpis",
           filters: {
             // We request a 13‑month window (current month + same month last year)
             // so the variation calculation always has the reference period available.
-            event_date_between: [effectiveFrom, date.from],
+            event_date_between: [date.from, date.to],
           },
         }),
       });

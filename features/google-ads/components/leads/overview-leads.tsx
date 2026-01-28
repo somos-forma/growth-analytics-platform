@@ -26,7 +26,16 @@ export const OverviewLeads = ({ date }: { date: { from: string; to?: string } })
         throw new Error("Network response was not ok for current data");
       }
       const currentJson = await currentResponse.json();
-      const currentOverview = currentJson.rows[0] || {};
+      const currentRows = currentJson.rows || [];
+      const currentOverview = currentRows.reduce(
+        (acc: { inversion_total: number; conversiones_total: number }, row: any) => {
+          acc.inversion_total += row.inversion_total || 0;
+          acc.conversiones_total += row.conversiones_total || 0;
+          return acc;
+        },
+        { inversion_total: 0, conversiones_total: 0 },
+      );
+      currentOverview.cpa_total = currentOverview.inversion_total / currentOverview.conversiones_total || 0;
 
       // Fetch previous period data
       const previousResponse = await fetch("/api/analytics", {
@@ -43,7 +52,16 @@ export const OverviewLeads = ({ date }: { date: { from: string; to?: string } })
         throw new Error("Network response was not ok for previous data");
       }
       const previousJson = await previousResponse.json();
-      const previousOverview = previousJson.rows[0] || {};
+      const previousRows = previousJson.rows || [];
+      const previousOverview = previousRows.reduce(
+        (acc: { inversion_total: number; conversiones_total: number }, row: any) => {
+          acc.inversion_total += row.inversion_total || 0;
+          acc.conversiones_total += row.conversiones_total || 0;
+          return acc;
+        },
+        { inversion_total: 0, conversiones_total: 0 },
+      );
+      previousOverview.cpa_total = previousOverview.inversion_total / previousOverview.conversiones_total || 0;
 
       const titlesMap: { [key: string]: string } = {
         inversion_total: "Inversión",
