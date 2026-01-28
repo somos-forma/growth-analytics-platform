@@ -1,7 +1,7 @@
 "use client";
 
 import { format, subMonths } from "date-fns";
-import { es } from "date-fns/locale";
+import { es } from "react-day-picker/locale";
 import { ChevronDown, Download, StarsIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -108,6 +108,7 @@ export const MetaAds = () => {
               numberOfMonths={2}
               ISOWeek
               captionLayout="dropdown"
+              showOutsideDays={false}
               locale={es}
               selected={
                 dateRange.from || dateRange.to

@@ -1,13 +1,11 @@
 "use client";
 import { format, subMonths } from "date-fns";
-import { es } from "date-fns/locale";
 import { ChevronDown, Download, StarsIcon } from "lucide-react";
 import { useState } from "react";
-
+import { es } from "react-day-picker/locale";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-
 import { MonthlyIndicators } from "./components/ecommerce/monthly-indicators";
 import { NewUsersByChannel } from "./components/ecommerce/new-users-by-channel";
 import { PerformanceByChannelTable } from "./components/ecommerce/performance-by-channel-table";
@@ -82,6 +80,8 @@ export const GoogleAnalytics = () => {
                 mode="range"
                 numberOfMonths={2}
                 ISOWeek
+                reverseYears
+                showOutsideDays={false}
                 captionLayout="dropdown"
                 locale={es}
                 selected={
