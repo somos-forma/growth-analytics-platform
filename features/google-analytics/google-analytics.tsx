@@ -1,8 +1,8 @@
 "use client";
-import { format } from "date-fns";
+import { format, subMonths } from "date-fns";
 import { es } from "date-fns/locale";
 import { ChevronDown, Download, StarsIcon } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -30,18 +30,18 @@ export const GoogleAnalytics = () => {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [type, _] = useState<"ecommerce" | "leads">("leads");
-  const [dateRange, setDateRange] = useState<{ from: Date | undefined; to: Date | undefined }>({
-    from: new Date(),
-    to: new Date(),
-  });
+  const [dateRange, setDateRange] = useState<{
+    from: Date | undefined;
+    to: Date | undefined;
+  }>({ from: subMonths(new Date(), 1), to: new Date() });
 
   // Formatear fecha en formato 'YYYY-MM-DD'
-  const formattedDate = useMemo(() => {
-    if (dateRange.from) {
-      return format(dateRange.from, "yyyy-MM-dd");
-    }
-    return new Date().toISOString().split("T")[0];
-  }, [dateRange.from]);
+  // const formattedDate = useMemo(() => {
+  //   if (dateRange.from) {
+  //     return format(dateRange.from, "yyyy-MM-dd");
+  //   }
+  //   return new Date().toISOString().split("T")[0];
+  // }, [dateRange.from]);
 
   if (type === "leads") {
     return (
@@ -116,7 +116,7 @@ export const GoogleAnalytics = () => {
                 para atraer, retener y convertir usuarios.
               </p>
             </div>
-            <GeneralPerformance date={{ from: formattedDate }} />
+            <GeneralPerformance date={{ from: "2026-01-01", to: "2026-01-31" }} />
           </section>
           {/* sections 02 */}
           <section>
@@ -127,7 +127,7 @@ export const GoogleAnalytics = () => {
                 de resultados, y dónde existen oportunidades de optimización.
               </p>
             </div>
-            <ChannelGroupMetricsTable date={{ from: formattedDate }} />
+            <ChannelGroupMetricsTable date={{ from: "2026-01-01", to: "2026-01-31" }} />
           </section>
           {/* sections 03 */}
           <section>
@@ -138,12 +138,12 @@ export const GoogleAnalytics = () => {
                 impacto real en los objetivos de negocio.
               </p>
             </div>
-            <ChannelGroupMetricsChangeTable date={{ from: formattedDate }} />
+            <ChannelGroupMetricsChangeTable date={{ from: "2026-01-01", to: "2026-01-31" }} />
           </section>
           {/* sections 04 */}
           <section>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-              <UserByDevice date={{ from: formattedDate }} />
+              <UserByDevice date={{ from: "2026-01-01", to: "2026-01-31" }} />
               {/* <UsersByAge /> */}
               {/* <UsersBySex /> */}
             </div>

@@ -6,7 +6,7 @@ import { OverviewSkeleton } from "@/components/skeletons/overview-skeleton";
 
 export const GeneralPerformance = ({ date }: { date: { from: string; to?: string } }) => {
   const { data, isLoading } = useQuery({
-    queryKey: ["ga4_traffic_campaign_monthly_yoy", date.from],
+    queryKey: ["ga4_traffic_campaign_monthly_yoy", date.from, date.to],
     queryFn: async () => {
       const response = await fetch("/api/analytics", {
         method: "POST",
@@ -16,7 +16,7 @@ export const GeneralPerformance = ({ date }: { date: { from: string; to?: string
         body: JSON.stringify({
           table: "ga4_traffic_campaign_monthly_yoy",
           filters: {
-            event_date_between: [date.from],
+            event_date_between: [date.from, date.to || date.from],
           },
           limit: 1,
         }),

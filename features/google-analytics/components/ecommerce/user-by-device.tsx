@@ -48,6 +48,7 @@ export const UserByDevice = ({ date }: { date: { from: string; to?: string } }) 
           filters: {
             event_date_between: [date.from, date.to || date.from],
           },
+          limit: 1000,
         }),
       });
 
@@ -62,11 +63,16 @@ export const UserByDevice = ({ date }: { date: { from: string; to?: string } }) 
         "(other)": "var(--color-other)",
       };
       const json = await response.json();
-      const data = json.rows.map((raw: any) => ({
-        // id: String(index + 1),
-        device: raw.device_category.replace(/\s+/g, "").replace(/[()]/g, ""),
-        visitors: raw.usuarios_activos,
-        fill: fillMap[raw.device_category.replace(/\s+/g, "").toLowerCase()],
+      const aggregated = json.rows.reduce((acc: { [key: string]: number }, row: any) => {
+        const device = row.device_category.replace(/\s+/g, "").replace(/[()]/g, "").toLowerCase();
+        acc[device] = (acc[device] || 0) + row.usuarios_activos;
+        return acc;
+      }, {});
+
+      const data = Object.entries(aggregated).map(([device, visitors]) => ({
+        device,
+        visitors,
+        fill: fillMap[device] || "var(--color-other)",
       }));
 
       return data;
