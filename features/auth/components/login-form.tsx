@@ -9,6 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
+import { useCreateClient } from "../hooks/userLoginDashboard";
+import { useAuthStore } from "../store";
 
 const formSchema = z.object({
   email: z.email({ message: "Ingresa un correo válido" }),
@@ -16,6 +19,9 @@ const formSchema = z.object({
 });
 
 export function LoginForm() {
+  const { setAuthStore } = useAuthStore();
+  const { mutate, isPending } = useCreateClient();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -24,31 +30,23 @@ export function LoginForm() {
     },
   });
   const router = useRouter();
-  //   function onSubmit(data: z.infer<typeof formSchema>) {
-  //   localStorage.setItem("userEmail", data.email);
-  //   toast.success("Inicio de sesión exitoso");
-  //   router.push("/dashboard/google-analytics");
-  // }
+
   async function onSubmit(data: z.infer<typeof formSchema>) {
-    try {
-      console.log({ email: data.email, password: data.password });
-      const response = await fetch("https://auton8n.moovmediagroup.com/webhook/growth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: data.email, password: data.password }),
-      });
-      const result = await response.json();
-      if (result.status === "404") {
-        toast.error(result.message);
-      } else {
-        localStorage.setItem("userEmail", data.email);
+    const payload = {
+      email: data.email,
+      password: data.password,
+    };
+    mutate(payload, {
+      onSuccess: (result) => {
+        setAuthStore(result);
+        localStorage.setItem("userEmail", result.email);
         toast.success("Inicio de sesión exitoso");
         router.push("/dashboard/google-analytics");
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("Error al iniciar sesión");
-    }
+      },
+      onError: () => {
+        toast.error("Error al iniciar sesión");
+      },
+    });
   }
 
   return (
@@ -109,12 +107,13 @@ export function LoginForm() {
         </CardContent>
         <CardFooter className="flex gap-2 flex-col">
           <Field orientation="horizontal">
-            <Button type="submit" form="form-rhf-login" className="w-full">
+            <Button type="submit" disabled={isPending} form="form-rhf-login" className="w-full">
+              {isPending && <Spinner />}
               Iniciar Sesión
             </Button>
           </Field>
-          <p className="text-xs">demo: admin@example.com | admin12345</p>
-          <p className="text-xs">demo: user@example.com | user12345</p>
+          <p className="text-xs">demo:admin@example.com | admin12345</p>
+          <p className="text-xs">demo:user@example.com | user12345</p>
         </CardFooter>
       </Card>
       <div className="grid grid-cols-3 gap-4 text-center">

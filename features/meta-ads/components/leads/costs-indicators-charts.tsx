@@ -40,6 +40,7 @@ export const CostsIndicatorsCharts = ({ date }: { date: { from: string; to: stri
             event_date_between: [date.from, date.to],
             // event_date_between: ["2025-10-15", "2025-11-11"],
           },
+          limit: 1000,
         }),
       });
 

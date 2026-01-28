@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
+import { useAuthStore } from "@/features/auth/store";
 
 export function DashboardNavUser({
   user,
@@ -23,8 +24,15 @@ export function DashboardNavUser({
     email: string;
   };
 }) {
+  const { setAuthStore } = useAuthStore();
   const { isMobile } = useSidebar();
   const router = useRouter();
+
+  const logOut = () => {
+    setAuthStore({ name: "", email: "", token: "", client_id: [], rol: "", status: "" });
+    localStorage.removeItem("userEmail");
+    router.push("/");
+  };
 
   return (
     <SidebarMenu>
@@ -74,7 +82,7 @@ export function DashboardNavUser({
             </DropdownMenuGroup>
 
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => router.push("/")}>
+            <DropdownMenuItem onClick={logOut}>
               <LogOut />
               Cerrar sesión
             </DropdownMenuItem>

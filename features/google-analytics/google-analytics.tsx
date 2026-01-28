@@ -1,11 +1,12 @@
 "use client";
-import { ChevronDownIcon, Download, StarsIcon } from "lucide-react";
-import { useMemo, useState } from "react";
+import { format, subMonths } from "date-fns";
+import { es } from "date-fns/locale";
+import { ChevronDown, Download, StarsIcon } from "lucide-react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import { MonthlyIndicators } from "./components/ecommerce/monthly-indicators";
 import { NewUsersByChannel } from "./components/ecommerce/new-users-by-channel";
@@ -29,34 +30,18 @@ export const GoogleAnalytics = () => {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [type, _] = useState<"ecommerce" | "leads">("leads");
-  const [selectedYear, setSelectedYear] = useState<string>(new Date().getFullYear().toString());
-  const [selectedMonth, setSelectedMonth] = useState<string>((new Date().getMonth() + 1).toString());
-
-  // Generar años (últimos 5 años)
-  const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 3 }, (_, i) => (currentYear - i).toString());
-
-  // Meses
-  const months = [
-    { value: "1", label: "Enero" },
-    { value: "2", label: "Febrero" },
-    { value: "3", label: "Marzo" },
-    { value: "4", label: "Abril" },
-    { value: "5", label: "Mayo" },
-    { value: "6", label: "Junio" },
-    { value: "7", label: "Julio" },
-    { value: "8", label: "Agosto" },
-    { value: "9", label: "Septiembre" },
-    { value: "10", label: "Octubre" },
-    { value: "11", label: "Noviembre" },
-    { value: "12", label: "Diciembre" },
-  ];
+  const [dateRange, setDateRange] = useState<{
+    from: Date | undefined;
+    to: Date | undefined;
+  }>({ from: subMonths(new Date(), 1), to: new Date() });
 
   // Formatear fecha en formato 'YYYY-MM-DD'
-  const formattedDate = useMemo(() => {
-    const month = selectedMonth.padStart(2, "0");
-    return `${selectedYear}-${month}-01`;
-  }, [selectedYear, selectedMonth]);
+  // const formattedDate = useMemo(() => {
+  //   if (dateRange.from) {
+  //     return format(dateRange.from, "yyyy-MM-dd");
+  //   }
+  //   return new Date().toISOString().split("T")[0];
+  // }, [dateRange.from]);
 
   if (type === "leads") {
     return (
@@ -83,36 +68,43 @@ export const GoogleAnalytics = () => {
         </div>
         {/* sections */}
         <div className="flex gap-3 items-center justify-end ">
-          <div className="flex items-center gap-2">
-            {/* <span className="text-sm font-medium">Año:</span> */}
-            <Select value={selectedYear} onValueChange={setSelectedYear}>
-              <SelectTrigger className="w-32 font-bold">
-                <SelectValue placeholder="Seleccionar año" />
-              </SelectTrigger>
-              <SelectContent>
-                {years.map((year) => (
-                  <SelectItem key={year} value={year}>
-                    {year}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="flex items-center gap-2">
-            {/* <span className="text-sm font-medium">Mes:</span> */}
-            <Select value={selectedMonth} onValueChange={setSelectedMonth}>
-              <SelectTrigger className="w-40 font-bold">
-                <SelectValue placeholder="Seleccionar mes" />
-              </SelectTrigger>
-              <SelectContent>
-                {months.map((month) => (
-                  <SelectItem key={month.value} value={month.value}>
-                    {month.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="justify-between font-semibold">
+                {dateRange.from ? format(dateRange.from, "MMMM yyyy", { locale: es }) : "Seleccionar rango"}{" "}
+                {dateRange.to ? ` - ${format(dateRange.to, "MMMM yyyy", { locale: es })}` : ""}
+                <ChevronDown />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto overflow-hidden p-1" align="start">
+              <Calendar
+                className="border"
+                mode="range"
+                numberOfMonths={2}
+                ISOWeek
+                captionLayout="dropdown"
+                locale={es}
+                selected={
+                  dateRange.from || dateRange.to
+                    ? {
+                        from: dateRange.from,
+                        to: dateRange.to,
+                      }
+                    : undefined
+                }
+                onSelect={(date) => {
+                  if (date?.from) {
+                    setDateRange({
+                      from: date.from,
+                      to: date.to ?? undefined,
+                    });
+                  } else {
+                    setDateRange({ from: undefined, to: undefined });
+                  }
+                }}
+              />
+            </PopoverContent>
+          </Popover>
         </div>
         <div className="space-y-16">
           {/* section 01 */}
@@ -124,7 +116,7 @@ export const GoogleAnalytics = () => {
                 para atraer, retener y convertir usuarios.
               </p>
             </div>
-            <GeneralPerformance date={{ from: formattedDate }} />
+            <GeneralPerformance date={{ from: "2026-01-01", to: "2026-01-31" }} />
           </section>
           {/* sections 02 */}
           <section>
@@ -135,7 +127,7 @@ export const GoogleAnalytics = () => {
                 de resultados, y dónde existen oportunidades de optimización.
               </p>
             </div>
-            <ChannelGroupMetricsTable date={{ from: formattedDate }} />
+            <ChannelGroupMetricsTable date={{ from: "2026-01-01", to: "2026-01-31" }} />
           </section>
           {/* sections 03 */}
           <section>
@@ -146,12 +138,12 @@ export const GoogleAnalytics = () => {
                 impacto real en los objetivos de negocio.
               </p>
             </div>
-            <ChannelGroupMetricsChangeTable date={{ from: formattedDate }} />
+            <ChannelGroupMetricsChangeTable date={{ from: "2026-01-01", to: "2026-01-31" }} />
           </section>
           {/* sections 04 */}
           <section>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-              <UserByDevice date={{ from: formattedDate }} />
+              <UserByDevice date={{ from: "2026-01-01", to: "2026-01-31" }} />
               {/* <UsersByAge /> */}
               {/* <UsersBySex /> */}
             </div>
@@ -177,7 +169,6 @@ export const GoogleAnalytics = () => {
               <PopoverTrigger asChild>
                 <Button variant="outline" id="date" className="w-48 justify-between font-semibold">
                   {date ? date.toLocaleDateString() : "Seleccionar fecha"}
-                  <ChevronDownIcon />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto overflow-hidden p-0" align="start">
