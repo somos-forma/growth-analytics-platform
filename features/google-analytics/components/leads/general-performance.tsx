@@ -14,11 +14,11 @@ export const GeneralPerformance = ({ date }: { date: { from: string; to?: string
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          table: "ga4_traffic_campaign_monthly_yoy",
+          table: "daily_ga4_traffic_campaign_yoy",
           filters: {
             event_date_between: [date.from, date.to || date.from],
           },
-          limit: 1,
+          limit: 1000,
         }),
       });
 
@@ -38,25 +38,49 @@ export const GeneralPerformance = ({ date }: { date: { from: string; to?: string
     return <OverviewSkeleton />;
   }
 
-  const adaptedData = data?.rows?.map((item: any, index: number) => ({
-    id: index,
-    total_users: item.total_usuarios ?? 0,
-    diff_total_users: item.diff_pct_total_users ?? 0,
-    new_users: item.new_users ?? 0,
-    diff_new_users: item.diff_pct_new_users ?? 0,
-    sessions: item.sessions ?? 0,
-    diff_sessions: item.diff_pct_sessions ?? 0,
-    engaged_sessions: item.engaged_sessions ?? 0,
-    diff_engaged_sessions: item.diff_pct_engaged_sessions ?? 0,
-    average_session_duration: item.duracion_media_sesion ?? 0,
-    diff_average_session_duration: item.diff_duracion_media_sesion ?? 0,
-    bounce_rate: item.tasa_rebote ?? 0,
-    diff_bounce_rate: item.diff_abs_tasa_rebote ?? 0,
-    key_events: item.evento_clave ?? 0,
-    diff_key_events: item.diff_pct_evento_clave ?? 0,
-    key_event_rate: item.tasa_evento_clave ?? 0,
-    diff_key_event_rate: item.diff_abs_tasa_evento_clave ?? 0,
-  }));
+  function aggregateData(rows: any[]) {
+    return rows.reduce(
+      (acc: any, row: any) => {
+        acc.total_users += row.total_usuarios ?? 0;
+        acc.diff_total_users += row.diff_pct_total_users ?? 0;
+        acc.new_users += row.new_users ?? 0;
+        acc.diff_new_users += row.diff_pct_new_users ?? 0;
+        acc.sessions += row.sessions ?? 0;
+        acc.diff_sessions += row.diff_pct_sessions ?? 0;
+        acc.engaged_sessions += row.engaged_sessions ?? 0;
+        acc.diff_engaged_sessions += row.diff_pct_engaged_sessions ?? 0;
+        acc.average_session_duration += row.duracion_media_sesion ?? 0;
+        acc.diff_average_session_duration += row.diff_duracion_media_sesion ?? 0;
+        acc.bounce_rate += row.tasa_rebote ?? 0;
+        acc.diff_bounce_rate += row.diff_abs_tasa_rebote ?? 0;
+        acc.key_events += row.evento_clave ?? 0;
+        acc.diff_key_events += row.diff_pct_evento_clave ?? 0;
+        acc.key_event_rate += row.tasa_evento_clave ?? 0;
+        acc.diff_key_event_rate += row.diff_abs_tasa_evento_clave ?? 0;
+        return acc;
+      },
+      {
+        total_users: 0,
+        diff_total_users: 0,
+        new_users: 0,
+        diff_new_users: 0,
+        sessions: 0,
+        diff_sessions: 0,
+        engaged_sessions: 0,
+        diff_engaged_sessions: 0,
+        average_session_duration: 0,
+        diff_average_session_duration: 0,
+        bounce_rate: 0,
+        diff_bounce_rate: 0,
+        key_events: 0,
+        diff_key_events: 0,
+        key_event_rate: 0,
+        diff_key_event_rate: 0,
+      },
+    );
+  }
+
+  const aggregatedData = aggregateData(data?.rows || []);
 
   const DICTIONARY = {
     total_users: "Total de usuarios",
@@ -69,7 +93,7 @@ export const GeneralPerformance = ({ date }: { date: { from: string; to?: string
     key_event_rate: "Tasa evento clave",
   };
 
-  const test = Object.entries(adaptedData[0] || {})
+  const test = Object.entries(aggregatedData)
     .map(([key, value]: [string, any]) => {
       if (key.startsWith("diff_") || key === "id") return null;
 
@@ -84,8 +108,8 @@ export const GeneralPerformance = ({ date }: { date: { from: string; to?: string
             : key === "average_session_duration"
               ? "time"
               : "number",
-        diff: adaptedData[0][diffKey],
-        isPositive: adaptedData[0][diffKey] >= 0,
+        diff: aggregatedData[diffKey],
+        isPositive: aggregatedData[diffKey] >= 0,
       };
     })
     .filter((item) => item !== null);

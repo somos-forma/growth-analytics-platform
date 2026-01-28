@@ -70,7 +70,7 @@ export const columns: ColumnDef<ChannelGroupMetrics>[] = [
 
 export const ChannelGroupMetricsChangeTable = ({ date }: { date: { from: string; to?: string } }) => {
   const { data, isLoading } = useQuery({
-    queryKey: ["ga4_traffic_source_medium_monthly_kpis", date.from],
+    queryKey: ["ga4_traffic_source_medium_monthly_kpis", date.from, date.to],
     queryFn: async () => {
       const response = await fetch("/api/analytics", {
         method: "POST",
@@ -78,11 +78,11 @@ export const ChannelGroupMetricsChangeTable = ({ date }: { date: { from: string;
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          table: "ga4_traffic_source_medium_monthly_kpis",
+          table: "daily_ga4_traffic_source_medium_kpis",
           filters: {
-            event_date_between: [date.from],
+            event_date_between: [date.from, date.to || date.from],
           },
-          limit: 200,
+          limit: 1000,
         }),
       });
       if (!response.ok) {
