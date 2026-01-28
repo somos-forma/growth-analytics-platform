@@ -1,7 +1,7 @@
 "use client";
 import { format, subMonths } from "date-fns";
 import { ChevronDown, Download, StarsIcon } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { es } from "react-day-picker/locale";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -34,12 +34,12 @@ export const GoogleAnalytics = () => {
   }>({ from: subMonths(new Date(), 1), to: new Date() });
 
   // Formatear fecha en formato 'YYYY-MM-DD'
-  // const formattedDate = useMemo(() => {
-  //   if (dateRange.from) {
-  //     return format(dateRange.from, "yyyy-MM-dd");
-  //   }
-  //   return new Date().toISOString().split("T")[0];
-  // }, [dateRange.from]);
+  const formattedDate = useMemo(() => {
+    if (dateRange.from) {
+      return format(dateRange.from, "yyyy-MM-dd");
+    }
+    return new Date().toISOString().split("T")[0];
+  }, [dateRange.from]);
 
   if (type === "leads") {
     return (
@@ -116,7 +116,12 @@ export const GoogleAnalytics = () => {
                 para atraer, retener y convertir usuarios.
               </p>
             </div>
-            <GeneralPerformance date={{ from: "2026-01-01", to: "2026-01-31" }} />
+            <GeneralPerformance
+              date={{
+                from: formattedDate,
+                to: dateRange.to && format(dateRange.to, "yyyy-MM-dd"),
+              }}
+            />
           </section>
           {/* sections 02 */}
           <section>
@@ -127,7 +132,12 @@ export const GoogleAnalytics = () => {
                 de resultados, y dónde existen oportunidades de optimización.
               </p>
             </div>
-            <ChannelGroupMetricsTable date={{ from: "2026-01-01", to: "2026-01-31" }} />
+            <ChannelGroupMetricsTable
+              date={{
+                from: formattedDate,
+                to: dateRange.to && format(dateRange.to, "yyyy-MM-dd"),
+              }}
+            />
           </section>
           {/* sections 03 */}
           <section>
@@ -138,12 +148,22 @@ export const GoogleAnalytics = () => {
                 impacto real en los objetivos de negocio.
               </p>
             </div>
-            <ChannelGroupMetricsChangeTable date={{ from: "2026-01-01", to: "2026-01-31" }} />
+            <ChannelGroupMetricsChangeTable
+              date={{
+                from: formattedDate,
+                to: dateRange.to && format(dateRange.to, "yyyy-MM-dd"),
+              }}
+            />
           </section>
           {/* sections 04 */}
           <section>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-              <UserByDevice date={{ from: "2026-01-01", to: "2026-01-31" }} />
+              <UserByDevice
+                date={{
+                  from: formattedDate,
+                  to: dateRange.to && format(dateRange.to, "yyyy-MM-dd"),
+                }}
+              />
               {/* <UsersByAge /> */}
               {/* <UsersBySex /> */}
             </div>
