@@ -25,7 +25,7 @@ export function DashboardSidebar() {
 
   useEffect(() => {
     const { email } = authStore || {};
-    const userEmail = email || "";
+    const userEmail = email || localStorage.getItem("userEmail") || "";
     setIsAdmin(userEmail === "admin@example.com");
 
     const name = userEmail.split("@")[0];
