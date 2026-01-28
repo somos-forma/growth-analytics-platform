@@ -1,6 +1,33 @@
 import { useQuery } from "@tanstack/react-query";
 import { MetricCard, type Unit } from "@/components/metric-card";
 import { OverviewSkeleton } from "@/components/skeletons/overview-skeleton";
+
+function aggregateOverviewData(rows: any[]) {
+  const grouped = rows.reduce(
+    (acc: { [fecha: string]: { inversion_total: number; conversiones_total: number } }, row: any) => {
+      const fecha = row.fecha;
+      if (!acc[fecha]) {
+        acc[fecha] = { inversion_total: row.inversion_total || 0, conversiones_total: row.conversiones_total || 0 };
+      }
+      return acc;
+    },
+    {} as { [fecha: string]: { inversion_total: number; conversiones_total: number } },
+  );
+
+  const totalInversion = (Object.values(grouped) as { inversion_total: number; conversiones_total: number }[]).reduce(
+    (sum, day) => sum + day.inversion_total,
+    0,
+  );
+  const totalConversiones = (
+    Object.values(grouped) as { inversion_total: number; conversiones_total: number }[]
+  ).reduce((sum, day) => sum + day.conversiones_total, 0);
+
+  return {
+    inversion_total: totalInversion,
+    conversiones_total: totalConversiones,
+    cpa_total: totalConversiones > 0 ? totalInversion / totalConversiones : 0,
+  };
+}
 export const OverviewLeads = ({ date }: { date: { from: string; to?: string } }) => {
   const { data, isPending, isError, error } = useQuery({
     queryKey: ["google-ads-monthly-overview-leads", date.from, date.to],
@@ -27,15 +54,7 @@ export const OverviewLeads = ({ date }: { date: { from: string; to?: string } })
       }
       const currentJson = await currentResponse.json();
       const currentRows = currentJson.rows || [];
-      const currentOverview = currentRows.reduce(
-        (acc: { inversion_total: number; conversiones_total: number }, row: any) => {
-          acc.inversion_total += row.inversion_total || 0;
-          acc.conversiones_total += row.conversiones_total || 0;
-          return acc;
-        },
-        { inversion_total: 0, conversiones_total: 0 },
-      );
-      currentOverview.cpa_total = currentOverview.inversion_total / currentOverview.conversiones_total || 0;
+      const currentOverview = aggregateOverviewData(currentRows);
 
       // Fetch previous period data
       const previousResponse = await fetch("/api/analytics", {
@@ -53,15 +72,7 @@ export const OverviewLeads = ({ date }: { date: { from: string; to?: string } })
       }
       const previousJson = await previousResponse.json();
       const previousRows = previousJson.rows || [];
-      const previousOverview = previousRows.reduce(
-        (acc: { inversion_total: number; conversiones_total: number }, row: any) => {
-          acc.inversion_total += row.inversion_total || 0;
-          acc.conversiones_total += row.conversiones_total || 0;
-          return acc;
-        },
-        { inversion_total: 0, conversiones_total: 0 },
-      );
-      previousOverview.cpa_total = previousOverview.inversion_total / previousOverview.conversiones_total || 0;
+      const previousOverview = aggregateOverviewData(previousRows);
 
       const titlesMap: { [key: string]: string } = {
         inversion_total: "Inversión",
@@ -81,8 +92,8 @@ export const OverviewLeads = ({ date }: { date: { from: string; to?: string } })
       }
 
       const transformed = Object.keys(titlesMap).map((key) => {
-        const currValue = currentOverview[key] ?? 0;
-        const prevValue = previousOverview[key] ?? 0;
+        const currValue = (currentOverview as any)[key] ?? 0;
+        const prevValue = (previousOverview as any)[key] ?? 0;
         const change = calcChange(currValue, prevValue);
         return {
           id: key,

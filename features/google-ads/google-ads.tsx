@@ -1,6 +1,6 @@
 "use client";
 
-import { format } from "date-fns";
+import { format, subMonths } from "date-fns";
 import { es } from "date-fns/locale";
 import { ChevronDown, Download, StarsIcon } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -25,7 +25,7 @@ export const GoogleAds = () => {
   const [dateRange, setDateRange] = useState<{
     from: Date | undefined;
     to: Date | undefined;
-  }>({ from: new Date(), to: new Date() });
+  }>({ from: subMonths(new Date(), 1), to: new Date() });
 
   // Formatear fecha en formato 'YYYY-MM-DD'
   const formattedDate = useMemo(() => {
