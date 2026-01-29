@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/data-table";
 import { TableSkeleton } from "@/components/skeletons/table-skeleton";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatCurrency, formatNumber, formatPercentage } from "@/utils/formatters";
 
 type PerformanceIndicators = {
@@ -167,11 +167,6 @@ export const PerformanceIndicatorsTable = ({ date }: { date: { from: string; to?
     <Card>
       <CardHeader>
         <CardTitle>Indicadores de Performance</CardTitle>
-        <CardDescription>
-          Rendimiento de los principales canales de adquisición
-          <br />
-          <span className=" italic">(Comparación del mes actual con el mismo mes del año anterior)</span>
-        </CardDescription>
       </CardHeader>
       <CardContent>
         <DataTable columns={columns} data={data} />

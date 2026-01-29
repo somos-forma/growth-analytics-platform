@@ -3,7 +3,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 
 import { DataTable } from "@/components/data-table";
 import { TableSkeleton } from "@/components/skeletons/table-skeleton";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { formatCurrency, formatNumber } from "@/utils/formatters";
 
 type PerformanceIndicators = {
@@ -119,13 +119,7 @@ export const LeadsPerformanceIndicatorsTable = ({ date }: { date: { from: string
         </p>
       </div>
       <Card>
-        <CardHeader>
-          <CardTitle>Indicadores de performance</CardTitle>
-          <CardDescription>
-            Resultados por campaña
-            {/* <p className=" italic">(Este mes)</p> */}
-          </CardDescription>
-        </CardHeader>
+        <CardHeader></CardHeader>
         <CardContent>
           <DataTable columns={columns} data={data} />
         </CardContent>

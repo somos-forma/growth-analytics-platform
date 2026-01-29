@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { Bar, CartesianGrid, ComposedChart, Line, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import { ChartSkeleton } from "@/components/skeletons/chart-skeleton";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   type ChartConfig,
   ChartContainer,
@@ -73,13 +73,7 @@ export const CostsIndicatorsCharts = ({ date }: { date: { from: string; to: stri
         <p className="text-muted-foreground">Comportamiento diario del gasto, CPM y CPC en el período analizado</p>
       </div>
       <Card>
-        <CardHeader>
-          <CardTitle>Indicadores de Costos</CardTitle>
-          <CardDescription>
-            Inversión, CPM y CPC por Día
-            <p className=" italic">(Este mes)</p>
-          </CardDescription>
-        </CardHeader>
+        <CardHeader></CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig} className="h-[350px]  w-full">
             <ResponsiveContainer>

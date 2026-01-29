@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import { ChartSkeleton } from "@/components/skeletons/chart-skeleton";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   type ChartConfig,
   ChartContainer,
@@ -73,10 +73,7 @@ export const LeadsCharts = ({ date }: { date: { from: string; to?: string } }) =
         </p>
       </div>
       <Card>
-        <CardHeader>
-          <CardTitle>Rendimiento mensual</CardTitle>
-          <CardDescription>Análisis del rendimiento de Google Ads durante el año en curso</CardDescription>
-        </CardHeader>
+        <CardHeader></CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig} className="h-[350px]  w-full">
             <ResponsiveContainer>
