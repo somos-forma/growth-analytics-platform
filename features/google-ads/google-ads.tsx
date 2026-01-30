@@ -27,6 +27,8 @@ export const GoogleAds = () => {
     to: Date | undefined;
   }>({ from: subMonths(new Date(), 1), to: new Date() });
 
+  const [hasSelectedDate, setHasSelectedDate] = useState(false);
+
   // Formatear fecha en formato 'YYYY-MM-DD'
   const formattedDate = useMemo(() => {
     if (dateRange.from) {
@@ -106,8 +108,10 @@ export const GoogleAds = () => {
                       from: date.from,
                       to: date.to ?? undefined,
                     });
+                    setHasSelectedDate(true);
                   } else {
                     setDateRange({ from: undefined, to: undefined });
+                    setHasSelectedDate(false);
                   }
                 }}
               />
@@ -124,8 +128,8 @@ export const GoogleAds = () => {
           />
           <LeadsCharts
             date={{
-              from: formattedDate,
-              to: dateRange.to && format(dateRange.to, "yyyy-MM-dd"),
+              from: hasSelectedDate ? formattedDate : "2025-01-01",
+              to: hasSelectedDate ? (dateRange.to ? format(dateRange.to, "yyyy-MM-dd") : undefined) : "2026-01-01",
             }}
           />
           <LeadsTable
