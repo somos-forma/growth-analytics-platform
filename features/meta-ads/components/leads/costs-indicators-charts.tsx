@@ -80,12 +80,29 @@ export const CostsIndicatorsCharts = ({ date }: { date: { from: string; to: stri
               <ComposedChart accessibilityLayer data={data}>
                 <CartesianGrid vertical={false} />
                 <YAxis
+                  yAxisId="left"
+                  orientation="left"
                   axisLine={false}
                   tickLine={false}
+                  domain={[0, "dataMax"]}
                   label={{
                     value: "Total costes",
                     angle: -90,
                     dx: -30,
+                  }}
+                  tickFormatter={(value) => formatNumberAbbreviated(value)}
+                />
+
+                <YAxis
+                  yAxisId="right"
+                  orientation="right"
+                  axisLine={false}
+                  tickLine={false}
+                  domain={[0, "dataMax"]}
+                  label={{
+                    value: "CPM / CPC",
+                    angle: 90,
+                    dx: 30,
                   }}
                   tickFormatter={(value) => formatNumberAbbreviated(value)}
                 />
@@ -99,9 +116,9 @@ export const CostsIndicatorsCharts = ({ date }: { date: { from: string; to: stri
                 />
                 <ChartTooltip content={<ChartTooltipContent />} />
                 <ChartLegend content={<ChartLegendContent />} />
-                <Bar dataKey="cost" fill="var(--color-cost)" radius={4} />
-                <Line dataKey="cpm" stroke="var(--color-cpm)" />
-                <Line dataKey="cpc" stroke="var(--color-cpc)" />
+                <Bar yAxisId="left" dataKey="cost" fill="var(--color-cost)" radius={4} />
+                <Line yAxisId="right" dataKey="cpm" stroke="var(--color-cpm)" />
+                <Line yAxisId="right" dataKey="cpc" stroke="var(--color-cpc)" />
               </ComposedChart>
             </ResponsiveContainer>
           </ChartContainer>
