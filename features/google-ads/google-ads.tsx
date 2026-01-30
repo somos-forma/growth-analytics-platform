@@ -124,8 +124,8 @@ export const GoogleAds = () => {
           />
           <LeadsCharts
             date={{
-              from: "2025-01-01",
-              to: "2025-12-31",
+              from: formattedDate,
+              to: dateRange.to && format(dateRange.to, "yyyy-MM-dd"),
             }}
           />
           <LeadsTable

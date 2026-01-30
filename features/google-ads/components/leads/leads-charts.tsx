@@ -34,7 +34,7 @@ export const LeadsCharts = ({ date }: { date: { from: string; to?: string } }) =
       const response = await fetch("/api/analytics", {
         method: "POST",
         body: JSON.stringify({
-          table: "monthly_google_ads_performance",
+          table: "daily_google_ads_performance",
           filters: {
             event_date_between: [date.from, date.to],
           },
@@ -47,14 +47,31 @@ export const LeadsCharts = ({ date }: { date: { from: string; to?: string } }) =
 
       const json = await response.json();
 
-      const transformed = json.rows.map((raw: any) => ({
-        month: raw.mes,
-        investment: raw.inversion ?? 0,
-        conversions: raw.conversiones ?? 0,
-        cpa: raw.cpa ?? 0,
+      const transformed = json.rows.reduce(
+        (acc: Record<string, { investment: number; conversions: number }>, curr: any) => {
+          const { coste, conversiones, fecha } = curr;
+          const month = fecha.slice(0, 7);
+
+          if (!acc[month]) {
+            acc[month] = { investment: 0, conversions: 0 };
+          }
+
+          acc[month].investment += coste ?? 0;
+          acc[month].conversions += conversiones ?? 0;
+
+          return acc;
+        },
+        {},
+      );
+
+      const data = Object.keys(transformed).map((month) => ({
+        month,
+        investment: transformed[month].investment,
+        conversions: transformed[month].conversions,
+        cpa: transformed[month].conversions > 0 ? transformed[month].investment / transformed[month].conversions : 0,
       }));
 
-      return transformed;
+      return data;
     },
   });
   if (isLoading) {
