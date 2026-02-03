@@ -4,7 +4,7 @@ import { Wizard } from "./wizard/Wizard";
 
 export const CreateAnalysis = () => {
   return (
-    <div className="space-y-5 max-w-[800px]">
+    <div className="space-y-5 ">
       <div>
         <h1 className="text-4xl font-bold">Crear análisis</h1>
         <p className="text-muted-foreground">

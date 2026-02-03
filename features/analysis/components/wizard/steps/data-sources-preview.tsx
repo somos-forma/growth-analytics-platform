@@ -50,7 +50,7 @@ export const DataSourcesPreviewStep = () => {
   const next = useWizardStore((state) => state.next);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 max-w-[800px]">
       <p className="font-medium">Vista previa de la fuente {dataSources === "integrate" ? "integrada" : "local"}</p>
       {dataSources === "integrate" ? <IntegrateTable /> : <LocalTable />}
       <div className="space-x-4">
@@ -228,5 +228,9 @@ const LocalTable = () => {
     },
   ];
 
-  return <DataTable data={data} columns={columns} showTotals={false} />;
+  return (
+    <div className="space-y-6 max-w-[800px]">
+      <DataTable data={data} columns={columns} showTotals={false} />
+    </div>
+  );
 };

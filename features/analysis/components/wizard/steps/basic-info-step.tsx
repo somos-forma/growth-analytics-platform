@@ -20,7 +20,7 @@ export const BasicInfoStep = () => {
   };
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 max-w-[800px]">
       <FieldGroup>
         <Controller
           name="analysisName"
