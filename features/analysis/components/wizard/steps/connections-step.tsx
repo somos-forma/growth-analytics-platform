@@ -57,7 +57,7 @@ export const ConnectionsStep = () => {
     next();
   };
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 max-w-[800px]">
       <FieldGroup>
         {dataSources == "integrate" ? (
           <Controller

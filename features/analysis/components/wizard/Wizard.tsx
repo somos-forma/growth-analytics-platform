@@ -13,7 +13,7 @@ export const Wizard = () => {
   const { step } = useWizardStore();
 
   return (
-    <div className="space-y-5 max-w-[800px]">
+    <div className="space-y-5 ">
       <p>Paso {step} de 8</p>
       {step === 1 && <BasicInfoStep />}
       {step === 2 && <ModelStep />}

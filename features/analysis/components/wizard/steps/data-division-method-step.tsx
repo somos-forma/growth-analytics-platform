@@ -55,7 +55,7 @@ export const DataDivisionMethodStep = () => {
   const selectedMethod = form.watch("dataDivisionMethod");
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 max-w-[800px]">
       <FieldGroup>
         <Controller
           name="dataDivisionMethod"

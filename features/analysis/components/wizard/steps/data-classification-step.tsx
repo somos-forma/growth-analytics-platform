@@ -27,33 +27,39 @@ export const DataClassificationStep = () => {
   const contextualSelected = useWizardStore((state) => state.data.contextualSelected);
 
   const [channelAvailable, setChannelAvailable] = useState<TransferItem[]>([
-    { id: "1", label: "Variable channel 1" },
-    { id: "2", label: "Variable channel 2" },
-    { id: "3", label: "Variable channel 3" },
+    { id: "cost_google", label: "cost_google" },
+    { id: "impressions_google", label: "impressions_google" },
+    { id: "clicks_google", label: "clicks_google" },
+    {
+      id: "cost_meta",
+      label: "cost_meta",
+    },
+    {
+      id: "impressions_meta",
+      label: "impressions_meta",
+    },
+    {
+      id: "clicks_meta",
+      label: "clicks_meta",
+    },
   ]);
 
   const [controlAvailable, setControlAvailable] = useState<TransferItem[]>([
-    { id: "1", label: "Variable de Control 1" },
-    { id: "2", label: "Variable de Control 2" },
-    { id: "3", label: "Variable de Control 3" },
+    { id: "usuarios", label: "usuarios" },
+    { id: "sesiones", label: "sesiones" },
   ]);
 
   const [kpiAvailable, setKpiAvailable] = useState<TransferItem[]>([
-    { id: "1", label: "Variable de KPI 1" },
-    { id: "2", label: "Variable de KPI 2" },
-    { id: "3", label: "Variable de KPI 3" },
+    { id: "conversiones_paid", label: "conversiones_paid" },
   ]);
 
   const [organicAvailable, setOrganicAvailable] = useState<TransferItem[]>([
-    { id: "1", label: "Variable Orgánica 1" },
-    { id: "2", label: "Variable Orgánica 2" },
-    { id: "3", label: "Variable Orgánica 3" },
+    { id: "users_organic", label: "users_organic" },
+    { id: "sessions_organic", label: "sessions_organic" },
   ]);
 
   const [contextualAvailable, setContextualAvailable] = useState<TransferItem[]>([
-    { id: "1", label: "Variable Contextual 1" },
-    { id: "2", label: "Variable Contextual 2" },
-    { id: "3", label: "Variable Contextual 3" },
+    { id: "CPA_paid", label: "CPA_paid" },
   ]);
 
   const handleTransferChannel = (newAvailable: TransferItem[], newSelected: TransferItem[]) => {
@@ -82,7 +88,7 @@ export const DataClassificationStep = () => {
   };
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 max-w-[800px]">
       <p className="font-medium">Clasificación de datos</p>
       <div className="grid grid-cols-2 gap-4">
         <Dialog>
