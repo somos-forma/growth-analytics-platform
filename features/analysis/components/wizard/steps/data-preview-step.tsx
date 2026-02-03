@@ -60,8 +60,6 @@ export const DataPreviewStep = () => {
         correlation_fields_extra: [],
       };
 
-      console.log("payload", payload);
-
       const response = await fetch("/api/analytics/eda", {
         method: "POST",
         headers: {
