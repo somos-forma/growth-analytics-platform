@@ -20,7 +20,6 @@ interface WizardState {
       startDate: string;
       endDate: string;
     };
-
     integratedConnections?: string[];
     localConnections?: File | null;
 
@@ -45,7 +44,7 @@ export const useWizardStore = create<WizardState>()(
       model: "meridian",
       dataSources: "integrate",
       dataDivisionMethod: "proportion",
-
+      dataDivisionProportion: 80,
       channelSelected: [],
       contextualSelected: [],
       controlSelected: [],
@@ -62,7 +61,6 @@ export const useWizardStore = create<WizardState>()(
           model: "meridian",
           dataSources: "integrate",
           dataDivisionMethod: "proportion",
-
           channelSelected: [],
           contextualSelected: [],
           controlSelected: [],
