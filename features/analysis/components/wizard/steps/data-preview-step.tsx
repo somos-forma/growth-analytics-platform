@@ -1,32 +1,63 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { Rocket } from "lucide-react";
-import type React from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
 import { useWizardStore } from "../wizard-store";
 
 export const DataPreviewStep = () => {
+  const router = useRouter();
   const back = useWizardStore((state) => state.back);
   const allData = useWizardStore((state) => state.data);
+  const reset = useWizardStore((state) => state.resetAll);
+  const [payload, setPayload] = useState<string>("");
+
+  const meridianMutation = useMutation({
+    mutationFn: async (payload_gcs_uri: string) => {
+      const response = await fetch("/api/meridian", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          payload_gcs_uri,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        const error: any = new Error(errorData.message || "Error al iniciar el entrenamiento");
+        error.status = response.status;
+        error.data = errorData;
+        throw error;
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      toast.success("Entrenamiento iniciado correctamente", {
+        description: "Tu análisis está siendo procesado. Serás redirigido al dashboard.",
+        duration: 4000,
+      });
+      reset();
+      router.push("/dashboard/marketing-mix-modeling");
+    },
+    onError: (error: any) => {
+      if (error.status === 429) {
+        toast.error(error.message || "Límite de entrenamientos alcanzado. Intenta más tarde.");
+      } else {
+        toast.error("Error al iniciar el entrenamiento");
+      }
+      console.error(error);
+    },
+  });
 
   const onSubmit = () => {
-    toast("Enviaste los siguientes valores:", {
-      description: (
-        <pre className="bg-code text-code-foreground rounded-md p-4 h-[400px] overflow-x-hidden overflow-y-auto">
-          <code>{JSON.stringify(allData, null, 2)}</code>
-        </pre>
-      ),
-      position: "bottom-right",
-      classNames: {
-        content: "flex flex-col gap-2 ",
-      },
-      style: {
-        "--border-radius": "calc(var(--radius)  + 4px)",
-        width: "420px",
-      } as React.CSSProperties,
-    });
+    meridianMutation.mutate(payload);
   };
 
   const {
@@ -70,7 +101,9 @@ export const DataPreviewStep = () => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      return response.json();
+      const data = await response.json();
+      setPayload(data.meridian_payload_path);
+      return data;
     },
   });
 
@@ -95,15 +128,19 @@ export const DataPreviewStep = () => {
     console.log(error);
     return <div>Error al cargar el análisis exploratorio de datos.</div>;
   }
-
+  console.log(eda);
   return (
     <div>
       <div className="space-y-6">
         <div className="flex justify-end">
           <div className="space-x-4">
-            <Button onClick={back}>Anterior</Button>
-            <Button onClick={onSubmit}>
-              Empezar entrenamiento <Rocket />
+            <Button onClick={back} disabled={meridianMutation.isPending}>
+              Anterior
+            </Button>
+            <Button onClick={onSubmit} disabled={meridianMutation.isPending || !payload}>
+              {meridianMutation.isPending && <Spinner />}
+              Empezar entrenamiento
+              <Rocket />
             </Button>
           </div>
         </div>
