@@ -5,5 +5,6 @@ export default function useAnalysis() {
   return useQuery({
     queryKey: ["analysis"],
     queryFn: getAnalysis,
+    refetchOnMount: true,
   });
 }

@@ -185,3 +185,21 @@ export const getCurrentYearRange = (date?: Date): { from: string; to: string } =
     return { from: "", to: "" };
   }
 };
+
+/**
+ * Formatea el status de un job de Meridian a un label en español.
+ */
+export const formatStatus = (status: string): string => {
+  switch (status) {
+    case "DONE":
+      return "Completado";
+    case "QUEUED":
+      return "En espera";
+    case "RUNNING":
+      return "En ejecución";
+    case "ERROR":
+      return "Error";
+    default:
+      return status;
+  }
+};

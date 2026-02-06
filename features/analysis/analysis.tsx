@@ -3,8 +3,8 @@ import { Brain } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { AnalysisCollection } from "./components/analysis-collection";
 import { AnalysisFilters } from "./components/analysis-filters";
-import { AnalysisList } from "./components/analysis-list";
 import { AnalysisOverview } from "./components/analysis-overview";
 import useAnalysis from "./hooks/useAnalysis";
 
@@ -12,21 +12,6 @@ export const Analysis = () => {
   const { data: analysis = [], isLoading, error } = useAnalysis();
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading analysis.</div>;
-
-  // const meridianQuery = useQuery({
-  //   queryKey: ["meridian"],
-  //   queryFn: async () => {
-  //     const response = await fetch("/api/meridian", {
-  //       method: "GET",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     });
-
-  //     const data = await response.json();
-  //     return data;
-  //   },
-  // });
 
   return (
     <div className="space-y-5">
@@ -51,7 +36,7 @@ export const Analysis = () => {
         </CardHeader>
         <CardContent className="space-y-5">
           <AnalysisFilters />
-          <AnalysisList />
+          <AnalysisCollection analysis={analysis} />
         </CardContent>
       </Card>
     </div>

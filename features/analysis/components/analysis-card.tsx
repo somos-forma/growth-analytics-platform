@@ -1,47 +1,48 @@
-import { Clock, DownloadIcon, FileTextIcon, Timer } from "lucide-react";
+import { Clock, FileTextIcon, Timer } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { formatTimeAgo } from "@/utils/formatters";
+import { formatStatus, formatTimeAgo } from "@/utils/formatters";
 import type { Analysis } from "../types/analysis.type";
 
 interface AnalysisCardProps {
   analysis: Analysis;
 }
-const statusText: Record<string, string> = {
-  completed: "Completado",
-  in_progress: "En Progreso",
-  failed: "Fallido",
-};
 
 export const AnalysisCard = ({ analysis }: AnalysisCardProps) => {
-  const { name, status, model, description, completedAgo, duration } = analysis;
-  const statusValue = statusText[status];
+  const { job_id, duration_minutes, status, message, finished_at, started_at, updated_at, result } = analysis;
   const statusBg: Record<string, string> = {
-    completed: "bg-green-100 text-green-800",
-    in_progress: "bg-yellow-100 text-yellow-800",
-    failed: "bg-red-100 text-red-800",
+    DONE: "bg-green-100 text-green-800",
+    QUEUED: "bg-yellow-100 text-yellow-800",
+    RUNNING: "bg-blue-100 text-blue-800",
+    ERROR: "bg-red-100 text-red-800",
   };
+
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex justify-between gap-4">
-          <span className="font-medium">{name}</span>
-          <Badge className={cn(statusBg[status])}>{statusValue}</Badge>
+          <span className="font-medium">Analisis de Campaña {job_id}</span>
+          <Badge className={cn(statusBg[status])}>{formatStatus(status)}</Badge>
         </CardTitle>
         <div className="flex gap-3">
-          <Badge>{model}</Badge>
+          <Badge>Meridian</Badge>
           <p className="flex items-center gap-1 text-sm text-muted-foreground">
             <Clock size={16} />
-            {formatTimeAgo(completedAgo)}
+            {formatTimeAgo(finished_at || updated_at || started_at)}
           </p>
           <Tooltip>
             <TooltipTrigger>
               <p className="underline decoration-dashed underline-offset-2 flex items-center gap-1 text-sm text-muted-foreground">
-                <Timer size={16} />
-                {duration}
+                {formatStatus(status) === "Completado" ? (
+                  <>
+                    <Timer size={16} /> {duration_minutes} minutos
+                  </>
+                ) : (
+                  ""
+                )}
               </p>
             </TooltipTrigger>
             <TooltipContent>
@@ -51,15 +52,31 @@ export const AnalysisCard = ({ analysis }: AnalysisCardProps) => {
         </div>
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
-        <p className="text-muted-foreground text-sm">{description}</p>
+        <p className="text-muted-foreground text-sm">{message}</p>
         <div className="flex gap-3">
-          <Button variant="outline" size="sm">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={formatStatus(status) !== "Completado"}
+            onClick={() => {
+              const url = result?.reports?.budget_optimization?.signed_url;
+              if (url) window.open(url, "_blank");
+            }}
+          >
             <FileTextIcon />
-            Ver Informe
+            Ver Reporte 1
           </Button>
-          <Button variant="outline" size="sm">
-            <DownloadIcon />
-            Exportar
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={formatStatus(status) !== "Completado"}
+            onClick={() => {
+              const url = result?.reports?.model_fit?.signed_url;
+              if (url) window.open(url, "_blank");
+            }}
+          >
+            <FileTextIcon />
+            Ver Reporte 2
           </Button>
         </div>
       </CardContent>
