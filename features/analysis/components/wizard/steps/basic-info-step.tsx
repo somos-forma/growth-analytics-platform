@@ -15,6 +15,7 @@ export const BasicInfoStep = () => {
   });
 
   const onSubmit = (values: BasicInfoSchemaType) => {
+    console.log(values);
     updateData(values);
     next();
   };

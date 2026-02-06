@@ -5,15 +5,26 @@ type Variable = {
   id: string;
   label: string;
 };
+
+type Connection = {
+  check: boolean;
+};
+
+type Connections = {
+  ga4: Connection;
+  meta_ads: Connection;
+  google_ads: Connection;
+};
 interface WizardState {
   step: number;
   next: () => void;
   back: () => void;
   data: {
-    analysisName: string;
-    analysisDescription: string;
+    name: string;
+    description: string;
     model: "meridian" | "robyn";
-    dataSources: "integrate" | "locale";
+    source: "integradas" | "local";
+    connections: Connections;
     dataDivisionMethod: "proportion" | "date";
     dataDivisionProportion?: number;
     dataDivisionDate?: {
@@ -39,10 +50,10 @@ export const useWizardStore = create<WizardState>()(
     next: () => set((state) => ({ step: state.step + 1 })),
     back: () => set((state) => ({ step: state.step - 1 })),
     data: {
-      analysisName: "",
-      analysisDescription: "",
+      name: "",
+      description: "",
       model: "meridian",
-      dataSources: "integrate",
+      source: "integradas",
       dataDivisionMethod: "proportion",
       dataDivisionProportion: 80,
       channelSelected: [],
@@ -50,22 +61,44 @@ export const useWizardStore = create<WizardState>()(
       controlSelected: [],
       kpiSelected: [],
       organicSelected: [],
+      connections: {
+        ga4: {
+          check: true,
+        },
+        meta_ads: {
+          check: false,
+        },
+        google_ads: {
+          check: false,
+        },
+      },
     },
     updateData: (partial) => set((state) => ({ data: { ...state.data, ...partial } })),
     resetAll: () =>
       set(() => ({
         step: 1,
         data: {
-          analysisName: "",
-          analysisDescription: "",
+          name: "",
+          description: "",
           model: "meridian",
-          dataSources: "integrate",
+          source: "integradas",
           dataDivisionMethod: "proportion",
           channelSelected: [],
           contextualSelected: [],
           controlSelected: [],
           kpiSelected: [],
           organicSelected: [],
+          connections: {
+            ga4: {
+              check: true,
+            },
+            meta_ads: {
+              check: false,
+            },
+            google_ads: {
+              check: false,
+            },
+          },
         },
       })),
   })),
