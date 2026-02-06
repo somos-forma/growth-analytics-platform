@@ -1,22 +1,33 @@
-import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-export const AnalysisFilters = () => {
-  const [search, setSearch] = useState<string>("");
-  const [state, setState] = useState<string>("");
-  const [model, setModel] = useState<string>("");
+type AnalysisFiltersProps = {
+  search: string;
+  setSearch: (value: string) => void;
+  selectedState: string;
+  setSelectedState: (value: string) => void;
+  selectedModel: string;
+  setSelectedModel: (value: string) => void;
+};
 
+export const AnalysisFilters = ({
+  search,
+  setSearch,
+  selectedState,
+  setSelectedState,
+  selectedModel,
+  setSelectedModel,
+}: AnalysisFiltersProps) => {
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
   };
 
   const handleStateChange = (value: string) => {
-    setState(value);
+    setSelectedState(value);
   };
 
   const handleModelChange = (value: string) => {
-    setModel(value);
+    setSelectedModel(value);
   };
 
   return (
@@ -29,23 +40,24 @@ export const AnalysisFilters = () => {
           onChange={handleSearchChange}
           className="lg:w-1/2"
         />
-        <Select onValueChange={handleStateChange} value={state}>
+        <Select onValueChange={handleStateChange} value={selectedState}>
           <SelectTrigger className="w-full lg:w-1/4">
             <SelectValue placeholder="Todos los estados" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="completed">Completado</SelectItem>
-            <SelectItem value="in-progress">En Progreso</SelectItem>
-            <SelectItem value="pending">Pendiente</SelectItem>
-            <SelectItem value="failed">Fallido</SelectItem>
+            <SelectItem value="all">Todos los estados</SelectItem>
+            <SelectItem value="DONE">Completado</SelectItem>
+            <SelectItem value="QUEUED">En espera</SelectItem>
+            <SelectItem value="RUNNING">En ejecución</SelectItem>
+            <SelectItem value="ERROR">Error</SelectItem>
           </SelectContent>
         </Select>
-        <Select onValueChange={handleModelChange} value={model}>
+        <Select onValueChange={handleModelChange} value={selectedModel}>
           <SelectTrigger className="w-full lg:w-1/4">
             <SelectValue placeholder="Todos los modelos" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="robyn">Robyn</SelectItem>
+            <SelectItem value="all">Todos los modelos</SelectItem>
             <SelectItem value="meridiam">Meridiam</SelectItem>
           </SelectContent>
         </Select>
