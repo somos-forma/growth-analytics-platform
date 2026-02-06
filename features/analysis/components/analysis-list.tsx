@@ -5,6 +5,6 @@ export const AnalysisList = () => {
   const { data: analysis = [], isLoading, error } = useAnalysis();
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading analysis.</div>;
-
+  console.log("Rendering AnalysisList with data:", analysis);
   return <AnalysisCollection analysis={analysis} />;
 };

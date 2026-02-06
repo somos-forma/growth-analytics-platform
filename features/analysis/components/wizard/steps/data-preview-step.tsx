@@ -27,7 +27,6 @@ export const DataPreviewStep = () => {
           payload_gcs_uri,
         }),
       });
-
       if (!response.ok) {
         const errorData = await response.json();
         const error: any = new Error(errorData.message || "Error al iniciar el entrenamiento");
@@ -128,7 +127,6 @@ export const DataPreviewStep = () => {
     console.log(error);
     return <div>Error al cargar el análisis exploratorio de datos.</div>;
   }
-  console.log(eda);
   return (
     <div>
       <div className="space-y-6">

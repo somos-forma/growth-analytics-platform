@@ -6,8 +6,29 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { AnalysisFilters } from "./components/analysis-filters";
 import { AnalysisList } from "./components/analysis-list";
 import { AnalysisOverview } from "./components/analysis-overview";
+import useAnalysis from "./hooks/useAnalysis";
 
 export const Analysis = () => {
+  const { data: analysis = [], isLoading, error } = useAnalysis();
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading analysis.</div>;
+  console.log("Rendering AnalysisList with data:", analysis);
+
+  // const meridianQuery = useQuery({
+  //   queryKey: ["meridian"],
+  //   queryFn: async () => {
+  //     const response = await fetch("/api/meridian", {
+  //       method: "GET",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     });
+
+  //     const data = await response.json();
+  //     return data;
+  //   },
+  // });
+
   return (
     <div className="space-y-5">
       <div className="flex justify-between items-center">
