@@ -1,9 +1,10 @@
 export type Analysis = {
-  id: string;
-  name: string;
-  description: string;
-  status: "completed" | "in_progress" | "failed";
-  model: string;
-  completedAgo: string;
-  duration: string;
+  duration_minutes: number;
+  finished_at: string;
+  job_id: string;
+  message: string;
+  result: any[];
+  started_at: string;
+  status: string;
+  updated_at: string;
 };

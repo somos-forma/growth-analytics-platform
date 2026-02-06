@@ -7,8 +7,8 @@ type AnalysisCollectionProps = {
 export const AnalysisCollection = ({ analysis }: AnalysisCollectionProps) => {
   return (
     <div className="flex flex-col gap-4">
-      {analysis.map((item) => (
-        <AnalysisCard key={item.id} analysis={item} />
+      {analysis.map((item: Analysis, index: number) => (
+        <AnalysisCard key={index} analysis={item} />
       ))}
     </div>
   );

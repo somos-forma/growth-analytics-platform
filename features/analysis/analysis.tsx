@@ -1,13 +1,30 @@
 "use client";
 import { Brain } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { AnalysisCollection } from "./components/analysis-collection";
 import { AnalysisFilters } from "./components/analysis-filters";
-import { AnalysisList } from "./components/analysis-list";
 import { AnalysisOverview } from "./components/analysis-overview";
+import useAnalysis from "./hooks/useAnalysis";
 
 export const Analysis = () => {
+  const { data: analysis = [], isLoading, error } = useAnalysis();
+  const [search, setSearch] = useState("");
+  const [selectedState, setSelectedState] = useState("all");
+  const [selectedModel, setSelectedModel] = useState("all");
+
+  const filteredAnalysis = analysis.filter((item) => {
+    const matchesSearch = search === "" || item.job_id.toLowerCase().includes(search.toLowerCase());
+    const matchesState = selectedState === "all" || selectedState === "" || item.status === selectedState;
+    const matchesModel = selectedModel === "all" || selectedModel === "";
+    return matchesSearch && matchesState && matchesModel;
+  });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading analysis.</div>;
+
   return (
     <div className="space-y-5">
       <div className="flex justify-between items-center">
@@ -23,15 +40,22 @@ export const Analysis = () => {
           </Link>
         </Button>
       </div>
-      <AnalysisOverview />
+      <AnalysisOverview analysis={analysis} />
       <Card>
         <CardHeader>
           <CardTitle>Análisis Recientes</CardTitle>
           <CardDescription>Historial de modelos de Marketing Mix ejecutados</CardDescription>
         </CardHeader>
         <CardContent className="space-y-5">
-          <AnalysisFilters />
-          <AnalysisList />
+          <AnalysisFilters
+            search={search}
+            setSearch={setSearch}
+            selectedState={selectedState}
+            setSelectedState={setSelectedState}
+            selectedModel={selectedModel}
+            setSelectedModel={setSelectedModel}
+          />
+          <AnalysisCollection analysis={filteredAnalysis} />
         </CardContent>
       </Card>
     </div>

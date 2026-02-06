@@ -6,6 +6,14 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Spinner } from "@/components/ui/spinner";
 import { useWizardStore } from "../wizard-store";
 
@@ -15,6 +23,8 @@ export const DataPreviewStep = () => {
   const allData = useWizardStore((state) => state.data);
   const reset = useWizardStore((state) => state.resetAll);
   const [payload, setPayload] = useState<string>("");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const meridianMutation = useMutation({
     mutationFn: async (payload_gcs_uri: string) => {
@@ -27,7 +37,6 @@ export const DataPreviewStep = () => {
           payload_gcs_uri,
         }),
       });
-
       if (!response.ok) {
         const errorData = await response.json();
         const error: any = new Error(errorData.message || "Error al iniciar el entrenamiento");
@@ -48,7 +57,8 @@ export const DataPreviewStep = () => {
     },
     onError: (error: any) => {
       if (error.status === 429) {
-        toast.error(error.message || "Límite de entrenamientos alcanzado. Intenta más tarde.");
+        setErrorMessage(error.message || "Límite de entrenamientos alcanzado. Intenta más tarde.");
+        setIsDialogOpen(true);
       } else {
         toast.error("Error al iniciar el entrenamiento");
       }
@@ -128,7 +138,6 @@ export const DataPreviewStep = () => {
     console.log(error);
     return <div>Error al cargar el análisis exploratorio de datos.</div>;
   }
-  console.log(eda);
   return (
     <div>
       <div className="space-y-6">
@@ -212,6 +221,17 @@ export const DataPreviewStep = () => {
           </Card>
         </div>
       </div>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Límite de entrenamientos alcanzado</DialogTitle>
+            <DialogDescription>{errorMessage}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button onClick={() => setIsDialogOpen(false)}>Cerrar</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
