@@ -86,7 +86,7 @@ export const DataPreviewStep = () => {
 
       const payload = {
         mode: mode,
-        percent: allData.method.proporcional.pruebas,
+        percent: allData.method.proporcional.entrenamiento,
         start_date: allData.method.fecha.from,
         end_date: allData.method.fecha.to,
         media_fields: allData.channelSelected.map((item) => item.id),

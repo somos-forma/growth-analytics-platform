@@ -96,7 +96,7 @@ export const DataDivisionMethodStep = () => {
         />
         {selectedMethod === "proportion" && (
           <Controller
-            name="method.proporcional.pruebas"
+            name="method.proporcional.entrenamiento"
             control={form.control}
             render={({ field, fieldState }) => (
               <FieldSet data-invalid={fieldState.invalid}>

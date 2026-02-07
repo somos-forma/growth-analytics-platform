@@ -70,8 +70,8 @@ export const useWizardStore = create<WizardState>()(
         },
         proporcional: {
           check: true,
-          pruebas: 80,
-          entrenamiento: 20,
+          pruebas: 20,
+          entrenamiento: 80,
         },
       },
       connectionsSelected: {
@@ -111,8 +111,8 @@ export const useWizardStore = create<WizardState>()(
             },
             proporcional: {
               check: true,
-              pruebas: 80,
-              entrenamiento: 20,
+              pruebas: 20,
+              entrenamiento: 80,
             },
           },
           integratedConnections: ["google_ads", "ga4", "meta_ads"],
