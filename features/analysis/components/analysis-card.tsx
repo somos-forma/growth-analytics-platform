@@ -12,7 +12,7 @@ interface AnalysisCardProps {
 }
 
 export const AnalysisCard = ({ analysis }: AnalysisCardProps) => {
-  const { job_id, duration_minutes, status, message, finished_at, started_at, updated_at, result } = analysis;
+  const { name, duration_minutes, status, message, finished_at, started_at, updated_at, result } = analysis;
   const statusBg: Record<string, string> = {
     DONE: "bg-green-100 text-green-800",
     QUEUED: "bg-yellow-100 text-yellow-800",
@@ -24,7 +24,7 @@ export const AnalysisCard = ({ analysis }: AnalysisCardProps) => {
     <Card>
       <CardHeader>
         <CardTitle className="flex justify-between gap-4">
-          <span className="font-medium">Analisis de Campaña {job_id}</span>
+          <span className="font-medium">Analisis de Campaña {name}</span>
           <Badge className={cn(statusBg[status])}>{formatStatus(status)}</Badge>
         </CardTitle>
         <div className="flex gap-3">

@@ -1,15 +1,11 @@
 import type { Analysis } from "../types/analysis.type";
 
 export const getAnalysis = async (user_id: number, client_id: number): Promise<Analysis[]> => {
-  const response = await fetch("/api/analysis", {
+  const response = await fetch(`/api/analysis?user_id=${user_id}&client_id=${client_id}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      user_id,
-      client_id,
-    }),
   });
 
   if (!response.ok) {
@@ -17,5 +13,5 @@ export const getAnalysis = async (user_id: number, client_id: number): Promise<A
   }
 
   const data = await response.json();
-  return (data.items as Analysis[]) || [];
+  return data;
 };
