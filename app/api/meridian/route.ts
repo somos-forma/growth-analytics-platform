@@ -68,8 +68,6 @@ export const GET: RouteHandler = async (request) => {
 
     return NextResponse.json(response.data);
   } catch (error: any) {
-    console.error(error);
-
     if (error.response?.status === 429) {
       return NextResponse.json(
         error.response?.data || {

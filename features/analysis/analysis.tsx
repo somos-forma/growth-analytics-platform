@@ -10,12 +10,12 @@ import { AnalysisOverview } from "./components/analysis-overview";
 import useAnalysis from "./hooks/useAnalysis";
 
 export const Analysis = () => {
-  const { data: analysis = [], isLoading, error } = useAnalysis();
+  const { data: analysis = [], isLoading } = useAnalysis();
   const [search, setSearch] = useState("");
   const [selectedState, setSelectedState] = useState("all");
   const [selectedModel, setSelectedModel] = useState("all");
 
-  const filteredAnalysis = analysis.filter((item) => {
+  const filteredAnalysis = analysis.filter((item: any) => {
     const matchesSearch = search === "" || item.job_id.toLowerCase().includes(search.toLowerCase());
     const matchesState = selectedState === "all" || selectedState === "" || item.status === selectedState;
     const matchesModel = selectedModel === "all" || selectedModel === "";
@@ -23,7 +23,9 @@ export const Analysis = () => {
   });
 
   if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error loading analysis.</div>;
+  // if (error) return <div>Error loading analysis.</div>;
+
+  console.log(analysis);
 
   return (
     <div className="space-y-5">

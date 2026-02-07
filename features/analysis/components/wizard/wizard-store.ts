@@ -5,26 +5,21 @@ type Variable = {
   id: string;
   label: string;
 };
-
-type Connection = {
-  check: boolean;
-};
-
-type Connections = {
-  ga4: Connection;
-  meta_ads: Connection;
-  google_ads: Connection;
-};
 interface WizardState {
   step: number;
   next: () => void;
   back: () => void;
   data: {
-    name: string;
-    description: string;
+    analysisName: string;
+    analysisDescription: string;
     model: "meridian" | "robyn";
-    source: "integradas" | "local";
-    connections: Connections;
+    dataSources: "integrate" | "locale";
+    connections: {
+      ga4: { check: boolean };
+      meta_ads: { check: boolean };
+      google_ads: { check: boolean };
+    };
+
     dataDivisionMethod: "proportion" | "date";
     dataDivisionProportion?: number;
     dataDivisionDate?: {
@@ -39,6 +34,13 @@ interface WizardState {
     controlSelected: Variable[];
     kpiSelected: Variable[];
     organicSelected: Variable[];
+    estado?: string;
+    user_id?: number;
+    client_id?: number;
+    id_run_gcp?: string;
+    analysis_url?: string[];
+    tiempo?: number;
+    finished_at?: string;
   };
   updateData: (partial: Partial<WizardState["data"]>) => void;
   resetAll: () => void;
@@ -50,10 +52,10 @@ export const useWizardStore = create<WizardState>()(
     next: () => set((state) => ({ step: state.step + 1 })),
     back: () => set((state) => ({ step: state.step - 1 })),
     data: {
-      name: "",
-      description: "",
+      analysisName: "",
+      analysisDescription: "",
       model: "meridian",
-      source: "integradas",
+      dataSources: "integrate",
       dataDivisionMethod: "proportion",
       dataDivisionProportion: 80,
       channelSelected: [],
@@ -62,26 +64,27 @@ export const useWizardStore = create<WizardState>()(
       kpiSelected: [],
       organicSelected: [],
       connections: {
-        ga4: {
-          check: true,
-        },
-        meta_ads: {
-          check: false,
-        },
-        google_ads: {
-          check: false,
-        },
+        ga4: { check: true },
+        meta_ads: { check: true },
+        google_ads: { check: true },
       },
+      estado: "",
+      user_id: undefined,
+      client_id: undefined,
+      id_run_gcp: "",
+      analysis_url: [],
+      tiempo: undefined,
+      finished_at: "",
     },
     updateData: (partial) => set((state) => ({ data: { ...state.data, ...partial } })),
     resetAll: () =>
       set(() => ({
         step: 1,
         data: {
-          name: "",
-          description: "",
+          analysisName: "",
+          analysisDescription: "",
           model: "meridian",
-          source: "integradas",
+          dataSources: "integrate",
           dataDivisionMethod: "proportion",
           channelSelected: [],
           contextualSelected: [],
@@ -89,16 +92,17 @@ export const useWizardStore = create<WizardState>()(
           kpiSelected: [],
           organicSelected: [],
           connections: {
-            ga4: {
-              check: true,
-            },
-            meta_ads: {
-              check: false,
-            },
-            google_ads: {
-              check: false,
-            },
+            ga4: { check: true },
+            meta_ads: { check: true },
+            google_ads: { check: true },
           },
+          estado: "",
+          user_id: undefined,
+          client_id: undefined,
+          id_run_gcp: "",
+          analysis_url: [],
+          tiempo: undefined,
+          finished_at: "",
         },
       })),
   })),

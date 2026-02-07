@@ -2,8 +2,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { BarChart3, Eye, EyeOff, TrendingUp } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Controller, useForm } from "react-hook-form";
 import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
@@ -42,6 +42,8 @@ export function LoginForm() {
       onSuccess: (result) => {
         setAuthStore(result);
         localStorage.setItem("userEmail", result.email);
+        localStorage.setItem("userId", JSON.stringify(result.id));
+        localStorage.setItem("clientId", JSON.stringify(result.client_id));
         toast.success("Inicio de sesión exitoso");
         router.push("/dashboard/google-analytics");
       },
