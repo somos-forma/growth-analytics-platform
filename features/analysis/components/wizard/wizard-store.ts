@@ -14,21 +14,25 @@ interface WizardState {
     analysisDescription: string;
     model: "meridian" | "robyn";
     dataSources: "integrate" | "locale";
-    connections: {
+
+    method: {
+      fecha: {
+        to: string;
+        from: string;
+        check: boolean;
+      };
+      proporcional: {
+        check: boolean;
+        pruebas: number;
+        entrenamiento: number;
+      };
+    };
+    connectionsSelected: {
       ga4: { check: boolean };
       meta_ads: { check: boolean };
       google_ads: { check: boolean };
     };
-
-    dataDivisionMethod: "proportion" | "date";
-    dataDivisionProportion?: number;
-    dataDivisionDate?: {
-      startDate: string;
-      endDate: string;
-    };
-    integratedConnections?: string[];
     localConnections?: File | null;
-
     channelSelected: Variable[];
     contextualSelected: Variable[];
     controlSelected: Variable[];
@@ -58,16 +62,29 @@ export const useWizardStore = create<WizardState>()(
       dataSources: "integrate",
       dataDivisionMethod: "proportion",
       dataDivisionProportion: 80,
+      method: {
+        fecha: {
+          to: new Date().toISOString().split("T")[0],
+          from: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+          check: false,
+        },
+        proporcional: {
+          check: true,
+          pruebas: 80,
+          entrenamiento: 20,
+        },
+      },
+      connectionsSelected: {
+        ga4: { check: true },
+        meta_ads: { check: true },
+        google_ads: { check: true },
+      },
       channelSelected: [],
       contextualSelected: [],
       controlSelected: [],
       kpiSelected: [],
       organicSelected: [],
-      connections: {
-        ga4: { check: true },
-        meta_ads: { check: true },
-        google_ads: { check: true },
-      },
+
       estado: "",
       user_id: undefined,
       client_id: undefined,
@@ -86,16 +103,30 @@ export const useWizardStore = create<WizardState>()(
           model: "meridian",
           dataSources: "integrate",
           dataDivisionMethod: "proportion",
+          method: {
+            fecha: {
+              to: new Date().toISOString().split("T")[0],
+              from: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+              check: false,
+            },
+            proporcional: {
+              check: true,
+              pruebas: 80,
+              entrenamiento: 20,
+            },
+          },
+          integratedConnections: ["google_ads", "ga4", "meta_ads"],
+          connectionsSelected: {
+            ga4: { check: true },
+            meta_ads: { check: true },
+            google_ads: { check: true },
+          },
           channelSelected: [],
           contextualSelected: [],
           controlSelected: [],
           kpiSelected: [],
           organicSelected: [],
-          connections: {
-            ga4: { check: true },
-            meta_ads: { check: true },
-            google_ads: { check: true },
-          },
+
           estado: "",
           user_id: undefined,
           client_id: undefined,

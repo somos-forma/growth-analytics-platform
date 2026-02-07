@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
 import { Rocket } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -78,17 +77,18 @@ export const DataPreviewStep = () => {
   } = useQuery({
     queryKey: ["eda"],
     queryFn: async () => {
-      const mode = allData.dataDivisionMethod === "proportion" ? "percent" : "dates";
+      const mode =
+        allData.method.proporcional.check === true
+          ? "percent"
+          : allData.method.fecha.check === true
+            ? "dates"
+            : undefined;
 
       const payload = {
         mode: mode,
-        percent: allData.dataDivisionProportion,
-        start_date: allData?.dataDivisionDate
-          ? format(allData?.dataDivisionDate?.startDate ?? "", "yyyy-MM-dd")
-          : undefined,
-        end_date: allData?.dataDivisionDate
-          ? format(allData?.dataDivisionDate?.endDate ?? "", "yyyy-MM-dd")
-          : undefined,
+        percent: allData.method.proporcional.pruebas,
+        start_date: allData.method.fecha.from,
+        end_date: allData.method.fecha.to,
         media_fields: allData.channelSelected.map((item) => item.id),
         control_fields: allData.controlSelected
           .map((item) => item.id)

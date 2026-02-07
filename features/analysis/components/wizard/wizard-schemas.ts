@@ -14,19 +14,32 @@ export const dataSourcesSchema = z.object({
 });
 
 export const connectionsSchema = z.object({
-  integratedConnections: z.array(z.string()).min(2, "Selecciona al menos 2 conexiones"),
+  connectionsSelected: z
+    .object({
+      ga4: z.object({ check: z.boolean() }),
+      meta_ads: z.object({ check: z.boolean() }),
+      google_ads: z.object({ check: z.boolean() }),
+    })
+    .refine((data) => {
+      const checked = Object.values(data).filter((conn) => conn.check).length;
+      return checked >= 3;
+    }, "Selecciona al menos 3 conexiones"),
   localConnections: z.instanceof(File).optional(),
 });
 
 export const dataDivisionMethodSchema = z.object({
-  dataDivisionMethod: z.enum(["proportion", "date"]),
-  dataDivisionProportion: z.number().optional(),
-  dataDivisionDate: z
-    .object({
-      startDate: z.string(),
-      endDate: z.string(),
-    })
-    .optional(),
+  method: z.object({
+    fecha: z.object({
+      to: z.string(),
+      from: z.string(),
+      check: z.boolean(),
+    }),
+    proporcional: z.object({
+      check: z.boolean(),
+      pruebas: z.number(),
+      entrenamiento: z.number(),
+    }),
+  }),
 });
 
 export type BasicInfoSchemaType = z.infer<typeof basicInfoSchema>;
