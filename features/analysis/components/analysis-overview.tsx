@@ -8,7 +8,7 @@ type AnalysisCollectionProps = {
 };
 
 export const AnalysisOverview = ({ analysis }: AnalysisCollectionProps) => {
-  const doneCount = analysis.filter((item: any) => item.status === "DONE").length;
+  const doneCount = analysis.filter((item: any) => item.status === "Completado" || item.status === "completado").length;
   const runningCount = analysis.filter((item: any) => item.status === "RUNNING").length;
   const queuedCount = analysis.filter((item: any) => item.status === "QUEUED").length;
 

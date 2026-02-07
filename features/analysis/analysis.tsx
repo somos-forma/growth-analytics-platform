@@ -16,14 +16,14 @@ export const Analysis = () => {
   const [selectedModel, setSelectedModel] = useState("all");
 
   const filteredAnalysis = analysis.filter((item: any) => {
-    const matchesSearch = search === "" || item.job_id.toLowerCase().includes(search.toLowerCase());
-    const matchesState = selectedState === "all" || selectedState === "" || item.status === selectedState;
+    const matchesSearch = search === "" || item.name.toLowerCase().includes(search.toLowerCase());
+    const matchesState =
+      selectedState === "all" || selectedState === "" || item.status?.toLowerCase() === selectedState.toLowerCase();
     const matchesModel = selectedModel === "all" || selectedModel === "";
     return matchesSearch && matchesState && matchesModel;
   });
 
   if (isLoading) return <div>Loading...</div>;
-  // if (error) return <div>Error loading analysis.</div>;
 
   console.log(analysis);
 
