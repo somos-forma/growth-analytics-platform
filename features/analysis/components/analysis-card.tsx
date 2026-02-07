@@ -12,7 +12,7 @@ interface AnalysisCardProps {
 }
 
 export const AnalysisCard = ({ analysis }: AnalysisCardProps) => {
-  const { name, duration_minutes, status, message, finished_at, started_at, updated_at, result } = analysis;
+  const { analysis_url, created_at, description, finished_at, name, status, tiempo } = analysis;
   const statusBg: Record<string, string> = {
     DONE: "bg-green-100 text-green-800",
     QUEUED: "bg-yellow-100 text-yellow-800",
@@ -31,14 +31,14 @@ export const AnalysisCard = ({ analysis }: AnalysisCardProps) => {
           <Badge>Meridian</Badge>
           <p className="flex items-center gap-1 text-sm text-muted-foreground">
             <Clock size={16} />
-            {formatTimeAgo(finished_at || updated_at || started_at)}
+            {formatTimeAgo(finished_at || created_at)}
           </p>
           <Tooltip>
             <TooltipTrigger>
               <p className="underline decoration-dashed underline-offset-2 flex items-center gap-1 text-sm text-muted-foreground">
                 {formatStatus(status) === "Completado" ? (
                   <>
-                    <Timer size={16} /> {duration_minutes} minutos
+                    <Timer size={16} /> {tiempo} minutos
                   </>
                 ) : (
                   ""
@@ -52,14 +52,14 @@ export const AnalysisCard = ({ analysis }: AnalysisCardProps) => {
         </div>
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
-        <p className="text-muted-foreground text-sm">{message}</p>
+        <p className="text-muted-foreground text-sm">{description}</p>
         <div className="flex gap-3">
           <Button
             variant="outline"
             size="sm"
             disabled={formatStatus(status) !== "Completado"}
             onClick={() => {
-              const url = result?.reports?.budget_optimization?.signed_url;
+              const url = analysis_url[0];
               if (url) window.open(url, "_blank");
             }}
           >
@@ -71,7 +71,7 @@ export const AnalysisCard = ({ analysis }: AnalysisCardProps) => {
             size="sm"
             disabled={formatStatus(status) !== "Completado"}
             onClick={() => {
-              const url = result?.reports?.model_fit?.signed_url;
+              const url = analysis_url[1];
               if (url) window.open(url, "_blank");
             }}
           >
