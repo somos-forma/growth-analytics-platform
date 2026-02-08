@@ -81,7 +81,10 @@ export const Analysis = () => {
   const filteredAnalysis = analysis.filter((item: any) => {
     const matchesSearch = search === "" || item.name.toLowerCase().includes(search.toLowerCase());
     const matchesState =
-      selectedState === "all" || selectedState === "" || item.status?.toLowerCase() === selectedState.toLowerCase();
+      selectedState === "all" ||
+      selectedState === "" ||
+      (selectedState === "en espera" && item.status?.toLowerCase().includes("espera")) ||
+      item.status?.toLowerCase() === selectedState.toLowerCase();
     const matchesModel = selectedModel === "all" || selectedModel === "";
     return matchesSearch && matchesState && matchesModel;
   });
