@@ -66,6 +66,14 @@ export const Analysis = () => {
             description: "Tu análisis de Marketing Mix Modeling ha finalizado.",
           });
           hasUpdatedStatusRef.current = false;
+        } else if (data.status === "ERROR") {
+          localStorage.removeItem("job_id");
+          setJobId(null);
+          refetch();
+          toast.error("Análisis fallido", {
+            description: "Ha ocurrido un error en el análisis de Marketing Mix Modeling.",
+          });
+          hasUpdatedStatusRef.current = false;
         } else {
           setTimeout(pollJobStatus, 5000);
         }
