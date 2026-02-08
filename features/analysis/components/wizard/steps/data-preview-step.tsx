@@ -181,7 +181,7 @@ export const DataPreviewStep = () => {
       <div className="space-y-6">
         <div className="flex justify-end">
           <div className="space-x-4">
-            <Button onClick={back} disabled={meridianMutation.isPending}>
+            <Button onClick={back} variant="outline">
               Anterior
             </Button>
             <Button onClick={onSubmit} disabled={meridianMutation.isPending || !payload}>
