@@ -46,12 +46,50 @@ export const DataPreviewStep = () => {
 
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      // Additional POST to /api/analysis
+      fetch("/api/analysis", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: allData.analysisName,
+          description: allData.analysisDescription,
+          model: allData.model,
+          source: allData.dataSources,
+          connections: allData.connectionsSelected,
+          method: allData.method,
+          status: "Espera",
+          datos: {
+            canales_de_medios: {
+              valor: allData.channelSelected.map((item) => item.id),
+            },
+            variables_contextuales: {
+              valor: allData.contextualSelected.map((item) => item.id),
+            },
+            variables_de_control: {
+              valor: allData.controlSelected.map((item) => item.id),
+            },
+            variables_de_kpi: {
+              valor: allData.kpiSelected.map((item) => item.id),
+            },
+            variables_organicas: {
+              valor: allData.organicSelected.map((item) => item.id),
+            },
+          },
+          user_id: Number(localStorage.getItem("userId")),
+          client_id: 2,
+          id_run_gcp: data.job_id,
+        }),
+      }).catch((error) => console.error("Error in additional POST:", error));
+
       toast.success("Entrenamiento iniciado correctamente", {
         description: "Tu análisis está siendo procesado. Serás redirigido al dashboard.",
         duration: 4000,
       });
       reset();
+
       router.push("/dashboard/marketing-mix-modeling");
     },
     onError: (error: any) => {
