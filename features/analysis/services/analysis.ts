@@ -11,7 +11,6 @@ export const getAnalysis = async (user_id: number, client_id: number): Promise<A
   if (!response.ok) {
     throw new Error("Failed to fetch analysis");
   }
-
   const data = await response.json();
   return data;
 };

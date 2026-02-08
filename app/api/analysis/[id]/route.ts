@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { RouteHandler } from "../../types/api.types";
 
 export const PUT: RouteHandler = async (request, context) => {
-  const URL = "https://auton8n.moovmediagroup.com/webhook/45d08efd-1e10-4702-853a-5aefc36c399c/growth/users";
+  const URL = "https://auton8n.moovmediagroup.com/webhook/c9bf137f-2890-447a-bf19-808b9cfda233";
   try {
     const { id } = await context.params;
     const body = await request.json();

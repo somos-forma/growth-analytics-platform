@@ -1,7 +1,8 @@
 "use client";
 import { Brain } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AnalysisCollection } from "./components/analysis-collection";
@@ -10,10 +11,71 @@ import { AnalysisOverview } from "./components/analysis-overview";
 import useAnalysis from "./hooks/useAnalysis";
 
 export const Analysis = () => {
-  const { data: analysis = [], isLoading } = useAnalysis();
+  const { data: analysis = [], isLoading, refetch } = useAnalysis();
   const [search, setSearch] = useState("");
   const [selectedState, setSelectedState] = useState("all");
   const [selectedModel, setSelectedModel] = useState("all");
+  const [jobId, setJobId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setJobId(localStorage.getItem("job_id"));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!jobId) return;
+
+    const pollJobStatus = async () => {
+      try {
+        const response = await fetch(`/api/meridian/${jobId}`);
+        if (!response.ok) throw new Error("Failed to fetch job status");
+        const data = await response.json();
+        console.log("esta es la data", data);
+        console.log("status", data.status);
+
+        // if(data.status === "RUNNING") {
+
+        //     await fetch(`/api/analysis/${jobId}`, {
+        //       method: "PUT",
+        //       headers: { "Content-Type": "application/json" },
+        //       body: JSON.stringify({ status: "En ejecución" }),
+        //     });
+        //   setTimeout(pollJobStatus, 5000);
+        //   return;
+        // }
+
+        if (data.status === "DONE") {
+          await fetch(`/api/analysis/${jobId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              status: "Completado",
+              tiempo: data.duration_minutes,
+              finished_at: data.finished_at,
+              analysis_url: [
+                data.result.reports.budget_optimization.signed_url,
+                data.result.reports.model_fit.signed_url,
+              ],
+            }),
+          });
+          localStorage.removeItem("job_id");
+          setJobId(null);
+          refetch();
+          toast.success("Análisis completado", {
+            description: "Tu análisis de Marketing Mix Modeling ha finalizado.",
+          });
+        } else {
+          setTimeout(pollJobStatus, 5000);
+        }
+      } catch (error) {
+        console.error("Error polling job status:", error);
+        setTimeout(pollJobStatus, 5000); // Retry on error
+      }
+    };
+
+    pollJobStatus();
+  }, [jobId, refetch]);
 
   const filteredAnalysis = analysis.filter((item: any) => {
     const matchesSearch = search === "" || item.name.toLowerCase().includes(search.toLowerCase());
@@ -24,8 +86,6 @@ export const Analysis = () => {
   });
 
   if (isLoading) return <div>Loading...</div>;
-
-  console.log(analysis);
 
   return (
     <div className="space-y-5">

@@ -60,7 +60,7 @@ export const DataPreviewStep = () => {
           source: allData.dataSources,
           connections: allData.connectionsSelected,
           method: allData.method,
-          status: "Espera",
+          status: "En Espera",
           datos: {
             canales_de_medios: {
               valor: allData.channelSelected.map((item) => item.id),
@@ -88,8 +88,8 @@ export const DataPreviewStep = () => {
         description: "Tu análisis está siendo procesado. Serás redirigido al dashboard.",
         duration: 4000,
       });
+      localStorage.setItem("job_id", data.job_id);
       reset();
-
       router.push("/dashboard/marketing-mix-modeling");
     },
     onError: (error: any) => {
