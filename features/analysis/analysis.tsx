@@ -1,7 +1,7 @@
 "use client";
 import { Brain } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,6 +16,7 @@ export const Analysis = () => {
   const [selectedState, setSelectedState] = useState("all");
   const [selectedModel, setSelectedModel] = useState("all");
   const [jobId, setJobId] = useState<string | null>(null);
+  const hasUpdatedStatusRef = useRef(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -25,6 +26,7 @@ export const Analysis = () => {
 
   useEffect(() => {
     if (!jobId) return;
+    hasUpdatedStatusRef.current = false;
 
     const pollJobStatus = async () => {
       try {
@@ -34,16 +36,14 @@ export const Analysis = () => {
         console.log("esta es la data", data);
         console.log("status", data.status);
 
-        // if(data.status === "RUNNING") {
-
-        //     await fetch(`/api/analysis/${jobId}`, {
-        //       method: "PUT",
-        //       headers: { "Content-Type": "application/json" },
-        //       body: JSON.stringify({ status: "En ejecución" }),
-        //     });
-        //   setTimeout(pollJobStatus, 5000);
-        //   return;
-        // }
+        if (data.status === "RUNNING" && !hasUpdatedStatusRef.current) {
+          hasUpdatedStatusRef.current = true;
+          await fetch(`/api/analysis/${jobId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ status: "En ejecución" }),
+          });
+        }
 
         if (data.status === "DONE") {
           await fetch(`/api/analysis/${jobId}`, {
@@ -65,6 +65,7 @@ export const Analysis = () => {
           toast.success("Análisis completado", {
             description: "Tu análisis de Marketing Mix Modeling ha finalizado.",
           });
+          hasUpdatedStatusRef.current = false;
         } else {
           setTimeout(pollJobStatus, 5000);
         }
