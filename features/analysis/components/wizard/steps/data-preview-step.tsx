@@ -88,7 +88,9 @@ export const DataPreviewStep = () => {
         description: "Tu análisis está siendo procesado. Serás redirigido al dashboard.",
         duration: 4000,
       });
-      localStorage.setItem("job_id", data.job_id);
+      const jobIds = JSON.parse(localStorage.getItem("job_ids") || "[]");
+      jobIds.push(data.job_id);
+      localStorage.setItem("job_ids", JSON.stringify(jobIds));
       reset();
       router.push("/dashboard/marketing-mix-modeling");
     },
