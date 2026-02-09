@@ -8,9 +8,18 @@ type AnalysisCollectionProps = {
 };
 
 export const AnalysisOverview = ({ analysis }: AnalysisCollectionProps) => {
-  const doneCount = analysis.filter((item: any) => item.status === "DONE").length;
-  const runningCount = analysis.filter((item: any) => item.status === "RUNNING").length;
-  const queuedCount = analysis.filter((item: any) => item.status === "QUEUED").length;
+  const doneCount = analysis.filter((item: any) => item.status === "Completado" || item.status === "completado").length;
+  const runningCount = analysis.filter(
+    (item: any) => item.status === "En ejecución" || item.status === "en ejecución",
+  ).length;
+  const queuedCount = analysis.filter(
+    (item: any) =>
+      item.status &&
+      item.status !== "En ejecución" &&
+      item.status !== "Completado" &&
+      item.status !== "en ejecución" &&
+      item.status !== "completado",
+  ).length;
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 ">

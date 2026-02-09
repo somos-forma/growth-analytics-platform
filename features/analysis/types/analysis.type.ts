@@ -1,10 +1,17 @@
 export type Analysis = {
-  duration_minutes: number;
+  analysis_url: string[];
+  client_id: number;
+  connections: any[];
+  created_at: string;
+  description: string;
   finished_at: string;
-  job_id: string;
-  message: string;
-  result: any[];
-  started_at: string;
+  id: number;
+  id_run_gcp: string;
+  method: any[];
+  model: string;
+  name: string;
+  source: string;
   status: string;
-  updated_at: string;
+  tiempo: string;
+  user_id: number;
 };

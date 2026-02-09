@@ -46,13 +46,16 @@ export const ConnectionsStep = () => {
   const form = useForm<ConnectionsSchemaType>({
     resolver: zodResolver(connectionsSchema),
     defaultValues: {
-      integratedConnections: data.integratedConnections || [],
+      connectionsSelected: data.connectionsSelected || {
+        ga4: { check: true },
+        meta_ads: { check: true },
+        google_ads: { check: true },
+      },
       localConnections: data.localConnections || undefined,
     },
   });
 
   const onSubmit = (values: ConnectionsSchemaType) => {
-    console.log(values);
     updateData(values);
     next();
   };
@@ -61,7 +64,7 @@ export const ConnectionsStep = () => {
       <FieldGroup>
         {dataSources == "integrate" ? (
           <Controller
-            name="integratedConnections"
+            name="connectionsSelected"
             control={form.control}
             render={({ field, fieldState }) => (
               <FieldSet data-invalid={fieldState.invalid}>
@@ -89,14 +92,12 @@ export const ConnectionsStep = () => {
                         <Checkbox
                           id={`connection-${connection.id}`}
                           value={connection.id}
-                          checked={field.value?.includes(connection.id) || false}
+                          checked={field.value?.[connection.id]?.check || false}
                           onCheckedChange={(checked) => {
-                            const currentValue = field.value || [];
-                            if (checked) {
-                              field.onChange([...currentValue, connection.id]);
-                            } else {
-                              field.onChange(currentValue.filter((id) => id !== connection.id));
-                            }
+                            field.onChange({
+                              ...field.value,
+                              [connection.id]: { check: checked },
+                            });
                           }}
                         />
                       </Field>

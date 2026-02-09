@@ -26,6 +26,17 @@ export const DataClassificationStep = () => {
   const organicSelected = useWizardStore((state) => state.data.organicSelected);
   const contextualSelected = useWizardStore((state) => state.data.contextualSelected);
 
+  const [error, setError] = useState("");
+
+  const handleNext = () => {
+    if (!channelSelected.length || !controlSelected.length || !kpiSelected.length) {
+      setError("Debe seleccionar al menos un canal de medio, una variable de control y una variable KPI");
+      return;
+    }
+    setError("");
+    next();
+  };
+
   const [channelAvailable, setChannelAvailable] = useState<TransferItem[]>([
     { id: "cost_google", label: "cost_google" },
     { id: "impressions_google", label: "impressions_google" },
@@ -456,8 +467,9 @@ export const DataClassificationStep = () => {
       </div>
       <div className="space-x-4">
         <Button onClick={back}>Anterior</Button>
-        <Button onClick={next}>Siguiente</Button>
+        <Button onClick={handleNext}>Siguiente</Button>
       </div>
+      {error && <p className="text-red-500 mt-2">{error}</p>}
     </div>
   );
 };

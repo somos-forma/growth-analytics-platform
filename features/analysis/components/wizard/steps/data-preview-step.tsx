@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
 import { Rocket } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -47,11 +46,49 @@ export const DataPreviewStep = () => {
 
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      // Additional POST to /api/analysis
+      fetch("/api/analysis", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: allData.analysisName,
+          description: allData.analysisDescription,
+          model: allData.model,
+          source: allData.dataSources,
+          connections: allData.connectionsSelected,
+          method: allData.method,
+          status: "En Espera",
+          datos: {
+            canales_de_medios: {
+              valor: allData.channelSelected.map((item) => item.id),
+            },
+            variables_contextuales: {
+              valor: allData.contextualSelected.map((item) => item.id),
+            },
+            variables_de_control: {
+              valor: allData.controlSelected.map((item) => item.id),
+            },
+            variables_de_kpi: {
+              valor: allData.kpiSelected.map((item) => item.id),
+            },
+            variables_organicas: {
+              valor: allData.organicSelected.map((item) => item.id),
+            },
+          },
+          user_id: Number(localStorage.getItem("userId")),
+          client_id: 2,
+          id_run_gcp: data.job_id,
+        }),
+      }).catch((error) => console.error("Error in additional POST:", error));
+
       toast.success("Entrenamiento iniciado correctamente", {
         description: "Tu análisis está siendo procesado. Serás redirigido al dashboard.",
         duration: 4000,
       });
+      localStorage.setItem("job_id", data.job_id);
       reset();
       router.push("/dashboard/marketing-mix-modeling");
     },
@@ -78,17 +115,21 @@ export const DataPreviewStep = () => {
   } = useQuery({
     queryKey: ["eda"],
     queryFn: async () => {
-      const mode = allData.dataDivisionMethod === "proportion" ? "percent" : "dates";
+      const mode =
+        allData.method.proporcional.check === true
+          ? "percent"
+          : allData.method.fecha.check === true
+            ? "dates"
+            : undefined;
+
+      const sources = Object.keys(allData.connectionsSelected).filter((key) => allData.connectionsSelected[key]?.check);
 
       const payload = {
         mode: mode,
-        percent: allData.dataDivisionProportion,
-        start_date: allData?.dataDivisionDate
-          ? format(allData?.dataDivisionDate?.startDate ?? "", "yyyy-MM-dd")
-          : undefined,
-        end_date: allData?.dataDivisionDate
-          ? format(allData?.dataDivisionDate?.endDate ?? "", "yyyy-MM-dd")
-          : undefined,
+        percent: allData.method.proporcional.entrenamiento,
+        start_date: allData.method.fecha.from,
+        end_date: allData.method.fecha.to,
+        sources: sources,
         media_fields: allData.channelSelected.map((item) => item.id),
         control_fields: allData.controlSelected
           .map((item) => item.id)
@@ -143,7 +184,7 @@ export const DataPreviewStep = () => {
       <div className="space-y-6">
         <div className="flex justify-end">
           <div className="space-x-4">
-            <Button onClick={back} disabled={meridianMutation.isPending}>
+            <Button onClick={back} variant="outline">
               Anterior
             </Button>
             <Button onClick={onSubmit} disabled={meridianMutation.isPending || !payload}>

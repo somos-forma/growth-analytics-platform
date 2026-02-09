@@ -41,36 +41,36 @@ export const DataDivisionMethodStep = () => {
   const form = useForm<DataDivisionMethodSchemaType>({
     resolver: zodResolver(dataDivisionMethodSchema),
     defaultValues: {
-      dataDivisionMethod: data.dataDivisionMethod,
-      dataDivisionProportion: data.dataDivisionProportion,
-      dataDivisionDate: data.dataDivisionDate,
+      method: data.method,
     },
   });
 
   const onSubmit = (values: DataDivisionMethodSchemaType) => {
+    console.log(values);
     next();
     updateData(values);
   };
 
-  const selectedMethod = form.watch("dataDivisionMethod");
+  const selectedMethod = form.watch("method.fecha.check") ? "date" : "proportion";
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 max-w-[800px]">
       <FieldGroup>
         <Controller
-          name="dataDivisionMethod"
+          name="method"
           control={form.control}
-          render={({ field, fieldState }) => (
+          render={({ fieldState }) => (
             <FieldSet data-invalid={fieldState.invalid}>
               <FieldLegend>Metodo de divisió́n de datos</FieldLegend>
               <FieldDescription>
                 Selecciona el metodo de divisió́n de datos que deseas para el entrenamiento del modelo.
               </FieldDescription>
               <RadioGroup
-                name={field.name}
-                value={field.value}
-                onValueChange={field.onChange}
-                aria-invalid={fieldState.invalid}
+                value={selectedMethod}
+                onValueChange={(value) => {
+                  form.setValue("method.fecha.check", value === "date");
+                  form.setValue("method.proporcional.check", value === "proportion");
+                }}
                 className="flex"
               >
                 {methods.map((method) => (
@@ -85,11 +85,7 @@ export const DataDivisionMethodStep = () => {
                         </FieldTitle>
                         <FieldDescription>{method.description}</FieldDescription>
                       </FieldContent>
-                      <RadioGroupItem
-                        value={method.id}
-                        id={`form-rhf-radiogroup-${method.id}`}
-                        aria-invalid={fieldState.invalid}
-                      />
+                      <RadioGroupItem value={method.id} id={`form-rhf-radiogroup-${method.id}`} />
                     </Field>
                   </FieldLabel>
                 ))}
@@ -100,7 +96,7 @@ export const DataDivisionMethodStep = () => {
         />
         {selectedMethod === "proportion" && (
           <Controller
-            name="dataDivisionProportion"
+            name="method.proporcional.entrenamiento"
             control={form.control}
             render={({ field, fieldState }) => (
               <FieldSet data-invalid={fieldState.invalid}>
@@ -109,7 +105,7 @@ export const DataDivisionMethodStep = () => {
                   Selecciona el porcentaje de datos que deseas usar para entrenar el modelo.
                 </FieldDescription>
                 <Slider
-                  value={[field.value || 80]}
+                  value={[field.value]}
                   onValueChange={(value) => field.onChange(value[0])}
                   max={100}
                   step={1}
@@ -118,10 +114,10 @@ export const DataDivisionMethodStep = () => {
                 />
                 <div className="flex justify-between">
                   <p className="text-xs">
-                    Datos usados para el entrenamiento: <strong>{field.value || 80}%</strong>
+                    Datos usados para el entrenamiento: <strong>{field.value}%</strong>
                   </p>
                   <p className="text-xs">
-                    Datos usados para las pruebas: <strong>{100 - (field.value || 80)}%</strong>
+                    Datos usados para las pruebas: <strong>{100 - field.value}%</strong>
                   </p>
                 </div>
                 {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -131,7 +127,7 @@ export const DataDivisionMethodStep = () => {
         )}
         {selectedMethod === "date" && (
           <Controller
-            name="dataDivisionDate"
+            name="method.fecha"
             control={form.control}
             render={({ field, fieldState }) => (
               <FieldSet data-invalid={fieldState.invalid}>
@@ -147,10 +143,10 @@ export const DataDivisionMethodStep = () => {
                   captionLayout="dropdown"
                   locale={es}
                   selected={
-                    field.value?.startDate && field.value?.endDate
+                    field.value?.from && field.value?.to
                       ? {
-                          from: new Date(field.value.startDate),
-                          to: new Date(field.value.endDate),
+                          from: new Date(field.value.from),
+                          to: new Date(field.value.to),
                         }
                       : undefined
                   }
@@ -158,8 +154,8 @@ export const DataDivisionMethodStep = () => {
                     if (date?.from) {
                       field.onChange({
                         ...field.value,
-                        startDate: date.from.toISOString(),
-                        endDate: date.to?.toISOString() || "",
+                        from: date.from.toISOString().split("T")[0],
+                        to: date.to?.toISOString().split("T")[0] || "",
                       });
                     }
                   }}

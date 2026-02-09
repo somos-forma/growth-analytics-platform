@@ -46,10 +46,10 @@ export const AnalysisFilters = ({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todos los estados</SelectItem>
-            <SelectItem value="DONE">Completado</SelectItem>
-            <SelectItem value="QUEUED">En espera</SelectItem>
-            <SelectItem value="RUNNING">En ejecución</SelectItem>
-            <SelectItem value="ERROR">Error</SelectItem>
+            <SelectItem value="Completado">Completado</SelectItem>
+            <SelectItem value="en espera">En espera</SelectItem>
+            <SelectItem value="En ejecución">En ejecución</SelectItem>
+            <SelectItem value="Error">Error</SelectItem>
           </SelectContent>
         </Select>
         <Select onValueChange={handleModelChange} value={selectedModel}>
