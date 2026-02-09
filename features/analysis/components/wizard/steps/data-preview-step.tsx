@@ -122,11 +122,14 @@ export const DataPreviewStep = () => {
             ? "dates"
             : undefined;
 
+      const sources = Object.keys(allData.connectionsSelected).filter((key) => allData.connectionsSelected[key]?.check);
+
       const payload = {
         mode: mode,
         percent: allData.method.proporcional.entrenamiento,
         start_date: allData.method.fecha.from,
         end_date: allData.method.fecha.to,
+        sources: sources,
         media_fields: allData.channelSelected.map((item) => item.id),
         control_fields: allData.controlSelected
           .map((item) => item.id)
