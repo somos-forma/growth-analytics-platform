@@ -45,7 +45,7 @@ export const POST: RouteHandler = async (request) => {
 export const GET: RouteHandler = async (request) => {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const limit = searchParams.get("limit") || "3";
+    const limit = searchParams.get("limit") || "5";
     const since_hours = searchParams.get("since_hours") || "24";
     const MERIDIAN_SERVICE_URL = process.env.MERIDIAN_SERVICE_URL ?? "https://example.com";
     const auth = new GoogleAuth({
