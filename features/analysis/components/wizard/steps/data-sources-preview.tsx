@@ -4,6 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/data-table";
 import { TableSkeleton } from "@/components/skeletons/table-skeleton";
 import { Button } from "@/components/ui/button";
+import { formatNumber } from "@/utils/formatters";
 import { useWizardStore } from "../wizard-store";
 
 export const DataSourcesPreviewStep = () => {
@@ -69,6 +70,10 @@ const IntegrateTable = () => {
   const dynamicColumns: ColumnDef<any>[] = queryData.columns.map((col: string) => ({
     accessorKey: col,
     header: col.charAt(0).toUpperCase() + col.slice(1),
+    cell: ({ getValue }) => {
+      const value = getValue();
+      return typeof value === "number" ? formatNumber(value) : value;
+    },
   }));
 
   return (

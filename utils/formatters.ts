@@ -28,7 +28,7 @@ export function formatTimeAgo(date: string | Date = ""): string {
  * Ejemplo: 2066178 → "2,066,178"
  */
 export const formatNumber = (value: number, locale: string = "es-PE"): string => {
-  return new Intl.NumberFormat(locale).format(value);
+  return new Intl.NumberFormat(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
 };
 
 /**
