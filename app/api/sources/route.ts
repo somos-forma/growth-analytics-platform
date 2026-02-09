@@ -23,9 +23,9 @@ export const GET: RouteHandler = async (request) => {
       mode === "percent"
         ? `${CLOUD_RUN_URL}/preview?mode=${mode}&percent=${percent}`
         : `${CLOUD_RUN_URL}/preview?mode=${mode}&start_date=${start_date}&end_date=${end_date}`;
+
     const response = await client.request({
       url,
-      // url: `${CLOUD_RUN_URL}/preview?mode=${'percent'}&percent=${'80'}`,
       method: "GET",
     });
     return NextResponse.json(response.data);
