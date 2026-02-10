@@ -2,6 +2,7 @@
 import { Brain } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AnalysisCollection } from "./components/analysis-collection";
@@ -54,14 +55,14 @@ export const Analysis = () => {
             if (job.status === "RUNNING" && !hasUpdatedStatusRef.current.has(job.job_id)) {
               hasUpdatedStatusRef.current.add(job.job_id);
               await fetch(`/api/analysis/${job.job_id}`, {
-                method: "PUT",
+                method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ status: "En ejecución" }),
               });
               await refetch();
             } else if (job.status === "DONE") {
               await fetch(`/api/analysis/${job.job_id}`, {
-                method: "PUT",
+                method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                   status: "Completado",
@@ -77,12 +78,12 @@ export const Analysis = () => {
               updatedJobIds = updatedJobIds.filter((id) => id !== job.job_id);
               hasUpdatedStatusRef.current.delete(job.job_id);
               hasChanges = true;
-              // toast.success("Análisis completado", {
-              //   description: `Tu análisis ${job.job_id} de Marketing Mix Modeling ha finalizado.`,
-              // });
+              toast.success("Análisis completado", {
+                description: `Tu análisis ${job.job_id} de Marketing Mix Modeling ha finalizado.`,
+              });
             } else if (job.status === "ERROR") {
               await fetch(`/api/analysis/${job.job_id}`, {
-                method: "PUT",
+                method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ status: "Error" }),
               });
@@ -90,9 +91,9 @@ export const Analysis = () => {
               updatedJobIds = updatedJobIds.filter((id) => id !== job.job_id);
               hasUpdatedStatusRef.current.delete(job.job_id);
               hasChanges = true;
-              // toast.error("Análisis fallido", {
-              //   description: `Ha ocurrido un error en el análisis ${job.job_id} de Marketing Mix Modeling.`,
-              // });
+              toast.error("Análisis fallido", {
+                description: `Ha ocurrido un error en el análisis ${job.job_id} de Marketing Mix Modeling.`,
+              });
             }
           }
 
