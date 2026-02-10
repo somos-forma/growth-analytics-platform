@@ -78,7 +78,7 @@ const IntegrateTable = () => {
 
   return (
     <div>
-      <p className="mb-4">Tabla: {queryData.table}</p>
+      {/* <p className="mb-4">Tabla: {queryData.table}</p> */}
       <DataTable data={queryData.rows} columns={dynamicColumns} showTotals={false} />
     </div>
   );

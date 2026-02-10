@@ -1,4 +1,4 @@
-import { CheckCircle, Hourglass } from "lucide-react";
+import { AlertTriangle, CheckCircle, Hourglass } from "lucide-react";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import type { Analysis } from "../types/analysis.type";
@@ -18,11 +18,14 @@ export const AnalysisOverview = ({ analysis }: AnalysisCollectionProps) => {
       item.status !== "En ejecución" &&
       item.status !== "Completado" &&
       item.status !== "en ejecución" &&
-      item.status !== "completado",
+      item.status !== "completado" &&
+      item.status !== "Error" &&
+      item.status !== "error",
   ).length;
+  const errorCount = analysis.filter((item: any) => item.status === "Error" || item.status === "error").length;
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 ">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 ">
       <Card>
         <CardHeader>
           <CardDescription className="flex justify-between">
@@ -47,6 +50,15 @@ export const AnalysisOverview = ({ analysis }: AnalysisCollectionProps) => {
             <Hourglass />
           </CardDescription>
           <CardTitle className="text-5xl font-bold">{queuedCount}</CardTitle>
+        </CardHeader>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardDescription className="flex justify-between">
+            Análisis con Error
+            <AlertTriangle />
+          </CardDescription>
+          <CardTitle className="text-5xl font-bold">{errorCount}</CardTitle>
         </CardHeader>
       </Card>
     </div>

@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -56,6 +57,13 @@ export const ConnectionsStep = () => {
   });
 
   const onSubmit = (values: ConnectionsSchemaType) => {
+    const checkedCount = Object.values(values.connectionsSelected).filter((conn) => conn.check).length;
+    if (checkedCount < 3) {
+      toast.error("Selecciona al menos 3 conexiones", {
+        description: "Debes seleccionar al menos 3 conexiones para continuar.",
+      });
+      return;
+    }
     updateData(values);
     next();
   };

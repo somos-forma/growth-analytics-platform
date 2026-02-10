@@ -10,7 +10,7 @@ import { AnalysisOverview } from "./components/analysis-overview";
 import useAnalysis from "./hooks/useAnalysis";
 
 export const Analysis = () => {
-  const { data: analysis = [], isLoading } = useAnalysis();
+  const { data: analysis = [], isLoading, refetch } = useAnalysis();
   const [search, setSearch] = useState("");
   const [selectedState, setSelectedState] = useState("all");
   const [selectedModel, setSelectedModel] = useState("all");
@@ -42,9 +42,7 @@ export const Analysis = () => {
         const response = await fetch(`/api/meridian`);
         if (!response.ok) throw new Error("Failed to fetch job status");
         const data = await response.json();
-        console.log("esta es la data", data);
         const jobs = data.items || [];
-        console.log("jobs array", jobs);
 
         let updatedJobIds = [...jobIds];
         let hasChanges = false;
@@ -60,6 +58,7 @@ export const Analysis = () => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ status: "En ejecución" }),
               });
+              await refetch();
             } else if (job.status === "DONE") {
               await fetch(`/api/analysis/${job.job_id}`, {
                 method: "PUT",
@@ -74,6 +73,7 @@ export const Analysis = () => {
                   ],
                 }),
               });
+              await refetch();
               updatedJobIds = updatedJobIds.filter((id) => id !== job.job_id);
               hasUpdatedStatusRef.current.delete(job.job_id);
               hasChanges = true;
@@ -86,6 +86,7 @@ export const Analysis = () => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ status: "Error" }),
               });
+              await refetch();
               updatedJobIds = updatedJobIds.filter((id) => id !== job.job_id);
               hasUpdatedStatusRef.current.delete(job.job_id);
               hasChanges = true;
@@ -127,7 +128,7 @@ export const Analysis = () => {
     pollJobStatus();
 
     // Set interval for subsequent polls
-    pollingIntervalRef.current = setInterval(pollJobStatus, 5000);
+    pollingIntervalRef.current = setInterval(pollJobStatus, 15000);
 
     // Cleanup on unmount or when jobIds changes
     return () => {
@@ -136,7 +137,7 @@ export const Analysis = () => {
         pollingIntervalRef.current = null;
       }
     };
-  }, [jobIds]);
+  }, [jobIds, refetch]);
 
   const filteredAnalysis = analysis.filter((item: any) => {
     const matchesSearch = search === "" || item.name.toLowerCase().includes(search.toLowerCase());

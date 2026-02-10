@@ -82,17 +82,19 @@ export const DataPreviewStep = () => {
           client_id: 2,
           id_run_gcp: data.job_id,
         }),
-      }).catch((error) => console.error("Error in additional POST:", error));
-
-      toast.success("Entrenamiento iniciado correctamente", {
-        description: "Tu análisis está siendo procesado. Serás redirigido al dashboard.",
-        duration: 4000,
-      });
-      const jobIds = JSON.parse(localStorage.getItem("job_ids") || "[]");
-      jobIds.push(data.job_id);
-      localStorage.setItem("job_ids", JSON.stringify(jobIds));
-      reset();
-      router.push("/dashboard/marketing-mix-modeling");
+      })
+        .then(() => {
+          toast.success("Entrenamiento iniciado correctamente", {
+            description: "Tu análisis está siendo procesado. Serás redirigido al dashboard.",
+            duration: 4000,
+          });
+          const jobIds = JSON.parse(localStorage.getItem("job_ids") || "[]");
+          jobIds.push(data.job_id);
+          localStorage.setItem("job_ids", JSON.stringify(jobIds));
+          reset();
+          router.push("/dashboard/marketing-mix-modeling");
+        })
+        .catch((error) => console.error("Error in additional POST:", error));
     },
     onError: (error: any) => {
       if (error.status === 429) {
