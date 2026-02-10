@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
 import type { RouteHandler } from "../../types/api.types";
 
-export const PATCH: RouteHandler = async (request, context) => {
-  const URL = "https://auton8n.moovmediagroup.com/webhook/c9bf137f-2890-447a-bf19-808b9cfda233";
+export const POST: RouteHandler = async (request, context) => {
+  const URL = "https://auton8n.moovmediagroup.com/webhook/218528bf-1376-4ce8-aa5c-350cb910abd5";
   try {
     const { id } = await context.params;
     const body = await request.json();
 
     const response = await fetch(`${URL}/${id}`, {
-      method: "PATCH",
+      method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
