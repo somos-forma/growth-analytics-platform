@@ -14,16 +14,11 @@ export const dataSourcesSchema = z.object({
 });
 
 export const connectionsSchema = z.object({
-  connectionsSelected: z
-    .object({
-      ga4: z.object({ check: z.boolean() }),
-      meta_ads: z.object({ check: z.boolean() }),
-      google_ads: z.object({ check: z.boolean() }),
-    })
-    .refine((data) => {
-      const checked = Object.values(data).filter((conn) => conn.check).length;
-      return checked >= 3;
-    }, "Selecciona al menos 3 conexiones"),
+  connectionsSelected: z.object({
+    ga4: z.object({ check: z.boolean() }),
+    meta_ads: z.object({ check: z.boolean() }),
+    google_ads: z.object({ check: z.boolean() }),
+  }),
   localConnections: z.instanceof(File).optional(),
 });
 

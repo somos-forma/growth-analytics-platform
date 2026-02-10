@@ -8,7 +8,7 @@ export default function useAnalysis() {
   return useQuery({
     queryKey: ["analysis"],
     queryFn: () => getAnalysis(user_id, client_id),
-    refetchInterval: 15000,
+    // refetchInterval: 20000,
     refetchIntervalInBackground: true,
   });
 }

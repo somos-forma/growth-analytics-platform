@@ -1,5 +1,6 @@
 import { Box } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { DndTransfer, type TransferItem } from "@/components/dnd-transfer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -26,14 +27,35 @@ export const DataClassificationStep = () => {
   const organicSelected = useWizardStore((state) => state.data.organicSelected);
   const contextualSelected = useWizardStore((state) => state.data.contextualSelected);
 
-  const [error, setError] = useState("");
-
   const handleNext = () => {
-    if (!channelSelected.length || !controlSelected.length || !kpiSelected.length) {
-      setError("Debe seleccionar al menos un canal de medio, una variable de control y una variable KPI");
+    // Validar Canales de Medios: mínimo 2 impresiones y 2 costos (clicks opcionales)
+    const costSelected = channelSelected.filter((item) => item.id.startsWith("cost_")).length;
+    const impressionsSelected = channelSelected.filter((item) => item.id.startsWith("impressions_")).length;
+    if (costSelected < 2 || impressionsSelected < 2) {
+      toast.error("Selección de canales incompleta", {
+        description: "Debe seleccionar al menos 2 variables de costo y 2 de impresiones en Canales de Medios.",
+      });
       return;
     }
-    setError("");
+
+    // Validar Variables de Control: ambas obligatorias (usuarios y sesiones)
+    const hasUsuarios = controlSelected.some((item) => item.id === "usuarios");
+    const hasSesiones = controlSelected.some((item) => item.id === "sesiones");
+    if (!hasUsuarios || !hasSesiones) {
+      toast.error("Variables de control incompletas", {
+        description: "Debe seleccionar ambas variables: usuarios y sesiones.",
+      });
+      return;
+    }
+
+    // Validar Variables de KPI: al menos una obligatoria
+    if (!kpiSelected.length) {
+      toast.error("Selección incompleta", {
+        description: "Debe seleccionar al menos una variable de KPI.",
+      });
+      return;
+    }
+
     next();
   };
 
@@ -469,7 +491,6 @@ export const DataClassificationStep = () => {
         <Button onClick={back}>Anterior</Button>
         <Button onClick={handleNext}>Siguiente</Button>
       </div>
-      {error && <p className="text-red-500 mt-2">{error}</p>}
     </div>
   );
 };

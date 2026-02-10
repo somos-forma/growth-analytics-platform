@@ -8,6 +8,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatNumber } from "@/utils/formatters";
@@ -133,11 +134,11 @@ export function DataTable<TData, TValue>({ columns, data, showTotals = true }: D
           Página {table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
         </div>
         <Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
-          Anterior
+          <ChevronLeft />
         </Button>
 
         <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
-          Siguiente
+          <ChevronRight />
         </Button>
       </div>
     </div>
