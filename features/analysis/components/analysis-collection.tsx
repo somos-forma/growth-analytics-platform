@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Analysis } from "../types/analysis.type";
 import { AnalysisCard } from "./analysis-card";
@@ -31,15 +32,15 @@ export const AnalysisCollection = ({ analysis }: AnalysisCollectionProps) => {
         <AnalysisCard key={item.id} analysis={item} />
       ))}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between">
-          <Button onClick={goToPrevPage} disabled={currentPage === 1} variant="outline">
-            Anterior
+        <div className="flex items-center justify-end gap-2">
+          <Button onClick={goToPrevPage} disabled={currentPage === 1} variant="outline" size="sm">
+            <ChevronLeft className="h-4 w-4" />
           </Button>
-          <span>
+          <span className="text-sm">
             Página {currentPage} de {totalPages}
           </span>
-          <Button onClick={goToNextPage} disabled={currentPage === totalPages} variant="outline">
-            Siguiente
+          <Button onClick={goToNextPage} disabled={currentPage === totalPages} variant="outline" size="sm">
+            <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
       )}
