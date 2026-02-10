@@ -55,14 +55,14 @@ export const Analysis = () => {
             if (job.status === "RUNNING" && !hasUpdatedStatusRef.current.has(job.job_id)) {
               hasUpdatedStatusRef.current.add(job.job_id);
               await fetch(`/api/analysis/${job.job_id}`, {
-                method: "PATCH",
+                method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ status: "En ejecución" }),
               });
               await refetch();
             } else if (job.status === "DONE") {
               await fetch(`/api/analysis/${job.job_id}`, {
-                method: "PATCH",
+                method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                   status: "Completado",
@@ -83,7 +83,7 @@ export const Analysis = () => {
               });
             } else if (job.status === "ERROR") {
               await fetch(`/api/analysis/${job.job_id}`, {
-                method: "PATCH",
+                method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ status: "Error" }),
               });
