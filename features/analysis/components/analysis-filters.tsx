@@ -58,7 +58,7 @@ export const AnalysisFilters = ({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todos los modelos</SelectItem>
-            <SelectItem value="meridiam">Meridiam</SelectItem>
+            <SelectItem value="Meridian">Meridian</SelectItem>
           </SelectContent>
         </Select>
       </div>
