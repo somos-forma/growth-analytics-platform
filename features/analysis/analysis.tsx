@@ -147,7 +147,8 @@ export const Analysis = () => {
       selectedState === "" ||
       (selectedState === "en espera" && item.status?.toLowerCase().includes("espera")) ||
       item.status?.toLowerCase() === selectedState.toLowerCase();
-    const matchesModel = selectedModel === "all" || selectedModel === "";
+    const matchesModel =
+      selectedModel === "all" || selectedModel === "" || item.model?.toLowerCase() === selectedModel.toLowerCase();
     return matchesSearch && matchesState && matchesModel;
   });
 

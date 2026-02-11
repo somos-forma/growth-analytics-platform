@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Rocket } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -18,6 +18,7 @@ import { useWizardStore } from "../wizard-store";
 
 export const DataPreviewStep = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const back = useWizardStore((state) => state.back);
   const allData = useWizardStore((state) => state.data);
   const reset = useWizardStore((state) => state.resetAll);
@@ -84,6 +85,7 @@ export const DataPreviewStep = () => {
         }),
       })
         .then(() => {
+          queryClient.invalidateQueries({ queryKey: ["analysis"] });
           toast.success("Entrenamiento iniciado correctamente", {
             description: "Tu análisis está siendo procesado. Serás redirigido al dashboard.",
             duration: 4000,

@@ -13,11 +13,17 @@ interface AnalysisCardProps {
 
 export const AnalysisCard = ({ analysis }: AnalysisCardProps) => {
   const { analysis_url, created_at, description, finished_at, name, status, tiempo } = analysis;
-  const statusBg: Record<string, string> = {
-    DONE: "bg-green-100 text-green-800",
-    QUEUED: "bg-yellow-100 text-yellow-800",
-    RUNNING: "bg-blue-100 text-blue-800",
-    ERROR: "bg-red-100 text-red-800",
+
+  const getStatusClass = (status: string) => {
+    const formatted = formatStatus(status).toLowerCase();
+    if (formatted === "completado") return "bg-green-100 text-green-800";
+    if (formatted === "en ejecución") return "bg-blue-100 text-blue-800";
+    if (formatted === "error") return "bg-red-100 text-red-800";
+    return "bg-[rgba(255,227,122,1)] text-yellow-800"; // default yellow for others
+  };
+
+  const modelBg: Record<string, string> = {
+    Meridian: "bg-purple-100 text-purple-800",
   };
 
   return (
@@ -25,10 +31,12 @@ export const AnalysisCard = ({ analysis }: AnalysisCardProps) => {
       <CardHeader>
         <CardTitle className="flex justify-between gap-4">
           <span className="font-medium">Analisis de Campaña {name}</span>
-          <Badge className={cn(statusBg[status])}>{formatStatus(status)}</Badge>
+          <Badge className={cn(getStatusClass(status))}>{formatStatus(status)}</Badge>
         </CardTitle>
         <div className="flex gap-3">
-          <Badge>Meridian</Badge>
+          <Badge className={cn(modelBg[analysis.model])}>
+            {analysis.model.charAt(0).toUpperCase() + analysis.model.slice(1)}
+          </Badge>
           <p className="flex items-center gap-1 text-sm text-muted-foreground">
             <Clock size={16} />
             {formatTimeAgo(finished_at || created_at)}
