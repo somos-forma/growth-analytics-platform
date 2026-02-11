@@ -29,7 +29,7 @@ export const AnalysisOverview = ({ analysis }: AnalysisCollectionProps) => {
       <Card>
         <CardHeader>
           <CardDescription className="flex justify-between">
-            Análisis completado <CheckCircle />
+            Análisis completado <CheckCircle color="rgba(128, 239, 128, 1)" />
           </CardDescription>
           <CardTitle className="text-5xl font-bold">{doneCount}</CardTitle>
         </CardHeader>
@@ -38,7 +38,7 @@ export const AnalysisOverview = ({ analysis }: AnalysisCollectionProps) => {
         <CardHeader>
           <CardDescription className="flex justify-between">
             Análisis en Ejecución
-            <Spinner className="size-6" />
+            <Spinner className="size-6" color="rgba(146, 199, 240, 1)" />
           </CardDescription>
           <CardTitle className="text-5xl font-bold">{runningCount}</CardTitle>
         </CardHeader>
@@ -47,7 +47,7 @@ export const AnalysisOverview = ({ analysis }: AnalysisCollectionProps) => {
         <CardHeader>
           <CardDescription className="flex justify-between">
             Análisis en espera
-            <Hourglass />
+            <Hourglass color="rgba(255, 227, 122, 1)" />
           </CardDescription>
           <CardTitle className="text-5xl font-bold">{queuedCount}</CardTitle>
         </CardHeader>
@@ -56,7 +56,7 @@ export const AnalysisOverview = ({ analysis }: AnalysisCollectionProps) => {
         <CardHeader>
           <CardDescription className="flex justify-between">
             Análisis con Error
-            <AlertTriangle />
+            <AlertTriangle color="rgba(255, 127, 127, 1.0)" />
           </CardDescription>
           <CardTitle className="text-5xl font-bold">{errorCount}</CardTitle>
         </CardHeader>
