@@ -59,32 +59,38 @@ export const DataClassificationStep = () => {
     next();
   };
 
-  const [channelAvailable, setChannelAvailable] = useState<TransferItem[]>([
-    { id: "cost_google", label: "cost_google" },
-    { id: "impressions_google", label: "impressions_google" },
-    { id: "clicks_google", label: "clicks_google" },
-    {
-      id: "cost_meta",
-      label: "cost_meta",
-    },
-    {
-      id: "impressions_meta",
-      label: "impressions_meta",
-    },
-    {
-      id: "clicks_meta",
-      label: "clicks_meta",
-    },
-  ]);
+  const [channelAvailable, setChannelAvailable] = useState<TransferItem[]>(
+    [
+      { id: "cost_google", label: "cost_google" },
+      { id: "impressions_google", label: "impressions_google" },
+      { id: "clicks_google", label: "clicks_google" },
+      {
+        id: "cost_meta",
+        label: "cost_meta",
+      },
+      {
+        id: "impressions_meta",
+        label: "impressions_meta",
+      },
+      {
+        id: "clicks_meta",
+        label: "clicks_meta",
+      },
+    ].filter((item) => !channelSelected.some((selected) => selected.id === item.id)),
+  );
 
-  const [controlAvailable, setControlAvailable] = useState<TransferItem[]>([
-    { id: "usuarios", label: "usuarios" },
-    { id: "sesiones", label: "sesiones" },
-  ]);
+  const [controlAvailable, setControlAvailable] = useState<TransferItem[]>(
+    [
+      { id: "usuarios", label: "usuarios" },
+      { id: "sesiones", label: "sesiones" },
+    ].filter((item) => !controlSelected.some((selected) => selected.id === item.id)),
+  );
 
-  const [kpiAvailable, setKpiAvailable] = useState<TransferItem[]>([
-    { id: "conversiones_paid", label: "conversiones_paid" },
-  ]);
+  const [kpiAvailable, setKpiAvailable] = useState<TransferItem[]>(
+    [{ id: "conversiones_paid", label: "conversiones_paid" }].filter(
+      (item) => !kpiSelected.some((selected) => selected.id === item.id),
+    ),
+  );
 
   const [organicAvailable, setOrganicAvailable] = useState<TransferItem[]>([
     { id: "users_organic", label: "users_organic" },

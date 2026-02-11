@@ -79,10 +79,18 @@ export const useWizardStore = create<WizardState>()(
         meta_ads: { check: true },
         google_ads: { check: true },
       },
-      channelSelected: [],
+      channelSelected: [
+        { id: "impressions_google", label: "impressions_google" },
+        { id: "impressions_meta", label: "impressions_meta" },
+        { id: "cost_google", label: "cost_google" },
+        { id: "cost_meta", label: "cost_meta" },
+      ],
       contextualSelected: [],
-      controlSelected: [],
-      kpiSelected: [],
+      controlSelected: [
+        { id: "usuarios", label: "usuarios" },
+        { id: "sesiones", label: "sesiones" },
+      ],
+      kpiSelected: [{ id: "conversiones_paid", label: "conversiones_paid" }],
       organicSelected: [],
 
       estado: "",
