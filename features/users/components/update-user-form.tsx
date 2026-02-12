@@ -14,13 +14,30 @@ import { Spinner } from "@/components/ui/spinner";
 import { useUpdateUser } from "../hooks/useUpdateUser";
 import { useUserStore } from "../store";
 
-const formSchema = z.object({
-  name: z.string().min(2, { message: "El nombre debe tener al menos 2 caracteres" }),
-  email: z.email({ message: "Ingresa un correo válido" }),
-  password: z.union([z.string().min(8, { message: "La contraseña debe tener al menos 8 caracteres" }), z.literal("")]),
-  rol: z.enum(["admin", "user"]),
-  client_id: z.array(z.string()).optional(),
-});
+const formSchema = z
+  .object({
+    name: z.string().min(2, { message: "El nombre debe tener al menos 2 caracteres" }),
+    email: z.email({ message: "Ingresa un correo válido" }),
+    password: z.union([
+      z.string().min(8, { message: "La contraseña debe tener al menos 8 caracteres" }),
+      z.literal(""),
+    ]),
+    rol: z.enum(["admin", "user"]),
+    client_id: z.array(z.string()).optional(),
+    type: z.enum(["leed", "ecommerce"]).optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.rol === "admin") {
+        return data.type !== undefined;
+      }
+      return true;
+    },
+    {
+      message: "Debe seleccionar el tipo de administrador",
+      path: ["type"],
+    },
+  );
 
 export function UpdateUserForm() {
   const { closeEditUserModal, user } = useUserStore();
@@ -36,6 +53,7 @@ export function UpdateUserForm() {
       password: user?.password || "",
       rol: (user?.rol as "admin" | "user") || "user",
       client_id: user?.client_id || [],
+      type: (user?.type as "leed" | "ecommerce") || undefined,
     },
   });
 
@@ -127,6 +145,28 @@ export function UpdateUserForm() {
             </Field>
           )}
         />
+
+        {form.watch("rol") === "admin" && (
+          <Controller
+            name="type"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor={field.name}>Tipo</FieldLabel>
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Seleccionar tipo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="leed">Leed</SelectItem>
+                    <SelectItem value="ecommerce">Ecommerce</SelectItem>
+                  </SelectContent>
+                </Select>
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              </Field>
+            )}
+          />
+        )}
 
         <Field>
           <Button disabled={isPending} type="submit">

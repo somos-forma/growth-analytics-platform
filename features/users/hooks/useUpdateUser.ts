@@ -9,6 +9,7 @@ export const useUpdateUser = () => {
       name: string;
       password: string;
       rol: string;
+      type?: string;
       client_id: string[];
     }) => Promise<any>,
   });
