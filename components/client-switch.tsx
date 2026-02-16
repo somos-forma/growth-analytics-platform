@@ -14,8 +14,8 @@ import { Button } from "./ui/button";
 
 const clients: Record<string, string> = {
   integramedica: "Integramédica",
-  entel: "Entel",
-  claro: "Claro",
+  // entel: "Entel",
+  // claro: "Claro",
 };
 export const ClientSwitch = () => {
   const [position, setPosition] = useState("integramedica");
@@ -32,8 +32,8 @@ export const ClientSwitch = () => {
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
           <DropdownMenuRadioItem value="integramedica">Integramédica</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="entel">Entel</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="claro">Claro</DropdownMenuRadioItem>
+          {/* <DropdownMenuRadioItem value="entel">Entel</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="claro">Claro</DropdownMenuRadioItem> */}
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>
