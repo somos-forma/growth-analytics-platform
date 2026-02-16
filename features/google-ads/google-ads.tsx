@@ -19,6 +19,7 @@ import { LeadsCharts } from "./components/leads/leads-charts";
 import { LeadsKeywordsTable } from "./components/leads/leads-keywords-table";
 import { LeadsTable } from "./components/leads/leads-table";
 import { OverviewLeads } from "./components/leads/overview-leads";
+import { exportGoogleAdsPdf } from "./pdf/export-google-ads";
 
 export const GoogleAds = () => {
   const [type, _] = useState<"ecommerce" | "leads">("leads");
@@ -28,6 +29,7 @@ export const GoogleAds = () => {
   }>({ from: subMonths(new Date(), 1), to: new Date() });
 
   const [hasSelectedDate, setHasSelectedDate] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   // Formatear fecha en formato 'YYYY-MM-DD'
   const formattedDate = useMemo(() => {
@@ -36,6 +38,24 @@ export const GoogleAds = () => {
     }
     return new Date().toISOString().split("T")[0];
   }, [dateRange.from]);
+
+  const handleDownload = async () => {
+    if (isDownloading) return;
+    setIsDownloading(true);
+
+    try {
+      await exportGoogleAdsPdf({
+        type,
+        dateRange,
+        date: undefined,
+        formattedDate,
+      });
+    } catch (error) {
+      console.error("Error al exportar PDF:", error);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   if (type === "leads") {
     return (
@@ -70,9 +90,9 @@ export const GoogleAds = () => {
               <StarsIcon />
               Resumen con AI
             </Button>
-            <Button variant="outline">
+            <Button variant="outline" onClick={handleDownload} disabled={isDownloading}>
               <Download />
-              Exportar
+              {isDownloading ? "Exportando..." : "Exportar"}
             </Button>
           </div>
         </div>
@@ -129,7 +149,7 @@ export const GoogleAds = () => {
           <LeadsCharts
             date={{
               from: hasSelectedDate ? formattedDate : "2025-01-01",
-              to: hasSelectedDate ? (dateRange.to ? format(dateRange.to, "yyyy-MM-dd") : undefined) : "2026-01-01",
+              to: hasSelectedDate ? (dateRange.to ? format(dateRange.to, "yyyy-MM-dd") : "2026-01-01") : "2026-01-01",
             }}
           />
           <LeadsTable
@@ -192,9 +212,9 @@ export const GoogleAds = () => {
               <StarsIcon />
               Resumen con AI
             </Button>
-            <Button variant="outline">
+            <Button variant="outline" onClick={handleDownload} disabled={isDownloading}>
               <Download />
-              Exportar
+              {isDownloading ? "Exportando..." : "Exportar"}
             </Button>
           </div>
         </div>
