@@ -13,6 +13,7 @@ import { InvestmentByDayChart } from "./components/ecommerce/investment-by-day-c
 import { CostsIndicatorsCharts } from "./components/leads/costs-indicators-charts";
 import { LeadsOverview } from "./components/leads/leads-overview";
 import { LeadsPerformanceIndicatorsTable } from "./components/leads/leads-performance-indicators-table";
+import { exportMetaAdsPdf } from "./pdf/export-meta-ads";
 
 export const MetaAds = () => {
   const [type, _] = useState<"ecommerce" | "leads">("leads");
@@ -20,6 +21,7 @@ export const MetaAds = () => {
     from: Date | undefined;
     to: Date | undefined;
   }>({ from: subMonths(new Date(), 1), to: new Date() });
+  const [isExporting, setIsExporting] = useState(false);
 
   // Formatear fecha en formato 'YYYY-MM-DD'
   const formattedDate = useMemo(() => {
@@ -28,6 +30,22 @@ export const MetaAds = () => {
     }
     return new Date().toISOString().split("T")[0];
   }, [dateRange.from]);
+
+  const handleDownload = async () => {
+    setIsExporting(true);
+    try {
+      await exportMetaAdsPdf({
+        type,
+        dateRange,
+        formattedDate,
+      });
+    } catch (error) {
+      console.error("Error exporting PDF:", error);
+      // Optionally show a toast or alert here
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   return (
     <div className="space-y-7">
@@ -85,9 +103,9 @@ export const MetaAds = () => {
             <StarsIcon />
             Resumen con AI
           </Button>
-          <Button variant="outline">
+          <Button variant="outline" onClick={handleDownload} disabled={isExporting}>
             <Download />
-            Exportar
+            {isExporting ? "Exportando..." : "Exportar"}
           </Button>
         </div>
       </div>
