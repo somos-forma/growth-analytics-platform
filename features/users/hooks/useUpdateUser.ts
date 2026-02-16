@@ -9,7 +9,7 @@ export const useUpdateUser = () => {
       name: string;
       password: string;
       rol: string;
-      type?: string;
+      type?: { leads: { check: boolean }; ecommerce: { check: boolean } };
       client_id: string[];
     }) => Promise<any>,
   });

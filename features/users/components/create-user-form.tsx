@@ -7,8 +7,8 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
@@ -21,7 +21,12 @@ const formSchema = z
     email: z.email({ message: "Ingresa un correo válido" }),
     password: z.string().min(8, { message: "La contraseña debe tener al menos 8 caracteres" }),
     rol: z.enum(["admin", "user"]),
-    type: z.enum(["leed", "ecommerce"]).optional(),
+    type: z
+      .object({
+        leads: z.object({ check: z.boolean() }),
+        ecommerce: z.object({ check: z.boolean() }),
+      })
+      .optional(),
     client_id: z.array(z.string()),
   })
   .refine(
@@ -42,7 +47,6 @@ export function CreateUserForm() {
   const { mutate, isPending } = useCreateUser();
   const queryClient = useQueryClient();
   const [showPassword, setShowPassword] = useState(false);
-  const [adminTypes, setAdminTypes] = useState({ leed: false, ecommerce: false });
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,7 +54,7 @@ export function CreateUserForm() {
       email: "",
       password: "",
       rol: "user",
-      type: undefined,
+      type: { leads: { check: false }, ecommerce: { check: false } },
       client_id: [],
     },
   });
@@ -161,17 +165,21 @@ export function CreateUserForm() {
                 <FieldLabel htmlFor={field.name}>Tipo</FieldLabel>
                 <div className="flex gap-8">
                   <div className="flex flex-col items-center gap-2">
-                    <span className="text-sm font-medium">Leed</span>
+                    <span className="text-sm font-medium">Leads</span>
                     <Checkbox
-                      checked={adminTypes.leed}
-                      onCheckedChange={(checked) => setAdminTypes((prev) => ({ ...prev, leed: Boolean(checked) }))}
+                      checked={field.value?.leads?.check || false}
+                      onCheckedChange={(checked) =>
+                        field.onChange({ ...field.value, leads: { check: Boolean(checked) } })
+                      }
                     />
                   </div>
                   <div className="flex flex-col items-center gap-2">
                     <span className="text-sm font-medium">Ecommerce</span>
                     <Checkbox
-                      checked={adminTypes.ecommerce}
-                      onCheckedChange={(checked) => setAdminTypes((prev) => ({ ...prev, ecommerce: Boolean(checked) }))}
+                      checked={field.value?.ecommerce?.check || false}
+                      onCheckedChange={(checked) =>
+                        field.onChange({ ...field.value, ecommerce: { check: Boolean(checked) } })
+                      }
                     />
                   </div>
                 </div>

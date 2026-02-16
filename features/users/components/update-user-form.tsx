@@ -7,6 +7,7 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -24,7 +25,12 @@ const formSchema = z
     ]),
     rol: z.enum(["admin", "user"]),
     client_id: z.array(z.string()).optional(),
-    type: z.enum(["leed", "ecommerce"]).optional(),
+    type: z
+      .object({
+        leads: z.object({ check: z.boolean() }),
+        ecommerce: z.object({ check: z.boolean() }),
+      })
+      .optional(),
   })
   .refine(
     (data) => {
@@ -53,7 +59,7 @@ export function UpdateUserForm() {
       password: user?.password || "",
       rol: (user?.rol as "admin" | "user") || "user",
       client_id: user?.client_id || [],
-      type: (user?.type as "leed" | "ecommerce") || undefined,
+      type: user?.type || { leads: { check: false }, ecommerce: { check: false } },
     },
   });
 
@@ -153,15 +159,26 @@ export function UpdateUserForm() {
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel htmlFor={field.name}>Tipo</FieldLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar tipo" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="leed">Leed</SelectItem>
-                    <SelectItem value="ecommerce">Ecommerce</SelectItem>
-                  </SelectContent>
-                </Select>
+                <div className="flex gap-8">
+                  <div className="flex flex-col items-center gap-2">
+                    <span className="text-sm font-medium">Leads</span>
+                    <Checkbox
+                      checked={field.value?.leads?.check || false}
+                      onCheckedChange={(checked) =>
+                        field.onChange({ ...field.value, leads: { check: Boolean(checked) } })
+                      }
+                    />
+                  </div>
+                  <div className="flex flex-col items-center gap-2">
+                    <span className="text-sm font-medium">Ecommerce</span>
+                    <Checkbox
+                      checked={field.value?.ecommerce?.check || false}
+                      onCheckedChange={(checked) =>
+                        field.onChange({ ...field.value, ecommerce: { check: Boolean(checked) } })
+                      }
+                    />
+                  </div>
+                </div>
                 {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
               </Field>
             )}

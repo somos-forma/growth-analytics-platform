@@ -14,7 +14,7 @@ export const createUser = async (data: {
   name: string;
   password: string;
   rol: string;
-  type?: string;
+  type?: { leads: { check: boolean }; ecommerce: { check: boolean } };
   client_id: string[];
 }): Promise<User> => {
   try {
@@ -58,7 +58,7 @@ export const updateUser = async (data: {
   password: string;
   rol: string;
   client_id: string[];
-  type?: string;
+  type?: { leads: { check: boolean }; ecommerce: { check: boolean } };
 }): Promise<User> => {
   try {
     const response = await fetch(`/api/users/${data.id}`, {
