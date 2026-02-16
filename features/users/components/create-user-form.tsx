@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
@@ -41,6 +42,7 @@ export function CreateUserForm() {
   const { mutate, isPending } = useCreateUser();
   const queryClient = useQueryClient();
   const [showPassword, setShowPassword] = useState(false);
+  const [adminTypes, setAdminTypes] = useState({ leed: false, ecommerce: false });
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -157,15 +159,22 @@ export function CreateUserForm() {
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel htmlFor={field.name}>Tipo</FieldLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar tipo" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="leed">Leed</SelectItem>
-                    <SelectItem value="ecommerce">Ecommerce</SelectItem>
-                  </SelectContent>
-                </Select>
+                <div className="flex gap-8">
+                  <div className="flex flex-col items-center gap-2">
+                    <span className="text-sm font-medium">Leed</span>
+                    <Checkbox
+                      checked={adminTypes.leed}
+                      onCheckedChange={(checked) => setAdminTypes((prev) => ({ ...prev, leed: Boolean(checked) }))}
+                    />
+                  </div>
+                  <div className="flex flex-col items-center gap-2">
+                    <span className="text-sm font-medium">Ecommerce</span>
+                    <Checkbox
+                      checked={adminTypes.ecommerce}
+                      onCheckedChange={(checked) => setAdminTypes((prev) => ({ ...prev, ecommerce: Boolean(checked) }))}
+                    />
+                  </div>
+                </div>
                 {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
               </Field>
             )}
