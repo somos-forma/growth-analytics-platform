@@ -215,53 +215,83 @@ const buildReportPdf = (title: string, rangeText: string, tables: TableSpec[], c
     const widths = table.widths.map((width) => width * scale);
     const tableWidth = widths.reduce((sum, width) => sum + width, 0);
 
-    const tableHeight = 24 + headerHeight + table.rows.length * rowHeight + 28;
-    if (cursorY + tableHeight > PAGE_HEIGHT - margin) {
+    // Check if title and header fit on current page
+    const titleHeight = 24;
+    const headerTotalHeight = titleHeight + headerHeight;
+    if (cursorY + headerTotalHeight > PAGE_HEIGHT - margin) {
       finishPage();
       startPage();
     }
 
     drawText(table.title, tableX, cursorY + 12, 13);
-    cursorY += 24;
+    cursorY += titleHeight;
 
-    setFill(0.95, 0.95, 0.95);
-    drawRect(tableX, cursorY, tableWidth, headerHeight, true);
-    setFill(0, 0, 0);
+    // Draw rows in batches that fit on pages
+    let rowIndex = 0;
+    while (rowIndex < table.rows.length) {
+      const availableHeight = PAGE_HEIGHT - margin - cursorY - 28; // 28 for bottom margin
+      const rowsPerPage = Math.floor(availableHeight / rowHeight);
+      const rowsToDraw = Math.min(rowsPerPage, table.rows.length - rowIndex);
 
-    drawRect(tableX, cursorY, tableWidth, headerHeight + table.rows.length * rowHeight);
+      if (rowsToDraw <= 0) {
+        // Not enough space for even one row, start new page
+        finishPage();
+        startPage();
+        // Do not redraw title, just continue with header + rows
+        continue;
+      }
 
-    let colX = tableX;
-    widths.forEach((width) => {
-      drawLine(colX, cursorY, colX, cursorY + headerHeight + table.rows.length * rowHeight);
-      colX += width;
-    });
-    drawLine(colX, cursorY, colX, cursorY + headerHeight + table.rows.length * rowHeight);
+      // Draw header
+      setFill(0.95, 0.95, 0.95);
+      drawRect(tableX, cursorY, tableWidth, headerHeight, true);
+      setFill(0, 0, 0);
 
-    let headerX = tableX;
-    table.headers.forEach((header, index) => {
-      drawCellText(header, headerX, widths[index], cursorY, headerHeight, 11, "left");
-      headerX += widths[index];
-    });
+      drawRect(tableX, cursorY, tableWidth, headerHeight + rowsToDraw * rowHeight);
 
-    table.rows.forEach((row, rowIndex) => {
-      const rowTop = cursorY + headerHeight + rowIndex * rowHeight;
-      drawLine(tableX, rowTop, tableX + tableWidth, rowTop);
-
-      let cellX = tableX;
-      row.forEach((cell, cellIndex) => {
-        const align = table.align?.[cellIndex] ?? "left";
-        drawCellText(cell, cellX, widths[cellIndex], rowTop, rowHeight, 11, align);
-        cellX += widths[cellIndex];
+      let colX = tableX;
+      widths.forEach((width) => {
+        drawLine(colX, cursorY, colX, cursorY + headerHeight + rowsToDraw * rowHeight);
+        colX += width;
       });
-    });
+      drawLine(colX, cursorY, colX, cursorY + headerHeight + rowsToDraw * rowHeight);
 
-    drawLine(
-      tableX,
-      cursorY + headerHeight + table.rows.length * rowHeight,
-      tableX + tableWidth,
-      cursorY + headerHeight + table.rows.length * rowHeight,
-    );
-    cursorY += headerHeight + table.rows.length * rowHeight + 28;
+      let headerX = tableX;
+      table.headers.forEach((header, index) => {
+        drawCellText(header, headerX, widths[index], cursorY, headerHeight, 11, "left");
+        headerX += widths[index];
+      });
+
+      // Draw the rows for this page
+      for (let i = 0; i < rowsToDraw; i++) {
+        const row = table.rows[rowIndex + i];
+        const rowTop = cursorY + headerHeight + i * rowHeight;
+        drawLine(tableX, rowTop, tableX + tableWidth, rowTop);
+
+        let cellX = tableX;
+        row.forEach((cell, cellIndex) => {
+          const align = table.align?.[cellIndex] ?? "left";
+          drawCellText(cell, cellX, widths[cellIndex], rowTop, rowHeight, 11, align);
+          cellX += widths[cellIndex];
+        });
+      }
+
+      // Draw bottom line for the batch
+      drawLine(
+        tableX,
+        cursorY + headerHeight + rowsToDraw * rowHeight,
+        tableX + tableWidth,
+        cursorY + headerHeight + rowsToDraw * rowHeight,
+      );
+
+      cursorY += headerHeight + rowsToDraw * rowHeight + 28;
+      rowIndex += rowsToDraw;
+
+      // If more rows and not last batch, start new page
+      if (rowIndex < table.rows.length) {
+        finishPage();
+        startPage();
+      }
+    }
   };
 
   const renderChart = (chart: ChartSpec) => {
