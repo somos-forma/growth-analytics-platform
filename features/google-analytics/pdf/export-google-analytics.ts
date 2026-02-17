@@ -180,7 +180,7 @@ const buildReportPdf = (title: string, rangeText: string, tables: TableSpec[]) =
 
     let headerX = tableX;
     table.headers.forEach((header, index) => {
-      drawCellText(header, headerX, table.widths[index], cursorY, headerHeight, 11, "left");
+      drawCellText(header, headerX, table.widths[index], cursorY, headerHeight, 9, "left");
       headerX += table.widths[index];
     });
 
@@ -191,7 +191,7 @@ const buildReportPdf = (title: string, rangeText: string, tables: TableSpec[]) =
       let cellX = tableX;
       row.forEach((cell, cellIndex) => {
         const align = table.align?.[cellIndex] ?? "left";
-        drawCellText(cell, cellX, table.widths[cellIndex], rowTop, rowHeight, 11, align);
+        drawCellText(cell, cellX, table.widths[cellIndex], rowTop, rowHeight, 9, align);
         cellX += table.widths[cellIndex];
       });
     });
