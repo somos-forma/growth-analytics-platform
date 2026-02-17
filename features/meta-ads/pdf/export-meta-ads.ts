@@ -198,6 +198,25 @@ const buildReportPdf = (title: string, rangeText: string, tables: TableSpec[], c
     return trimmed.length > 0 ? `${trimmed}${ellipsis}` : "";
   };
 
+  const wrapText = (text: string, maxWidth: number, size: number) => {
+    const words = text.split(" ");
+    const lines: string[] = [];
+    let currentLine = words[0];
+
+    for (let i = 1; i < words.length; i++) {
+      const word = words[i];
+      const width = estimateTextWidth(`${currentLine} ${word}`, size);
+      if (width < maxWidth) {
+        currentLine += ` ${word}`;
+      } else {
+        lines.push(currentLine);
+        currentLine = word;
+      }
+    }
+    if (currentLine) lines.push(currentLine);
+    return lines;
+  };
+
   const drawCellText = (
     text: string,
     colX: number,
@@ -208,13 +227,20 @@ const buildReportPdf = (title: string, rangeText: string, tables: TableSpec[], c
     align: "left" | "right",
   ) => {
     const maxWidth = Math.max(0, colWidth - paddingX * 2);
-    const lines = String(text).split("\n");
+    const originalLines = String(text).split("\n");
+    const lines: string[] = [];
+
+    originalLines.forEach((line) => {
+      lines.push(...wrapText(line, maxWidth, size));
+    });
+
     const lineHeight = size + 2;
     const totalHeight = lineHeight * lines.length;
     const startY = yTop + (rowHeight - totalHeight) / 2 + size;
 
     const leftPadding = 4;
     lines.forEach((line, index) => {
+      // Use fitText as a final safety measure for single very long words
       const fitted = fitText(line, maxWidth, size);
       const textWidth = estimateTextWidth(fitted, size);
       const x =
@@ -303,7 +329,7 @@ const buildReportPdf = (title: string, rangeText: string, tables: TableSpec[], c
 
       let headerX = tableX;
       table.headers.forEach((header, index) => {
-        drawCellText(header, headerX, widths[index], cursorY, headerHeight, 11, "left");
+        drawCellText(header, headerX, widths[index], cursorY, headerHeight, 9, "left");
         headerX += widths[index];
       });
 
@@ -316,7 +342,7 @@ const buildReportPdf = (title: string, rangeText: string, tables: TableSpec[], c
         let cellX = tableX;
         row.forEach((cell, cellIndex) => {
           const align = table.align?.[cellIndex] ?? "left";
-          drawCellText(cell, cellX, widths[cellIndex], rowTop, rowHeight, 11, align);
+          drawCellText(cell, cellX, widths[cellIndex], rowTop, rowHeight, 9, align);
           cellX += widths[cellIndex];
         });
       }
@@ -523,9 +549,8 @@ export const exportMetaAdsPdf = async ({ type, dateRange, formattedDate }: Expor
         .slice(0, 20)
         .map((row: any, index: number) => {
           const name = String(row.campaign_name ?? `Campaña ${index + 1}`);
-          const trimmed = name.length > 70 ? `${name.slice(0, 67)}...` : name;
           return [
-            trimmed,
+            name,
             formatCurrency(row.total_cost ?? 0),
             formatNumber(row.impresiones ?? 0),
             formatNumber(row.clicks ?? 0),
@@ -539,7 +564,7 @@ export const exportMetaAdsPdf = async ({ type, dateRange, formattedDate }: Expor
         headers: ["Campaña", "Costos", "Impresiones", "Clicks", "Frecuencia", "Alcance"],
         widths: [170, 80, 85, 70, 70, 80],
         align: ["left", "right", "right", "right", "right", "right"],
-        rowHeight: 30,
+        rowHeight: 50,
         rows: campaignRows.length > 0 ? campaignRows : [["Sin datos", "-", "-", "-", "-", "-"]],
       });
 

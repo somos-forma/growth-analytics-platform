@@ -47,9 +47,9 @@ export const ClientsList = () => {
         const sources = row.original.source[0]?.sources;
         if (!sources) return <span>N/A</span>;
         const activeSources = [];
-        if (sources.ga4.check) activeSources.push(`GA4: ${sources.ga4.value}`);
-        if (sources.google_ads.check) activeSources.push(`Google Ads: ${sources.google_ads.value}`);
-        if (sources.meta_ads.check) activeSources.push(`Meta Ads: ${sources.meta_ads.value}`);
+        if (sources.ga4?.check) activeSources.push(`GA4 ${sources.ga4.value}`);
+        if (sources.google_ads?.check) activeSources.push(`Google Ads ${sources.google_ads.value}`);
+        if (sources.meta_ads?.check) activeSources.push(`Meta Ads ${sources.meta_ads.value}`);
         return <span>{activeSources.join(", ") || "Ninguna"}</span>;
       },
     },

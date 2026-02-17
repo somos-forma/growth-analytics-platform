@@ -180,7 +180,7 @@ const buildReportPdf = (title: string, rangeText: string, tables: TableSpec[]) =
 
     let headerX = tableX;
     table.headers.forEach((header, index) => {
-      drawCellText(header, headerX, table.widths[index], cursorY, headerHeight, 11, "left");
+      drawCellText(header, headerX, table.widths[index], cursorY, headerHeight, 9, "left");
       headerX += table.widths[index];
     });
 
@@ -191,7 +191,7 @@ const buildReportPdf = (title: string, rangeText: string, tables: TableSpec[]) =
       let cellX = tableX;
       row.forEach((cell, cellIndex) => {
         const align = table.align?.[cellIndex] ?? "left";
-        drawCellText(cell, cellX, table.widths[cellIndex], rowTop, rowHeight, 11, align);
+        drawCellText(cell, cellX, table.widths[cellIndex], rowTop, rowHeight, 9, align);
         cellX += table.widths[cellIndex];
       });
     });
@@ -253,6 +253,7 @@ const buildReportPdf = (title: string, rangeText: string, tables: TableSpec[]) =
 };
 
 const formatNumber = (value: unknown) => (typeof value === "number" ? value.toLocaleString("es-ES") : "-");
+const formatPercentage = (value: unknown) => (typeof value === "number" ? `${value.toFixed(2)}%` : "-");
 
 export const exportGoogleAnalyticsPdf = async ({ type, dateRange, date, formattedDate }: ExportOptions) => {
   const rangeText =
@@ -320,9 +321,9 @@ export const exportGoogleAnalyticsPdf = async ({ type, dateRange, date, formatte
 
     tables.push({
       title: "Performance por canal",
-      headers: ["Canal", "Usuarios", "Sesiones", "Eventos"],
-      widths: [200, 90, 90, 90],
-      align: ["left", "right", "right", "right"],
+      headers: ["Canal", "Usuarios", "Sesiones", "Eventos", "Tasa evento clave"],
+      widths: [140, 80, 80, 80, 90],
+      align: ["left", "right", "right", "right", "right"],
       rows: (channelGroup?.rows || [])
         .slice(0, 8)
         .map((row: any) => [
@@ -330,14 +331,15 @@ export const exportGoogleAnalyticsPdf = async ({ type, dateRange, date, formatte
           formatNumber(row.usuarios_nuevos),
           formatNumber(row.sesiones),
           formatNumber(row.eventos_clave),
+          formatPercentage(row.tasa_eventos_clave),
         ]),
     });
 
     tables.push({
       title: "Performance por fuente / medio",
-      headers: ["Fuente / medio", "Usuarios", "Sesiones", "Eventos"],
-      widths: [220, 80, 80, 80],
-      align: ["left", "right", "right", "right"],
+      headers: ["Fuente / medio", "Usuarios", "Sesiones", "Eventos", "Tasa evento clave"],
+      widths: [140, 80, 80, 80, 90],
+      align: ["left", "right", "right", "right", "right"],
       rows: (sourceMedium?.rows || [])
         .slice(0, 8)
         .map((row: any) => [
@@ -345,6 +347,7 @@ export const exportGoogleAnalyticsPdf = async ({ type, dateRange, date, formatte
           formatNumber(row.usuarios_nuevos),
           formatNumber(row.sesiones),
           formatNumber(row.eventos_clave),
+          formatPercentage(row.tasa_eventos_clave),
         ]),
     });
 

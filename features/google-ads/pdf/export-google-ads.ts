@@ -257,7 +257,7 @@ const buildReportPdf = (title: string, rangeText: string, tables: TableSpec[], c
 
       let headerX = tableX;
       table.headers.forEach((header, index) => {
-        drawCellText(header, headerX, widths[index], cursorY, headerHeight, 11, "left");
+        drawCellText(header, headerX, widths[index], cursorY, headerHeight, 9, "left");
         headerX += widths[index];
       });
 
@@ -270,7 +270,7 @@ const buildReportPdf = (title: string, rangeText: string, tables: TableSpec[], c
         let cellX = tableX;
         row.forEach((cell, cellIndex) => {
           const align = table.align?.[cellIndex] ?? "left";
-          drawCellText(cell, cellX, widths[cellIndex], rowTop, rowHeight, 11, align);
+          drawCellText(cell, cellX, widths[cellIndex], rowTop, rowHeight, 9, align);
           cellX += widths[cellIndex];
         });
       }
@@ -440,29 +440,45 @@ const aggregateOverviewData = (rows: any[]) => {
 };
 
 export const exportGoogleAdsPdf = async ({ type, dateRange, formattedDate }: ExportOptions) => {
-  let rangeText = `Rango: ${dateRange.from ? format(dateRange.from, "yyyy-MM-dd") : "-"} a ${dateRange.to ? format(dateRange.to, "yyyy-MM-dd") : "-"}`;
+  const rangeText = `Rango: ${dateRange.from ? format(dateRange.from, "yyyy-MM-dd") : "-"} a ${dateRange.to ? format(dateRange.to, "yyyy-MM-dd") : "-"}`;
 
   const tables: TableSpec[] = [];
 
   if (type === "leads") {
-    const fixedFrom = "2025-01-01";
-    const fixedTo = "2026-01-01";
-    rangeText = `Rango: ${fixedFrom} a ${fixedTo}`;
+    // Determine the user-selected range
+    const startDateStr = dateRange.from ? format(dateRange.from, "yyyy-MM-dd") : formattedDate;
+    const endDateStr = dateRange.to ? format(dateRange.to, "yyyy-MM-dd") : formattedDate;
+
+    // Filter using user selection
     const dateFilter = {
-      event_date_between: [fixedFrom, fixedTo],
+      event_date_between: [startDateStr, endDateStr],
     };
 
-    const baseDate = new Date(fixedFrom);
-    const previousDate = new Date(baseDate);
-    previousDate.setFullYear(previousDate.getFullYear() - 1);
-    const previousFrom = previousDate.toISOString().split("T")[0];
+    // Filter for Previous Year (YoY) - Same duration shifted back 1 year
+    const startObj = new Date(startDateStr);
+    const endObj = new Date(endDateStr);
+
+    // Clone dates to avoid mutation issues if any, though here we just use them to setFullYear
+    const prevStart = new Date(startObj);
+    prevStart.setFullYear(prevStart.getFullYear() - 1);
+
+    const prevEnd = new Date(endObj);
+    prevEnd.setFullYear(prevEnd.getFullYear() - 1);
+
+    const previousFilter = {
+      event_date_between: [format(prevStart, "yyyy-MM-dd"), format(prevEnd, "yyyy-MM-dd")],
+    };
+
+    // Filter for "Todo el año" (Whole Year) based on the start year
+    const currentYear = startObj.getFullYear();
+    const yearFilter = {
+      event_date_between: [`${currentYear}-01-01`, `${currentYear}-12-31`],
+    };
 
     const [overviewData, previousOverviewData, chartData, campaignData, keywordsData] = await Promise.all([
       fetchAnalytics("daily_campaign_google_ads_summary", dateFilter),
-      fetchAnalytics("daily_campaign_google_ads_summary", {
-        event_date_between: [previousFrom, previousDate.toISOString().split("T")[0]],
-      }),
-      fetchAnalytics("daily_google_ads_performance", dateFilter),
+      fetchAnalytics("daily_campaign_google_ads_summary", previousFilter),
+      fetchAnalytics("daily_google_ads_performance", yearFilter),
       fetchAnalytics("daily_campaign_google_ads_summary", dateFilter),
       fetchAnalytics("daily_gads_top_keywords", dateFilter),
     ]);
