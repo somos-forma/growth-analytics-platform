@@ -6,6 +6,7 @@ import { es } from "react-day-picker/locale";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { exportGoogleAnalyticsPdf } from "./pdf/export-google-analytics";
 import { MonthlyIndicators } from "./components/ecommerce/monthly-indicators";
 import { NewUsersByChannel } from "./components/ecommerce/new-users-by-channel";
 import { PerformanceByChannelTable } from "./components/ecommerce/performance-by-channel-table";
@@ -28,6 +29,7 @@ export const GoogleAnalytics = () => {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [type, _] = useState<"ecommerce" | "leads">("leads");
+  const [isDownloading, setIsDownloading] = useState(false);
   const [dateRange, setDateRange] = useState<{
     from: Date | undefined;
     to: Date | undefined;
@@ -40,6 +42,24 @@ export const GoogleAnalytics = () => {
     }
     return new Date().toISOString().split("T")[0];
   }, [dateRange.from]);
+
+  const handleDownload = async () => {
+    if (isDownloading) return;
+    setIsDownloading(true);
+
+    try {
+      await exportGoogleAnalyticsPdf({
+        type,
+        dateRange,
+        date,
+        formattedDate,
+      });
+    } catch (error) {
+      console.error("Error al exportar PDF:", error);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   if (type === "leads") {
     return (
@@ -58,9 +78,9 @@ export const GoogleAnalytics = () => {
               <StarsIcon />
               Resumen con AI
             </Button>
-            <Button variant="outline">
+            <Button variant="outline" onClick={handleDownload} disabled={isDownloading}>
               <Download />
-              Exportar
+              {isDownloading ? "Exportando..." : "Exportar"}
             </Button>
           </div>
         </div>
@@ -207,9 +227,9 @@ export const GoogleAnalytics = () => {
               <StarsIcon />
               Resumen con AI
             </Button>
-            <Button variant="outline">
+            <Button variant="outline" onClick={handleDownload} disabled={isDownloading}>
               <Download />
-              Exportar
+              {isDownloading ? "Exportando..." : "Exportar"}
             </Button>
           </div>
         </div>

@@ -162,18 +162,6 @@ export function UpdateClientForm() {
               </div>
             )}
           />
-          {form.watch("ga4_check") && (
-            <Controller
-              name="ga4_value"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <Input {...field} placeholder="G-24124213" aria-invalid={fieldState.invalid} />
-                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
-          )}
           <Controller
             name="google_ads_check"
             control={form.control}
@@ -184,18 +172,6 @@ export function UpdateClientForm() {
               </div>
             )}
           />
-          {form.watch("google_ads_check") && (
-            <Controller
-              name="google_ads_value"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <Input {...field} placeholder="1234567890" aria-invalid={fieldState.invalid} />
-                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
-          )}
           <Controller
             name="meta_ads_check"
             control={form.control}
@@ -206,18 +182,6 @@ export function UpdateClientForm() {
               </div>
             )}
           />
-          {form.watch("meta_ads_check") && (
-            <Controller
-              name="meta_ads_value"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <Input {...field} placeholder="12345678900000" aria-invalid={fieldState.invalid} />
-                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
-          )}
         </Field>
         <Button disabled={isPending} type="submit">
           {isPending && <Spinner />}

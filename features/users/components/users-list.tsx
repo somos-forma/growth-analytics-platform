@@ -45,14 +45,19 @@ export const UsersList = () => {
         return (
           <div className="flex gap-2">
             <Button variant="outline" asChild>
-              <Link href={`/dashboard/users/${row.original.id}/clients`} onClick={() => setSelectedUser(row.original)}>
-                Ver clientes asignados
-              </Link>
+              {row.original.rol === "admin" && (
+                <Link
+                  href={`/dashboard/users/${row.original.id}/clients`}
+                  onClick={() => setSelectedUser(row.original)}
+                >
+                  Ver clientes asignados
+                </Link>
+              )}
             </Button>
-            <Button onClick={() => openEditUserModal(row.original)}>Edit</Button>
+            <Button onClick={() => openEditUserModal(row.original)}>Editar</Button>
 
             <Button onClick={() => openDeleteUserModal(row.original)} variant="destructive">
-              Delete
+              Eliminar
             </Button>
           </div>
         );

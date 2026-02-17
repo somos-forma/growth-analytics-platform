@@ -125,13 +125,13 @@ export function LoginForm() {
         </CardContent>
         <CardFooter className="flex gap-2 flex-col">
           <Field orientation="horizontal">
-            <Button type="submit" disabled={isPending} form="form-rhf-login" className="w-full">
+            <Button type="submit" disabled={isPending} form="form-rhf-login" className="w-full my-2">
               {isPending && <Spinner />}
               Iniciar Sesión
             </Button>
           </Field>
-          <p className="text-xs">demo: admin@example.com | admin12345</p>
-          <p className="text-xs">demo: user@example.com | user12345</p>
+          {/* <p className="text-xs">demo: admin@example.com | admin12345</p>
+          <p className="text-xs">demo: user@example.com | user12345</p> */}
         </CardFooter>
       </Card>
       <div className="grid grid-cols-3 gap-4 text-center">
