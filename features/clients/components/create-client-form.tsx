@@ -12,31 +12,24 @@ import { Textarea } from "@/components/ui/textarea";
 import { useCreateClient } from "../hooks/useCreateClient";
 import { useClientStore } from "../store";
 
-const formSchema = z
-  .object({
-    name: z.string().min(2, { message: "El nombre debe tener al menos 2 caracteres" }),
-    website_url: z.string().url({ message: "URL inválida" }).or(z.literal("")),
-    gcp_id: z.string().min(1, { message: "GCP ID requerido" }),
-    description: z.string().optional(),
-    ga4_check: z.boolean(),
-    ga4_value: z.string().optional(),
-    google_ads_check: z.boolean(),
-    google_ads_value: z.string().optional(),
-    meta_ads_check: z.boolean(),
-    meta_ads_value: z.string().optional(),
-  })
-  .refine((data) => !data.ga4_check || (data.ga4_value && data.ga4_value.length > 0), {
-    message: "Valor GA4 requerido si está marcado",
-    path: ["ga4_value"],
-  })
-  .refine((data) => !data.google_ads_check || (data.google_ads_value && data.google_ads_value.length > 0), {
-    message: "Valor Google Ads requerido si está marcado",
-    path: ["google_ads_value"],
-  })
-  .refine((data) => !data.meta_ads_check || (data.meta_ads_value && data.meta_ads_value.length > 0), {
-    message: "Valor Meta Ads requerido si está marcado",
-    path: ["meta_ads_value"],
-  });
+const formSchema = z.object({
+  name: z.string().min(2, { message: "El nombre debe tener al menos 2 caracteres" }),
+  website_url: z.string().url({ message: "URL inválida" }).or(z.literal("")),
+  gcp_id: z.string().min(1, { message: "GCP ID requerido" }),
+  description: z.string().optional(),
+  type: z
+    .object({
+      leads: z.object({ check: z.boolean() }).optional(),
+      ecommerce: z.object({ check: z.boolean() }).optional(),
+    })
+    .optional(),
+  ga4_check: z.boolean(),
+  ga4_value: z.string().optional(),
+  google_ads_check: z.boolean(),
+  google_ads_value: z.string().optional(),
+  meta_ads_check: z.boolean(),
+  meta_ads_value: z.string().optional(),
+});
 
 export function CreateClientForm() {
   const { closeCreateClientModal } = useClientStore();
@@ -48,6 +41,10 @@ export function CreateClientForm() {
       website_url: "",
       gcp_id: "",
       description: "",
+      type: {
+        leads: { check: false },
+        ecommerce: { check: false },
+      },
       ga4_check: false,
       ga4_value: "",
       google_ads_check: false,
@@ -81,6 +78,10 @@ export function CreateClientForm() {
       ],
       gcp_id: data.gcp_id,
       description: data.description,
+      type: {
+        leads: data.type?.leads ?? { check: false },
+        ecommerce: data.type?.ecommerce ?? { check: false },
+      },
     };
     mutate(payload, {
       onSuccess: () => {
@@ -146,6 +147,7 @@ export function CreateClientForm() {
             </Field>
           )}
         />
+
         <Field>
           <FieldLabel>Fuentes de Datos</FieldLabel>
           <Controller
@@ -215,6 +217,36 @@ export function CreateClientForm() {
             />
           )}
         </Field>
+        <Controller
+          name="type"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor={field.name}>Tipo de Cliente</FieldLabel>
+              <div className="flex gap-8">
+                <div className="flex flex-col items-center gap-2">
+                  <span className="text-sm font-medium">Leads</span>
+                  <Checkbox
+                    checked={field.value?.leads?.check || false}
+                    onCheckedChange={(checked) =>
+                      field.onChange({ ...field.value, leads: { check: Boolean(checked) } })
+                    }
+                  />
+                </div>
+                <div className="flex flex-col items-center gap-2">
+                  <span className="text-sm font-medium">Ecommerce</span>
+                  <Checkbox
+                    checked={field.value?.ecommerce?.check || false}
+                    onCheckedChange={(checked) =>
+                      field.onChange({ ...field.value, ecommerce: { check: Boolean(checked) } })
+                    }
+                  />
+                </div>
+              </div>
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
         <Button disabled={isPending} type="submit">
           {isPending && <Spinner />}
           Crear cliente

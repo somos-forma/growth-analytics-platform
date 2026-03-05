@@ -15,6 +15,10 @@ export type Client = {
   description?: string;
   updatedAt: string;
   createdAt: string;
+  type?: {
+    leads: { check: boolean };
+    ecommerce: { check: boolean };
+  };
 };
 
 export type CreateClientInput = {
@@ -23,6 +27,10 @@ export type CreateClientInput = {
   website_url: string;
   source: SourceItem[];
   gcp_id: string;
+  type?: {
+    leads: { check: boolean };
+    ecommerce: { check: boolean };
+  };
 };
 
 export type UpdateClientInput = {
@@ -31,4 +39,8 @@ export type UpdateClientInput = {
   website_url: string;
   source: SourceItem[];
   gcp_id: string;
+  type?: {
+    leads: { check: boolean };
+    ecommerce: { check: boolean };
+  };
 };

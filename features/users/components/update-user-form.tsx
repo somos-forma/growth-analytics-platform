@@ -7,7 +7,6 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -152,7 +151,7 @@ export function UpdateUserForm() {
           )}
         />
 
-        {form.watch("rol") === "admin" && (
+        {/* {form.watch("rol") === "admin" && (
           <Controller
             name="type"
             control={form.control}
@@ -183,7 +182,7 @@ export function UpdateUserForm() {
               </Field>
             )}
           />
-        )}
+        )} */}
 
         <Field>
           <Button disabled={isPending} type="submit">
