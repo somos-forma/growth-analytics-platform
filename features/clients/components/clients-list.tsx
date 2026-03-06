@@ -17,7 +17,7 @@ export const ClientsList = () => {
   if (isError) {
     return <div>Error loading clients.</div>;
   }
-
+  console.log("Clients data:", clients);
   const columns: ColumnDef<Client>[] = [
     {
       accessorKey: "id",
@@ -30,6 +30,16 @@ export const ClientsList = () => {
     {
       accessorKey: "description",
       header: "Descripción",
+    },
+    {
+      id: "type",
+      header: "Tipo",
+      cell: ({ row }) => {
+        const type = row.original.type;
+        if (type?.leads?.check) return <span>Leads</span>;
+        if (type?.ecommerce?.check) return <span>Ecommerce</span>;
+        return <span>N/A</span>;
+      },
     },
     {
       accessorKey: "website_url",
