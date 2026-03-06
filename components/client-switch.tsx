@@ -1,8 +1,7 @@
 "use client";
-import { Building2, ChevronsUpDown, Loader2 } from "lucide-react";
-import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getClients } from "@/features/clients/services/client";
+import { Building2, ChevronsUpDown, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,12 +11,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "./ui/button";
 import { useAuthStore } from "@/features/auth/store";
+import { getClients } from "@/features/clients/services/client";
+import { Button } from "./ui/button";
 
 export const ClientSwitch = () => {
   const [selectedClientId, setSelectedClientId] = useState<string>("");
-  const { authStore } = useAuthStore();
+  const {
+    authStore,
+    selectedClientId: globalSelectedClientId,
+    setSelectedClientId: setGlobalSelectedClientId,
+  } = useAuthStore();
   const [allowedClientIds, setAllowedClientIds] = useState<string[]>([]);
 
   useEffect(() => {
@@ -53,11 +57,28 @@ export const ClientSwitch = () => {
 
   useEffect(() => {
     if (filteredClients && filteredClients.length > 0 && !selectedClientId) {
-      setSelectedClientId(filteredClients[0].id);
-    }
-  }, [filteredClients, selectedClientId]);
+      const storedSelectedClientId = globalSelectedClientId || localStorage.getItem("selectedClient");
 
-  const selectedClient = filteredClients?.find((c) => c.id === selectedClientId);
+      if (storedSelectedClientId && filteredClients.some((client) => String(client.id) === storedSelectedClientId)) {
+        setSelectedClientId(storedSelectedClientId);
+        setGlobalSelectedClientId(storedSelectedClientId);
+        return;
+      }
+
+      const defaultId = String(filteredClients[0].id);
+      setSelectedClientId(defaultId);
+      setGlobalSelectedClientId(defaultId);
+      localStorage.setItem("selectedClient", defaultId);
+    }
+  }, [filteredClients, selectedClientId, globalSelectedClientId, setGlobalSelectedClientId]);
+
+  const handleClientChange = (value: string) => {
+    setSelectedClientId(value);
+    setGlobalSelectedClientId(value);
+    localStorage.setItem("selectedClient", value);
+  };
+
+  const selectedClient = filteredClients?.find((c) => String(c.id) === selectedClientId);
 
   if (isLoading) {
     return (
@@ -79,9 +100,9 @@ export const ClientSwitch = () => {
       <DropdownMenuContent className="w-56" align="end">
         <DropdownMenuLabel>Clientes</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuRadioGroup value={selectedClientId} onValueChange={setSelectedClientId}>
+        <DropdownMenuRadioGroup value={selectedClientId} onValueChange={handleClientChange}>
           {filteredClients?.map((client) => (
-            <DropdownMenuRadioItem key={client.id} value={client.id}>
+            <DropdownMenuRadioItem key={client.id} value={String(client.id)}>
               {client.name}
             </DropdownMenuRadioItem>
           ))}
