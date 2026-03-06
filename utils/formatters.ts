@@ -35,8 +35,14 @@ export const formatNumber = (value: number, locale: string = "es-PE"): string =>
  * Formatea porcentajes.
  * Ejemplo: 0.31 → "0.31%" o con decimales limitados.
  */
-export const formatPercentage = (value: number, decimals: number = 2): string => {
-  return `${value.toFixed(decimals)}%`;
+export const formatPercentage = (value: number | null | undefined, decimals: number = 2): string => {
+  const numericValue = typeof value === "number" ? value : Number(value);
+
+  if (!Number.isFinite(numericValue)) {
+    return `${(0).toFixed(decimals)}%`;
+  }
+
+  return `${numericValue.toFixed(decimals)}%`;
 };
 
 /**
