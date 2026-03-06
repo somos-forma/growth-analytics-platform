@@ -41,6 +41,8 @@ export function LoginForm() {
     mutate(payload, {
       onSuccess: (result) => {
         setAuthStore(result);
+        console.log("Login successful:", result);
+        localStorage.setItem("rol", JSON.stringify(result.rol));
         localStorage.setItem("userEmail", result.email);
         localStorage.setItem("userId", JSON.stringify(result.id));
         localStorage.setItem("clientId", JSON.stringify(result.client_id));
