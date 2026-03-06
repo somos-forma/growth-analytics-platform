@@ -80,7 +80,7 @@ export const DataPreviewStep = () => {
             },
           },
           user_id: Number(localStorage.getItem("userId")),
-          client_id: 2,
+          client_id: Number(localStorage.getItem("clientId")),
           id_run_gcp: data.job_id,
         }),
       })
